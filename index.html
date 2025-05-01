@@ -1777,4 +1777,38 @@
                 <div class="signature-line"></div>
             </div>
             <div class="signature-item">
-                <label>Date Complet
+                <label>Date Completed:</label>
+                <div class="signature-line"></div>
+            </div>
+        </div>
+        
+        <footer>
+            © Skinny Brown Dog Media, 2025 | For internal use only
+        </footer>
+    </div>
+    
+    <script>
+        // Print button functionality
+        window.addEventListener('DOMContentLoaded', function() {
+            const printButton = document.createElement('button');
+            printButton.textContent = 'Print Checklist';
+            printButton.style.position = 'fixed';
+            printButton.style.bottom = '20px';
+            printButton.style.right = '20px';
+            printButton.style.padding = '10px 15px';
+            printButton.style.backgroundColor = '#1a56db';
+            printButton.style.color = 'white';
+            printButton.style.border = 'none';
+            printButton.style.borderRadius = '4px';
+            printButton.style.cursor = 'pointer';
+            printButton.style.zIndex = '1000';
+            
+            printButton.addEventListener('click', function() {
+                window.print();
+            });
+            
+            document.body.appendChild(printButton);
+        });
+    </script>
+</body>
+</html>
