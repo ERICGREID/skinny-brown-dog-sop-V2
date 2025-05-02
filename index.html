@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skinny Brown Dog Media - Book Publishing Checklist with Auto-Scheduling</title>
+    <style>
+        :root {
+            --primary: #1a56db;
+            --primary-dark: #1e429f;
+            --secondary: #64748b;
+            --accent: #3b82f6;
+            --light: #f3f4f6;
+            --white: #ffffff;
+            --gray-100: #f9fafb;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--gray-100);
+            color: var(--gray-700);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: var(--white);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin: 30px 0 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--accent);
+            font-size: 20px;
+        }
+        
+        .info-section {
+            margin-bottom: 30px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .info-item {
+            margin-bottom: 15px;
+        }
+        
+        .info-item label {
+            display: block;
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+        
+        .info-item input[type="text"], 
+        .info-item input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            border: 1px solid var(--gray-300);
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: var(--white);
+            font-weight: normal;
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--gray-100);
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            margin: 5px 0;
+        }
+        
+        .checkbox-label {
+            margin-left: 10px;
+        }
+        
+        input[type="checkbox"] {
+            margin-top: 5px;
+        }
+        
+        input[type="text"], 
+        input[type="date"], 
+        select, 
+        textarea {
+            padding: 5px;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            width: 100%;
+        }
+        
+        select {
+            height: 30px;
+        }
+        
+        .notes-comments {
+            margin-top: 30px;
+        }
+        
+        textarea.notes {
+            width: 100%;
+            height: 100px;
+            margin-top: 10px;
+            padding: 8px;
+            font-family: inherit;
+            resize: vertical;
+        }
+        
+        .signature-section {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .signature-item {
+            width: 45%;
+        }
+        
+        .signature-input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+        }
+        
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: var(--gray-500);
+            font-size: 12px;
+            border-top: 1px solid var(--gray-300);
+            padding-top: 20px;
+        }
+        
+        .section-header {
+            background-color: var(--light);
+            padding: 10px;
+            margin-top: 15px;
+            font-weight: bold;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .issue-tracking-table {
+            margin-top: 20px;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .highlight {
+            background-color: #fffde7;
+            animation: fade 2s;
+        }
+        
+        @keyframes fade {
+            from { background-color: #fff9c4; }
+            to { background-color: #fffde7; }
+        }
+        
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                padding: 10px;
+                max-width: 100%;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            @page {
+                size: letter;
+                margin: 0.5in;
+            }
+        }
+
+        /* Additional styling for timeline view */
+        .timeline-toggle {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+        }
+
+        .timeline-toggle button {
+            margin-left: 10px;
+            background-color: var(--gray-300);
+            color: var(--gray-700);
+        }
+
+        .timeline-toggle button.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .timeline-view {
+            display: none;
+            margin-top: 20px;
+            position: relative;
+            padding-bottom: 40px;
+        }
+
+        .timeline-track {
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: var(--primary);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-left: 50px;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-left: 4px solid var(--accent);
+            background-color: var(--light);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -29px;
+            top: 20px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            border: 3px solid var(--white);
+        }
+
+        .timeline-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .timeline-date {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .timeline-phase {
+            font-weight: bold;
+            color: var(--secondary);
+        }
+
+        .timeline-task {
+            margin-bottom: 5px;
+        }
+
+        .late-task {
+            color: #e53935;
+        }
+
+        .completion-date {
+            color: #43a047;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            border-radius: 8px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray-500);
+        }
+
+        .task-duration {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .task-duration span {
+            margin: 0 10px;
+        }
+
+        .duration-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .duration-buttons button {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <form id="publishingForm">
+        <div class="container">
+            <h1>Skinny Brown Dog Media - Book Publishing Checklist with Auto-Scheduling</h1>
+            
+            <div class="info-section">
+                <h2>Book Project Information</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label for="bookTitle">Book Title:</label>
+                        <input type="text" id="bookTitle" name="bookTitle" required>
+                    </div>
+                    <div class="info-item">
+                        <label for="authorName">Author Name:</label>
+                        <input type="text" id="authorName" name="authorName" required>
+                    </div>
+                    <div class="info-item">
+                        <label for="startDate">Project Start Date:</label>
+                        <input type="date" id="startDate" name="startDate" required>
+                    </div>
+                    <div class="info-item">
+                        <label for="pubDate">Target Publication Date:</label>
+                        <input type="date" id="pubDate" name="pubDate" required>
+                    </div>
+                    <div class="info-item">
+                        <label for="projectManager">Project Manager:</label>
+                        <input type="text" id="projectManager" name="projectManager" required>
+                    </div>
+                </div>
+                
+                <div class="action-buttons no-print">
+                    <button type="button" id="autoscheduleButton">Auto-Schedule Tasks</button>
+                    <div class="timeline-toggle">
+                        <button type="button" id="tableViewButton" class="active">Table View</button>
+                        <button type="button" id="timelineViewButton">Timeline View</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="tableView">
+                <h2>Initial Setup Phase</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Task</th>
+                            <th>Responsible</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Completion Date</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-task-id="task1" data-phase="Initial Setup" data-default-days="3">
+                            <td>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="task1" name="task1" class="task-checkbox">
+                                    <label for="task1" class="checkbox-label">Send welcome email with onboarding forms</label>
+                                </div>
+                            </td>
+                            <td><input type="text" name="responsible1"></td>
+                            <td><input type="date" name="dueDate1" class="due-date"></td>
+                            <td>
+                                <select name="status1" class="task-status">
+                                    <option value="Not Started">Not Started</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Delayed">Delayed</option>
+                                </select>
+                            </td>
+                            <td><input type="date" name="completionDate1" class="completion-date"></td>
+                            <td><input type="text" name="notes1"></td>
+                        </tr>
+                        <tr data-task-id="task2" data-phase="Initial Setup" data-default-days="7" data-dependency="task1">
+                            <td>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="task2" name="task2" class="task-checkbox">
+                                    <label for="task2" class="checkbox-label">Receive completed Author Intake Form</label>
+                                </div>
+                            </td>
+                            <td><input type="text" name="responsible2"></td>
+                            <td><input type="date" name="dueDate2" class="due-date"></td>
+                            <td>
+                                <select name="status2" class="task-status">
+                                    <option value="Not Started">Not Started</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Delayed">Delayed</option>
+                                </select>
+                            </td>
+                            <td><input type="date" name="completionDate2" class="completion-date"></td>
+                            <td><input type="text" name="notes2"></td>
+                        </tr>
+                        <tr data-task-id="task3" data-phase="Initial Setup" data-default-days="14" data-dependency="task1">
+                            <td>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="task3" name="task3" class="task-checkbox">
+                                    <label for="task3" class="checkbox-label">Receive signed Publishing Agreement</label>
+                                </div>
+                            </td>
+                            <td><input type="text" name="responsible3"></td>
+                            <td><input type="date" name="dueDate3" class="due-date"></td>
+                            <td>
+                                <select name="status3" class="task-status">
+                                    <option value="Not Started">Not Started</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Delayed">Delayed</option>
+                                </select>
+                            </td>
+                            <td><input type="date" name="completionDate3" class="completion-date"></td>
+                            <td><input type="text" name="notes3"></td>
+                        </tr>
+                        <tr data-task-id="task4" data-phase="Initial Setup" data-default-days="14" data-dependency="task1">
+                            <td>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="task4" name="task4" class="task-checkbox">
+                                    <label for="task4" class="checkbox-label">Receive completed W-9/tax documentation</label>
+                                </div>
+                            </td>
+                            <td><input type="text" name="responsible4"></td>
+                            <td><input type="date" name="dueDate4" class="due-date"></td>
+                            <td>
+                                <select name="status4" class="task-status">
+                                    <option value="Not Started">Not Started</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Delayed">Delayed</option>
+                                </select>
+                            </td>
+                            <td><input type="date" name="completionDate4" class="completion-date"></td>
+                            <td><input type="text" name="notes4"></td>
+                        </tr>
+                        <tr data-task-id="task5" data-phase="Initial Setup" data-default-days="5" data-dependency="task1">
+                            <td>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="task5" name="task5" class="task-checkbox">
+                                    <label for="task5" class="checkbox-label">Create author folder in Google Drive</label>
+                                </div>
+                            </td>
+                            <td><input type="text" name="responsible5"></td>
+                            <td><input type="date" name="dueDate5" class="due-date"></td>
+                            <td>
+                                <select name="status5" class="task-status">
+                                    <option value="Not Started">Not Started</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Delayed">Delayed</option>
+                                </select>
+                            </td>
+                            <td><input type="date" name="completionDate5" class="completion-date"></td>
+                            <td><input type="text" name="notes5"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h2>Account Setup Phase</h2>
+                <div class="section-header">BookVault</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Task</th>
+                            <th>Responsible</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Completion Date</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-task-id="bv1" data-phase="Account Setup" data-default-days="21" data-dependency="task3">
+                            <td>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="bv1" name="bv1" class="task-checkbox">
+                                    <label for="bv1" class="checkbox-label">Create BookVault sub-account</label>
+                                </div>
+                            </td>
+                            <td><input type="text" name="bvResponsible1"></td>
+                            <td><input type="date" name="bvDueDate1" class="due-date"></td>
+                            <td>
+                                <select name="bvStatus1" class="task-status">
+                                    <option value="Not Started">Not Started</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Delayed">Delayed</option>
+                                </select>
+                            </td>
+                            <td><input type="date" name="bvCompletionDate1" class="completion-date"></td>
+                            <td><input type="text" name="bvNotes1"></td>
+                        </tr>
+                        <tr data-task-id="bv2" data-phase="Account Setup" data-default-days="2" data-dependency="bv1">
+                            <td>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="bv2" name="bv2" class="task-checkbox">
+                                    <label for="bv2" class="checkbox-label">Send BookVault invitation to author</label>
+                                </div>
+                            </td>
+                            <td><input type="text" name="bvResponsible2"></td>
+                            <td><input type="date" name="bvDueDate2" class="due-date"></td>
+                            <td>
+                                <select name="bvStatus2" class="task-status">
+                                    <option value="Not Started">Not Started</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Delayed">Delayed</option>
+                                </select>
+                            </td>
+                            <td><input type="date" name="bvCompletionDate2" class="completion-date"></td>
+                            <td><input type="text" name="bvNotes2"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section-header">File Preparation Phase</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Task</th>
+                            <th>Responsible</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Completion Date</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-task-id="fp1" data-phase="File Preparation" data-default-days="30" data-dependency="task3">
+                            <td>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="fp1" name="fp1" class="task-checkbox">
+                                    <label for="fp1" class="checkbox-label">Receive manuscript from author</label>
+                                </div>
+                            </td>
+                            <td><input type="text" name="fpResponsible1"></td>
+                            <td><input type="date" name="fpDueDate1" class="due-date"></td>
+                            <td>
+                                <select name="fpStatus1" class="task-status">
+                                    <option value="Not Started">Not Started</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Delayed">Delayed</option>
+                                </select>
+                            </td>
+                            <td><input type="date" name="fpCompletionDate1" class="completion-date"></td>
+                            <td><input type="text" name="fpNotes1"></td>
+                        </tr>
+                        <tr data-task-id="fp2" data-phase="File Preparation" data-default-days="3" data-dependency="fp1">
+                            <td>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="fp2" name="fp2" class="task-checkbox">
+                                    <label for="fp2" class="checkbox-label">Format interior for print</label>
+                                </div>
+                            </td>
+                            <td><input type="text" name="fpResponsible2"></td>
+                            <td><input type="date" name="fpDueDate2" class="due-date"></td>
+                            <td>
+                                <select name="fpStatus2" class="task-status">
+                                    <option value="Not Started">Not Started</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Delayed">Delayed</option>
+                                </select>
+                            </td>
+                            <td><input type="date" name="fpCompletionDate2" class="completion-date"></td>
+                            <td><input type="text" name="fpNotes2"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="section-header">Publication Phase</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Task</th>
+                            <th>Responsible</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Completion Date</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-task-id="pub1" data-phase="Publication" data-default-days="-7" data-dependency-end="pubDate">
+                            <td>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="pub1" name="pub1" class="task-checkbox">
+                                    <label for="pub1" class="checkbox-label">Approve for distribution on all platforms</label>
+                                </div>
+                            </td>
+                            <td><input type="text" name="pubResponsible1"></td>
+                            <td><input type="date" name="pubDueDate1" class="due-date"></td>
+                            <td>
+                                <select name="pubStatus1" class="task-status">
+                                    <option value="Not Started">Not Started</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Delayed">Delayed</option>
+                                </select>
+                            </td>
+                            <td><input type="date" name="pubCompletionDate1" class="completion-date"></td>
+                            <td><input type="text" name="pubNotes1"></td>
+                        </tr>
+                        <tr data-task-id="pub2" data-phase="Publication" data-default-days="0" data-dependency-end="pubDate">
+                            <td>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="pub2" name="pub2" class="task-checkbox">
+                                    <label for="pub2" class="checkbox-label">Send Book Launch Announcement Email</label>
+                                </div>
+                            </td>
+                            <td><input type="text" name="pubResponsible2"></td>
+                            <td><input type="date" name="pubDueDate2" class="due-date"></td>
+                            <td>
+                                <select name="pubStatus2" class="task-status">
+                                    <option value="Not Started">Not Started</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Delayed">Delayed</option>
+                                </select>
+                            </td>
+                            <td><input type="date" name="pubCompletionDate2" class="completion-date"></td>
+                            <td><input type="text" name="pubNotes2"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="timelineView" class="timeline-view">
+                <div class="timeline-track"></div>
+                <!-- Timeline items will be dynamically generated here -->
+            </div>
+            
+            <div class="notes-comments">
+                <h2>Notes & Comments</h2>
+                <textarea class="notes" name="generalNotes"></textarea>
+            </div>
+            
+            <div class="signature-section">
+                <div class="signature-item">
+                    <label for="completedBy">Checklist Completed By:</label>
+                    <input type="text" id="completedBy" name="completedBy" class="signature-input">
+                </div>
+                <div class="signature-item">
+                    <label for="dateCompleted">Date Completed:</label>
+                    <input type="date" id="dateCompleted" name="dateCompleted" class="signature-input">
+                </div>
+            </div>
+            
+            <div class="action-buttons no-print">
+                <button type="button" id="saveButton">Save Progress</button>
+                <button type="button" id="printButton">Print Checklist</button>
+                <button type="submit" id="submitButton">Submit Form</button>
+            </div>
+            
+            <footer>
+                © Skinny Brown Dog Media, 2025 | For internal use only
+            </footer>
+        </div>
+    </form>
+    
+    <!-- Task Duration Modal -->
+    <div id="taskDurationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Customize Task Schedule</h2>
+                <button type="button" class="close-modal">&times;</button>
+            </div>
+            <div id="modalBody">
+                <p>Adjust the duration and dependencies for tasks in your publishing timeline.</p>
+                
+                <div id="taskCustomizationFields">
+                    <!-- Task fields will be populated here -->
+                </div>
+                
+                <div class="duration-buttons">
+                    <button type="button" id="applyCustomDuration">Apply Changes</button>
+                    <button type="button" id="cancelCustomDuration">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get form elements
+            const publishingForm = document.getElementById('publishingForm');
+            const startDateInput = document.getElementById('startDate');
+            const pubDateInput = document.getElementById('pubDate');
+            const autoscheduleButton = document.getElementById('autoscheduleButton');
+            const saveButton = document.getElementById('saveButton');
+            const printButton = document.getElementById('printButton');
+            const tableViewButton = document.getElementById('tableViewButton');
+            const timelineViewButton = document.getElementById('timelineViewButton');
+            const tableView = document.getElementById('tableView');
+            const timelineView = document.getElementById('timelineView');
+            
+            // Modal elements
+            const taskDurationModal = document.getElementById('taskDurationModal');
+            const closeModalButton = document.querySelector('.close-modal');
+            const applyCustomDurationButton = document.getElementById('applyCustomDuration');
+            const cancelCustomDurationButton = document.getElementById('cancelCustomDuration');
+            
+            // Task tracking
+            const taskElements = document.querySelectorAll('[data-task-id]');
+            let taskData = {};
+            
+            // Initialize task data
+            taskElements.forEach(task => {
+                const taskId = task.getAttribute('data-task-id');
+                taskData[taskId] = {
+                    id: taskId,
+                    phase: task.getAttribute('data-phase'),
+                    defaultDays: parseInt(task.getAttribute('data-default-days'), 10),
+                    customDays: parseInt(task.getAttribute('data-default-days'), 10), // Start with default
+                    dependency: task.getAttribute('data-dependency') || null,
+                    dependencyEnd: task.getAttribute('data-dependency-end') || null,
+                    element: task,
+                    dueDateInput: task.querySelector('.due-date'),
+                    statusSelect: task.querySelector('.task-status'),
+                    completionDateInput: task.querySelector('.completion-date'),
+                    checkbox: task.querySelector('.task-checkbox')
+                };
+            });
+            
+            // Auto-schedule button event
+            autoscheduleButton.addEventListener('click', function() {
+                if (!validateDates()) {
+                    alert('Please enter valid start and publication dates first.');
+                    return;
+                }
+                
+                showTaskDurationModal();
+            });
+            
+            // View toggle buttons
+            tableViewButton.addEventListener('click', function() {
+                tableView.style.display = 'block';
+                timelineView.style.display = 'none';
+                tableViewButton.classList.add('active');
+                timelineViewButton.classList.remove('active');
+            });
+            
+            timelineViewButton.addEventListener('click', function() {
+                tableView.style.display = 'none';
+                timelineView.style.display = 'block';
+                timelineViewButton.classList.add('active');
+                tableViewButton.classList.remove('active');
+                renderTimeline();
+            });
+            
+            // Modal event listeners
+            closeModalButton.addEventListener('click', closeTaskDurationModal);
+            applyCustomDurationButton.addEventListener('click', applyCustomDurations);
+            cancelCustomDurationButton.addEventListener('click', closeTaskDurationModal);
+            
+            // Print button functionality
+            printButton.addEventListener('click', function() {
+                window.print();
+            });
+            
+            // Save progress functionality
+            saveButton.addEventListener('click', function() {
+                saveFormData();
+                alert('Progress saved successfully!');
+            });
+            
+            // Handle status changes
+            document.addEventListener('change', function(e) {
+                if (e.target.classList.contains('task-status')) {
+                    const row = e.target.closest('tr');
+                    const taskId = row.getAttribute('data-task-id');
+                    const status = e.target.value;
+                    const completionDateInput = row.querySelector('.completion-date');
+                    const checkbox = row.querySelector('.task-checkbox');
+                    
+                    if (status === 'Completed') {
+                        // Set today's date if completion date is empty
+                        if (!completionDateInput.value) {
+                            completionDateInput.value = new Date().toISOString().split('T')[0];
+                        }
+                        checkbox.checked = true;
+                    } else if (status === 'Not Started' || status === 'Delayed') {
+                        completionDateInput.value = '';
+                        checkbox.checked = false;
+                    }
+                } else if (e.target.classList.contains('task-checkbox')) {
+                    const row = e.target.closest('tr');
+                    const statusSelect = row.querySelector('.task-status');
+                    const completionDateInput = row.querySelector('.completion-date');
+                    
+                    if (e.target.checked) {
+                        statusSelect.value = 'Completed';
+                        // Set today's date if completion date is empty
+                        if (!completionDateInput.value) {
+                            completionDateInput.value = new Date().toISOString().split('T')[0];
+                        }
+                    } else {
+                        statusSelect.value = 'In Progress';
+                        completionDateInput.value = '';
+                    }
+                }
+            });
+            
+            // Load saved form data if exists
+            loadFormData();
+            
+            // Form submission
+            publishingForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate required fields
+                const required = publishingForm.querySelectorAll('[required]');
+                let valid = true;
+                
+                required.forEach(function(field) {
+                    if (!field.value) {
+                        field.style.borderColor = 'red';
+                        valid = false;
+                    } else {
+                        field.style.borderColor = '';
+                    }
+                });
+                
+                if (!valid) {
+                    alert('Please fill out all required fields marked in red.');
+                    return;
+                }
+                
+                // If form is valid, you would typically submit to a server
+                alert('Form submitted successfully!');
+                
+                // Clear form data from storage after submission
+                localStorage.removeItem('publishingFormData');
+            });
+            
+            // Functions
+            function validateDates() {
+                const startDate = new Date(startDateInput.value);
+                const pubDate = new Date(pubDateInput.value);
+                
+                if (isNaN(startDate.getTime()) || isNaN(pubDate.getTime())) {
+                    return false;
+                }
+                
+                if (pubDate <= startDate) {
+                    alert('Publication date must be after the start date.');
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            function showTaskDurationModal() {
+                // Populate the modal with task data
+                const customizationFields = document.getElementById('taskCustomizationFields');
+                customizationFields.innerHTML = '';
+                
+                // Group tasks by phase
+                const phases = {};
+                for (const taskId in taskData) {
+                    const task = taskData[taskId];
+                    const phase = task.phase;
+                    
+                    if (!phases[phase]) {
+                        phases[phase] = [];
+                    }
+                    phases[phase].push(task);
+                }
+                
+                // Create section for each phase
+                for (const phase in phases) {
+                    const phaseHeader = document.createElement('h3');
+                    phaseHeader.textContent = phase + ' Phase';
+                    customizationFields.appendChild(phaseHeader);
+                    
+                    phases[phase].forEach(task => {
+                        const taskLabel = task.element.querySelector('.checkbox-label').textContent;
+                        
+                        const taskField = document.createElement('div');
+                        taskField.classList.add('task-duration');
+                        taskField.innerHTML = `
+                            <div>${taskLabel}</div>
+                            <div style="margin-top: 5px;">
+                                <input type="number" id="duration-${task.id}" value="${task.customDays}" min="1" style="width: 60px;">
+                                <span>days ${task.dependency ? 'after ' + taskData[task.dependency].element.querySelector('.checkbox-label').textContent : task.dependencyEnd ? 'before publication' : 'from start'}</span>
+                            </div>
+                        `;
+                        
+                        customizationFields.appendChild(taskField);
+                    });
+                }
+                
+                taskDurationModal.style.display = 'flex';
+            }
+            
+            function closeTaskDurationModal() {
+                taskDurationModal.style.display = 'none';
+            }
+            
+            function applyCustomDurations() {
+                // Update custom durations from modal inputs
+                for (const taskId in taskData) {
+                    const durationInput = document.getElementById(`duration-${taskId}`);
+                    if (durationInput) {
+                        taskData[taskId].customDays = parseInt(durationInput.value, 10);
+                    }
+                }
+                
+                // Schedule tasks based on start and publication dates
+                scheduleTasks();
+                
+                // Close the modal
+                closeTaskDurationModal();
+                
+                // Highlight updated due dates
+                for (const taskId in taskData) {
+                    if (taskData[taskId].dueDateInput) {
+                        taskData[taskId].dueDateInput.classList.add('highlight');
+                        setTimeout(() => {
+                            taskData[taskId].dueDateInput.classList.remove('highlight');
+                        }, 3000);
+                    }
+                }
+                
+                // Update timeline if it's visible
+                if (timelineView.style.display === 'block') {
+                    renderTimeline();
+                }
+            }
+            
+            function scheduleTasks() {
+                if (!validateDates()) {
+                    return;
+                }
+                
+                const startDate = new Date(startDateInput.value);
+                const pubDate = new Date(pubDateInput.value);
+                
+                // First pass: schedule tasks with dependencies on start date or publication date
+                for (const taskId in taskData) {
+                    const task = taskData[taskId];
+                    
+                    if (!task.dependency && !task.dependencyEnd) {
+                        // Task depends on start date
+                        const dueDate = new Date(startDate);
+                        dueDate.setDate(dueDate.getDate() + task.customDays);
+                        task.calculatedDate = dueDate;
+                        
+                        if (task.dueDateInput) {
+                            task.dueDateInput.value = dueDate.toISOString().split('T')[0];
+                        }
+                    } else if (task.dependencyEnd === 'pubDate') {
+                        // Task depends on publication date (counting backward)
+                        const dueDate = new Date(pubDate);
+                        dueDate.setDate(dueDate.getDate() + task.customDays); // Note: customDays may be negative
+                        task.calculatedDate = dueDate;
+                        
+                        if (task.dueDateInput) {
+                            task.dueDateInput.value = dueDate.toISOString().split('T')[0];
+                        }
+                    }
+                }
+                
+                // Second pass: schedule tasks with dependencies on other tasks
+                let changed = true;
+                let iterations = 0;
+                const maxIterations = 10; // Prevent infinite loops
+                
+                while (changed && iterations < maxIterations) {
+                    changed = false;
+                    iterations++;
+                    
+                    for (const taskId in taskData) {
+                        const task = taskData[taskId];
+                        
+                        if (task.dependency && taskData[task.dependency].calculatedDate) {
+                            const dependencyDate = new Date(taskData[task.dependency].calculatedDate);
+                            const dueDate = new Date(dependencyDate);
+                            dueDate.setDate(dueDate.getDate() + task.customDays);
+                            
+                            // Only update if we haven't calculated this task yet or the date has changed
+                            if (!task.calculatedDate || task.calculatedDate.getTime() !== dueDate.getTime()) {
+                                task.calculatedDate = dueDate;
+                                
+                                if (task.dueDateInput) {
+                                    task.dueDateInput.value = dueDate.toISOString().split('T')[0];
+                                }
+                                
+                                changed = true;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            function renderTimeline() {
+                if (!validateDates()) {
+                    return;
+                }
+                
+                // Clear existing timeline
+                timelineView.innerHTML = '<div class="timeline-track"></div>';
+                
+                // Group tasks by calculated date
+                const tasksByDate = {};
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                for (const taskId in taskData) {
+                    const task = taskData[taskId];
+                    const dueDate = task.dueDateInput ? task.dueDateInput.value : '';
+                    
+                    if (dueDate) {
+                        if (!tasksByDate[dueDate]) {
+                            tasksByDate[dueDate] = [];
+                        }
+                        tasksByDate[dueDate].push(task);
+                    }
+                }
+                
+                // Sort dates
+                const sortedDates = Object.keys(tasksByDate).sort((a, b) => {
+                    return new Date(a) - new Date(b);
+                });
+                
+                // Create timeline items
+                sortedDates.forEach(dateStr => {
+                    const date = new Date(dateStr);
+                    const tasks = tasksByDate[dateStr];
+                    
+                    const timelineItem = document.createElement('div');
+                    timelineItem.classList.add('timeline-item');
+                    
+                    // Check if this date is in the past
+                    const isPastDue = date < today;
+                    
+                    // Create header
+                    const header = document.createElement('div');
+                    header.classList.add('timeline-item-header');
+                    
+                    const dateElement = document.createElement('div');
+                    dateElement.classList.add('timeline-date');
+                    dateElement.textContent = date.toDateString();
+                    
+                    const phaseElement = document.createElement('div');
+                    phaseElement.classList.add('timeline-phase');
+                    phaseElement.textContent = tasks[0].phase + ' Phase';
+                    
+                    header.appendChild(dateElement);
+                    header.appendChild(phaseElement);
+                    timelineItem.appendChild(header);
+                    
+                    // Add tasks
+                    tasks.forEach(task => {
+                        const taskElement = document.createElement('div');
+                        taskElement.classList.add('timeline-task');
+                        
+                        const isCompleted = task.statusSelect && task.statusSelect.value === 'Completed';
+                        const taskName = task.element.querySelector('.checkbox-label').textContent;
+                        
+                        if (isPastDue && !isCompleted) {
+                            taskElement.classList.add('late-task');
+                            taskElement.innerHTML = `<strong>OVERDUE:</strong> ${taskName}`;
+                        } else if (isCompleted) {
+                            const completionDate = task.completionDateInput ? task.completionDateInput.value : '';
+                            
+                            taskElement.innerHTML = `
+                                <span style="text-decoration: line-through;">${taskName}</span>
+                                ${completionDate ? `<span class="completion-date">(Completed: ${new Date(completionDate).toDateString()})</span>` : ''}
+                            `;
+                        } else {
+                            taskElement.textContent = taskName;
+                        }
+                        
+                        timelineItem.appendChild(taskElement);
+                    });
+                    
+                    timelineView.appendChild(timelineItem);
+                });
+            }
+            
+            function saveFormData() {
+                const formData = new FormData(publishingForm);
+                const formDataObj = {};
+                
+                formData.forEach(function(value, key) {
+                    formDataObj[key] = value;
+                });
+                
+                // Save task custom durations
+                formDataObj.taskCustomDurations = {};
+                for (const taskId in taskData) {
+                    formDataObj.taskCustomDurations[taskId] = taskData[taskId].customDays;
+                }
+                
+                localStorage.setItem('publishingFormData', JSON.stringify(formDataObj));
+            }
+            
+            function loadFormData() {
+                const savedData = localStorage.getItem('publishingFormData');
+                
+                if (savedData) {
+                    const formDataObj = JSON.parse(savedData);
+                    
+                    // Restore form fields
+                    for (const key in formDataObj) {
+                        if (key === 'taskCustomDurations') continue;
+                        
+                        const field = publishingForm.querySelector(`[name="${key}"]`);
+                        
+                        if (field) {
+                            if (field.type === 'checkbox') {
+                                field.checked = formDataObj[key] === 'on';
+                            } else {
+                                field.value = formDataObj[key];
+                            }
+                        }
+                    }
+                    
+                    // Restore task custom durations
+                    if (formDataObj.taskCustomDurations) {
+                        for (const taskId in formDataObj.taskCustomDurations) {
+                            if (taskData[taskId]) {
+                                taskData[taskId].customDays = formDataObj.taskCustomDurations[taskId];
+                            }
+                        }
+                    }
+                    
+                    // If we have valid dates, try to schedule tasks
+                    if (validateDates()) {
+                        scheduleTasks();
+                    }
+                }
+            }
+            
+            // Set up the timeline view initially
+            renderTimeline();
+            
+            // Auto-save form data every 30 seconds
+            setInterval(saveFormData, 30000);
+        });
+    </script>
+</body>
+</html>
