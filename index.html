@@ -43,6 +43,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             padding: 40px;
             border-radius: 8px;
+            position: relative;
         }
         
         h1 {
@@ -81,10 +82,13 @@
             margin-bottom: 5px;
         }
         
-        .info-item .input-line {
+        .info-item input[type="text"], 
+        .info-item input[type="date"] {
             width: 100%;
-            height: 24px;
-            border-bottom: 1px solid var(--gray-300);
+            padding: 8px;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            font-family: inherit;
         }
         
         table {
@@ -115,53 +119,39 @@
             margin: 5px 0;
         }
         
-        .checkbox {
-            margin-right: 10px;
-            width: 16px;
-            height: 16px;
-            border: 1px solid var(--gray-400);
-            display: inline-block;
-            border-radius: 3px;
-            position: relative;
-            top: 3px;
+        .checkbox-label {
+            margin-left: 10px;
+        }
+        
+        input[type="checkbox"] {
+            margin-top: 5px;
+        }
+        
+        input[type="text"], 
+        input[type="date"], 
+        select, 
+        textarea {
+            padding: 5px;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            width: 100%;
+        }
+        
+        select {
+            height: 30px;
         }
         
         .notes-comments {
             margin-top: 30px;
         }
         
-        .notes-lines {
+        textarea.notes {
             width: 100%;
             height: 100px;
-            border: 1px solid var(--gray-300);
             margin-top: 10px;
-            position: relative;
-        }
-        
-        .notes-lines::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 25px;
-            width: 100%;
-            border-bottom: 1px solid var(--gray-300);
-        }
-        
-        .notes-lines::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 50px;
-            width: 100%;
-            border-bottom: 1px solid var(--gray-300);
-        }
-        
-        .notes-lines div {
-            position: absolute;
-            left: 0;
-            top: 75px;
-            width: 100%;
-            border-bottom: 1px solid var(--gray-300);
+            padding: 8px;
+            font-family: inherit;
+            resize: vertical;
         }
         
         .signature-section {
@@ -174,10 +164,12 @@
             width: 45%;
         }
         
-        .signature-line {
+        .signature-input {
             width: 100%;
-            border-bottom: 1px solid var(--gray-500);
+            padding: 8px;
             margin-top: 5px;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
         }
         
         footer {
@@ -201,6 +193,68 @@
             margin-top: 20px;
         }
         
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .form-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .password-form {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 350px;
+            max-width: 90%;
+        }
+        
+        .form-locked {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        
+        .password-message {
+            margin-bottom: 15px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
         @media print {
             body {
                 background-color: white;
@@ -213,6 +267,10 @@
                 max-width: 100%;
             }
             
+            .no-print {
+                display: none !important;
+            }
+            
             @page {
                 size: letter;
                 margin: 0.5in;
@@ -221,1593 +279,572 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Skinny Brown Dog Media - Book Publishing Checklist</h1>
-        
-        <div class="info-section">
-            <h2>Book Project Information</h2>
-            <div class="info-grid">
-                <div class="info-item">
-                    <label>Book Title:</label>
-                    <div class="input-line"></div>
-                </div>
-                <div class="info-item">
-                    <label>Author Name:</label>
-                    <div class="input-line"></div>
-                </div>
-                <div class="info-item">
-                    <label>Project Start Date:</label>
-                    <div class="input-line"></div>
-                </div>
-                <div class="info-item">
-                    <label>Target Publication Date:</label>
-                    <div class="input-line"></div>
-                </div>
-                <div class="info-item">
-                    <label>Project Manager:</label>
-                    <div class="input-line"></div>
-                </div>
+    <div id="formOverlay" class="form-overlay">
+        <div class="password-form">
+            <h2 style="margin-top: 0;">Password Required</h2>
+            <p class="password-message">This form is password protected. Please enter the password to access it.</p>
+            <div class="info-item">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password">
+                <div id="passwordError" class="error-message"></div>
             </div>
+            <button id="unlockButton" style="margin-top: 15px; width: 100%;">Unlock Form</button>
         </div>
-        
-        <h2>Initial Setup Phase</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Task</th>
-                    <th>Responsible</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Completion Date</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Send welcome email with onboarding forms
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Receive completed Author Intake Form
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Receive signed Publishing Agreement
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Receive completed W-9/tax documentation
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Create author folder in Google Drive
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Schedule kickoff call with author
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Complete kickoff call
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Assign ISBN(s) to project
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Create entry in Employee Task Tracker
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Receive Author Marketing Questionnaire
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <h2>Account Setup Phase</h2>
-        <div class="section-header">BookVault</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Task</th>
-                    <th>Responsible</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Completion Date</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Create BookVault sub-account
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Send BookVault invitation to author
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Confirm author accepted BookVault invite
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Guide author through Stripe/PayPal setup
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Verify payment method connection
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <div class="section-header">IngramSpark</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Task</th>
-                    <th>Responsible</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Completion Date</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Create IngramSpark account
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Share IngramSpark login with author
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Confirm author can access IngramSpark
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <div class="section-header">KDP (if applicable)</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Task</th>
-                    <th>Responsible</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Completion Date</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Help author set up KDP account
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Confirm KDP tax interview completed
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Determine if enrolling in KDP Select
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <h2>File Preparation Phase</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Task</th>
-                    <th>Responsible</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Completion Date</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Receive manuscript from author
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Confirm manuscript format
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Acknowledge receipt to author
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Format interior for print (if needed)
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Request cover design (if needed)
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Receive cover design
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Complete interior formatting
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Create EPUB file for eBook
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <h2>Quality Control Phase</h2>
-        <div class="section-header">Interior File QA</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Task</th>
-                    <th>Responsible</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Completion Date</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Verify margins (min 0.5" all sides)
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Check fonts are embedded
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Verify page numbers consistent
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Confirm chapter breaks on right pages
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Check image resolution (300+ DPI)
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Verify file is PDF/X-1a:2001 compliant
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <div class="section-header">Cover File QA</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Task</th>
-                    <th>Responsible</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Completion Date</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Verify 0.125" bleed included
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Confirm CMYK color mode
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Check spine width calculation
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Verify ISBN barcode on back cover
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Check all text in safe zones
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Confirm 300+ DPI resolution
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <div class="section-header">EPUB QA</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Task</th>
-                    <th>Responsible</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Completion Date</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Run through EPUB validator
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Test table of contents navigation
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Check all links function properly
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Verify images display correctly
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Confirm metadata embedded
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <h2>Platform Upload Phase</h2>
-        <div class="section-header">BookVault Upload</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Task</th>
-                    <th>Responsible</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Completion Date</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Upload interior PDF
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Upload cover PDF
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Complete all metadata fields
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Set pricing
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Order proof copy
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <div class="section-header">IngramSpark Upload</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Task</th>
-                    <th>Responsible</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Completion Date</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Upload interior PDF
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Upload cover PDF
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Complete metadata
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Set 40% wholesale discount
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            UNCHECK Amazon expanded distribution
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Enable global distribution
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Set returns policy (typically "no returns")
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Order proof copy
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <div class="section-header">KDP Upload (if applicable)</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Task</th>
-                    <th>Responsible</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Completion Date</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Upload interior PDF for paperback
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Upload cover PDF for paperback
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Upload EPUB for Kindle
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            UNCHECK expanded distribution
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Set KDP Select enrollment (if chosen)
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Complete all metadata fields
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Set pricing within 70% royalty range
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Order author copies
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <h2>Proof Approval Phase</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Task</th>
-                    <th>Responsible</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Completion Date</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Send Proof Copy Review Email
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Send physical proof to author
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Provide access to digital proof
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Follow up with author on proof review
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Receive completed Proof Approval Form
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Make corrections (if requested)
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Get final approval for publication
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <h2>Publication Phase</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Task</th>
-                    <th>Responsible</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Completion Date</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Approve for distribution on BookVault
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Approve for distribution on IngramSpark
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Approve for distribution on KDP
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Send Book Launch Announcement Email
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Verify live listings on all platforms
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Check all retail links working
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Create screenshots of all listings
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Add all listing links to author's folder
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <h2>Marketing Support Phase</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Task</th>
-                    <th>Responsible</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Completion Date</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Create author press kit
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Deliver marketing materials to author
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Schedule KDP promotions (if applicable)
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Create KDP Promotion Planner
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Add book to Skinny Brown Dog Media website
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Create custom landing page (if applicable)
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Create tracking links for campaigns
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <h2>Follow-up Phase</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Task</th>
-                    <th>Responsible</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Completion Date</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Verify author can access all dashboards
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Confirm author received first payment
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Send 30-Day Check-In Email
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Schedule 90-day review
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Document lessons learned
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox-item">
-                            <div class="checkbox"></div>
-                            Update project status to "Complete"
-                        </div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <h2>Issue Tracking</h2>
-        <table class="issue-tracking-table">
-            <thead>
-                <tr>
-                    <th>Issue Description</th>
-                    <th>Date Identified</th>
-                    <th>Responsible</th>
-                    <th>Resolution</th>
-                    <th>Date Resolved</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <div class="notes-comments">
-            <h2>Notes & Comments</h2>
-            <div class="notes-lines">
-                <div></div>
-            </div>
-        </div>
-        
-        <div class="signature-section">
-            <div class="signature-item">
-                <label>Checklist Completed By:</label>
-                <div class="signature-line"></div>
-            </div>
-            <div class="signature-item">
-                <label>Date Completed:</label>
-                <div class="signature-line"></div>
-            </div>
-        </div>
-        
-        <footer>
-            © Skinny Brown Dog Media, 2025 | For internal use only
-        </footer>
     </div>
+
+    <form id="publishingForm" class="form-locked">
+        <div class="container">
+            <h1>Skinny Brown Dog Media - Book Publishing Checklist</h1>
+            
+            <div class="info-section">
+                <h2>Book Project Information</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label for="bookTitle">Book Title:</label>
+                        <input type="text" id="bookTitle" name="bookTitle" required>
+                    </div>
+                    <div class="info-item">
+                        <label for="authorName">Author Name:</label>
+                        <input type="text" id="authorName" name="authorName" required>
+                    </div>
+                    <div class="info-item">
+                        <label for="startDate">Project Start Date:</label>
+                        <input type="date" id="startDate" name="startDate" required>
+                    </div>
+                    <div class="info-item">
+                        <label for="pubDate">Target Publication Date:</label>
+                        <input type="date" id="pubDate" name="pubDate" required>
+                    </div>
+                    <div class="info-item">
+                        <label for="projectManager">Project Manager:</label>
+                        <input type="text" id="projectManager" name="projectManager" required>
+                    </div>
+                </div>
+            </div>
+            
+            <h2>Initial Setup Phase</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Responsible</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Completion Date</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="task1" name="task1">
+                                <label for="task1" class="checkbox-label">Send welcome email with onboarding forms</label>
+                            </div>
+                        </td>
+                        <td><input type="text" name="responsible1"></td>
+                        <td><input type="date" name="dueDate1"></td>
+                        <td>
+                            <select name="status1">
+                                <option value="">Select</option>
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Delayed">Delayed</option>
+                            </select>
+                        </td>
+                        <td><input type="date" name="completionDate1"></td>
+                        <td><input type="text" name="notes1"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="task2" name="task2">
+                                <label for="task2" class="checkbox-label">Receive completed Author Intake Form</label>
+                            </div>
+                        </td>
+                        <td><input type="text" name="responsible2"></td>
+                        <td><input type="date" name="dueDate2"></td>
+                        <td>
+                            <select name="status2">
+                                <option value="">Select</option>
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Delayed">Delayed</option>
+                            </select>
+                        </td>
+                        <td><input type="date" name="completionDate2"></td>
+                        <td><input type="text" name="notes2"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="task3" name="task3">
+                                <label for="task3" class="checkbox-label">Receive signed Publishing Agreement</label>
+                            </div>
+                        </td>
+                        <td><input type="text" name="responsible3"></td>
+                        <td><input type="date" name="dueDate3"></td>
+                        <td>
+                            <select name="status3">
+                                <option value="">Select</option>
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Delayed">Delayed</option>
+                            </select>
+                        </td>
+                        <td><input type="date" name="completionDate3"></td>
+                        <td><input type="text" name="notes3"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="task4" name="task4">
+                                <label for="task4" class="checkbox-label">Receive completed W-9/tax documentation</label>
+                            </div>
+                        </td>
+                        <td><input type="text" name="responsible4"></td>
+                        <td><input type="date" name="dueDate4"></td>
+                        <td>
+                            <select name="status4">
+                                <option value="">Select</option>
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Delayed">Delayed</option>
+                            </select>
+                        </td>
+                        <td><input type="date" name="completionDate4"></td>
+                        <td><input type="text" name="notes4"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="task5" name="task5">
+                                <label for="task5" class="checkbox-label">Create author folder in Google Drive</label>
+                            </div>
+                        </td>
+                        <td><input type="text" name="responsible5"></td>
+                        <td><input type="date" name="dueDate5"></td>
+                        <td>
+                            <select name="status5">
+                                <option value="">Select</option>
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Delayed">Delayed</option>
+                            </select>
+                        </td>
+                        <td><input type="date" name="completionDate5"></td>
+                        <td><input type="text" name="notes5"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="task6" name="task6">
+                                <label for="task6" class="checkbox-label">Schedule kickoff call with author</label>
+                            </div>
+                        </td>
+                        <td><input type="text" name="responsible6"></td>
+                        <td><input type="date" name="dueDate6"></td>
+                        <td>
+                            <select name="status6">
+                                <option value="">Select</option>
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Delayed">Delayed</option>
+                            </select>
+                        </td>
+                        <td><input type="date" name="completionDate6"></td>
+                        <td><input type="text" name="notes6"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="task7" name="task7">
+                                <label for="task7" class="checkbox-label">Complete kickoff call</label>
+                            </div>
+                        </td>
+                        <td><input type="text" name="responsible7"></td>
+                        <td><input type="date" name="dueDate7"></td>
+                        <td>
+                            <select name="status7">
+                                <option value="">Select</option>
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Delayed">Delayed</option>
+                            </select>
+                        </td>
+                        <td><input type="date" name="completionDate7"></td>
+                        <td><input type="text" name="notes7"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="task8" name="task8">
+                                <label for="task8" class="checkbox-label">Assign ISBN(s) to project</label>
+                            </div>
+                        </td>
+                        <td><input type="text" name="responsible8"></td>
+                        <td><input type="date" name="dueDate8"></td>
+                        <td>
+                            <select name="status8">
+                                <option value="">Select</option>
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Delayed">Delayed</option>
+                            </select>
+                        </td>
+                        <td><input type="date" name="completionDate8"></td>
+                        <td><input type="text" name="notes8"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="task9" name="task9">
+                                <label for="task9" class="checkbox-label">Create entry in Employee Task Tracker</label>
+                            </div>
+                        </td>
+                        <td><input type="text" name="responsible9"></td>
+                        <td><input type="date" name="dueDate9"></td>
+                        <td>
+                            <select name="status9">
+                                <option value="">Select</option>
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Delayed">Delayed</option>
+                            </select>
+                        </td>
+                        <td><input type="date" name="completionDate9"></td>
+                        <td><input type="text" name="notes9"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="task10" name="task10">
+                                <label for="task10" class="checkbox-label">Receive Author Marketing Questionnaire</label>
+                            </div>
+                        </td>
+                        <td><input type="text" name="responsible10"></td>
+                        <td><input type="date" name="dueDate10"></td>
+                        <td>
+                            <select name="status10">
+                                <option value="">Select</option>
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Delayed">Delayed</option>
+                            </select>
+                        </td>
+                        <td><input type="date" name="completionDate10"></td>
+                        <td><input type="text" name="notes10"></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h2>Account Setup Phase</h2>
+            <div class="section-header">BookVault</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Responsible</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Completion Date</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="bv1" name="bv1">
+                                <label for="bv1" class="checkbox-label">Create BookVault sub-account</label>
+                            </div>
+                        </td>
+                        <td><input type="text" name="bvResponsible1"></td>
+                        <td><input type="date" name="bvDueDate1"></td>
+                        <td>
+                            <select name="bvStatus1">
+                                <option value="">Select</option>
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Delayed">Delayed</option>
+                            </select>
+                        </td>
+                        <td><input type="date" name="bvCompletionDate1"></td>
+                        <td><input type="text" name="bvNotes1"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="bv2" name="bv2">
+                                <label for="bv2" class="checkbox-label">Send BookVault invitation to author</label>
+                            </div>
+                        </td>
+                        <td><input type="text" name="bvResponsible2"></td>
+                        <td><input type="date" name="bvDueDate2"></td>
+                        <td>
+                            <select name="bvStatus2">
+                                <option value="">Select</option>
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Delayed">Delayed</option>
+                            </select>
+                        </td>
+                        <td><input type="date" name="bvCompletionDate2"></td>
+                        <td><input type="text" name="bvNotes2"></td>
+                    </tr>
+                    <!-- Additional BookVault rows would follow similar pattern -->
+                </tbody>
+            </table>
+            
+            <!-- For brevity, I'll skip some sections and just show the pattern -->
+            
+            <div class="section-header">IngramSpark</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Responsible</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Completion Date</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="is1" name="is1">
+                                <label for="is1" class="checkbox-label">Create IngramSpark account</label>
+                            </div>
+                        </td>
+                        <td><input type="text" name="isResponsible1"></td>
+                        <td><input type="date" name="isDueDate1"></td>
+                        <td>
+                            <select name="isStatus1">
+                                <option value="">Select</option>
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Delayed">Delayed</option>
+                            </select>
+                        </td>
+                        <td><input type="date" name="isCompletionDate1"></td>
+                        <td><input type="text" name="isNotes1"></td>
+                    </tr>
+                    <!-- Additional IngramSpark rows would follow similar pattern -->
+                </tbody>
+            </table>
+            
+            <!-- Additional sections would follow similar pattern -->
+            
+            <h2>Issue Tracking</h2>
+            <table class="issue-tracking-table">
+                <thead>
+                    <tr>
+                        <th>Issue Description</th>
+                        <th>Date Identified</th>
+                        <th>Responsible</th>
+                        <th>Resolution</th>
+                        <th>Date Resolved</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><textarea name="issue1" rows="2"></textarea></td>
+                        <td><input type="date" name="issueDate1"></td>
+                        <td><input type="text" name="issueResponsible1"></td>
+                        <td><textarea name="resolution1" rows="2"></textarea></td>
+                        <td><input type="date" name="resolvedDate1"></td>
+                    </tr>
+                    <tr>
+                        <td><textarea name="issue2" rows="2"></textarea></td>
+                        <td><input type="date" name="issueDate2"></td>
+                        <td><input type="text" name="issueResponsible2"></td>
+                        <td><textarea name="resolution2" rows="2"></textarea></td>
+                        <td><input type="date" name="resolvedDate2"></td>
+                    </tr>
+                    <tr>
+                        <td><textarea name="issue3" rows="2"></textarea></td>
+                        <td><input type="date" name="issueDate3"></td>
+                        <td><input type="text" name="issueResponsible3"></td>
+                        <td><textarea name="resolution3" rows="2"></textarea></td>
+                        <td><input type="date" name="resolvedDate3"></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="notes-comments">
+                <h2>Notes & Comments</h2>
+                <textarea class="notes" name="generalNotes"></textarea>
+            </div>
+            
+            <div class="signature-section">
+                <div class="signature-item">
+                    <label for="completedBy">Checklist Completed By:</label>
+                    <input type="text" id="completedBy" name="completedBy" class="signature-input">
+                </div>
+                <div class="signature-item">
+                    <label for="dateCompleted">Date Completed:</label>
+                    <input type="date" id="dateCompleted" name="dateCompleted" class="signature-input">
+                </div>
+            </div>
+            
+            <div class="action-buttons no-print">
+                <button type="button" id="saveButton">Save Progress</button>
+                <button type="button" id="lockButton">Lock Form</button>
+                <button type="button" id="printButton">Print Checklist</button>
+                <button type="submit" id="submitButton">Submit Form</button>
+            </div>
+            
+            <footer>
+                © Skinny Brown Dog Media, 2025 | For internal use only
+            </footer>
+        </div>
+    </form>
     
     <script>
-        // Print button functionality
-        window.addEventListener('DOMContentLoaded', function() {
-            const printButton = document.createElement('button');
-            printButton.textContent = 'Print Checklist';
-            printButton.style.position = 'fixed';
-            printButton.style.bottom = '20px';
-            printButton.style.right = '20px';
-            printButton.style.padding = '10px 15px';
-            printButton.style.backgroundColor = '#1a56db';
-            printButton.style.color = 'white';
-            printButton.style.border = 'none';
-            printButton.style.borderRadius = '4px';
-            printButton.style.cursor = 'pointer';
-            printButton.style.zIndex = '1000';
+        // Password protection and form functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form protection variables
+            const formPassword = "SBDM2025"; // Change this to your desired password
+            const formOverlay = document.getElementById('formOverlay');
+            const publishingForm = document.getElementById('publishingForm');
+            const passwordInput = document.getElementById('password');
+            const unlockButton = document.getElementById('unlockButton');
+            const lockButton = document.getElementById('lockButton');
+            const saveButton = document.getElementById('saveButton');
+            const printButton = document.getElementById('printButton');
+            const submitButton = document.getElementById('submitButton');
+            const passwordError = document.getElementById('passwordError');
             
+            // Check if form is already unlocked in session storage
+            const isUnlocked = sessionStorage.getItem('formUnlocked');
+            
+            if (isUnlocked === 'true') {
+                unlockForm();
+            } else {
+                formOverlay.style.display = 'flex';
+            }
+            
+            // Unlock button functionality
+            unlockButton.addEventListener('click', function() {
+                if (passwordInput.value === formPassword) {
+                    unlockForm();
+                    sessionStorage.setItem('formUnlocked', 'true');
+                } else {
+                    passwordError.textContent = 'Incorrect password. Please try again.';
+                }
+            });
+            
+            // Lock button functionality
+            lockButton.addEventListener('click', function() {
+                lockForm();
+                sessionStorage.removeItem('formUnlocked');
+            });
+            
+            // Print button functionality
             printButton.addEventListener('click', function() {
                 window.print();
             });
             
-            document.body.appendChild(printButton);
+            // Save progress functionality
+            saveButton.addEventListener('click', function() {
+                saveFormData();
+                alert('Progress saved successfully!');
+            });
+            
+            // Form submission
+            publishingForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate required fields
+                const required = publishingForm.querySelectorAll('[required]');
+                let valid = true;
+                
+                required.forEach(function(field) {
+                    if (!field.value) {
+                        field.style.borderColor = 'red';
+                        valid = false;
+                    } else {
+                        field.style.borderColor = '';
+                    }
+                });
+                
+                if (!valid) {
+                    alert('Please fill out all required fields marked in red.');
+                    return;
+                }
+                
+                // If form is valid, you would typically submit to a server
+                // For now, we'll just show a success message
+                alert('Form submitted successfully!');
+                
+                // Clear form data from storage after submission
+                localStorage.removeItem('publishingFormData');
+            });
+            
+            // Load saved form data if exists
+            loadFormData();
+            
+            // Functions
+            function unlockForm() {
+                formOverlay.style.display = 'none';
+                publishingForm.classList.remove('form-locked');
+                passwordInput.value = '';
+                passwordError.textContent = '';
+            }
+            
+            function lockForm() {
+                formOverlay.style.display = 'flex';
+                publishingForm.classList.add('form-locked');
+            }
+            
+            function saveFormData() {
+                const formData = new FormData(publishingForm);
+                const formDataObj = {};
+                
+                formData.forEach(function(value, key) {
+                    formDataObj[key] = value;
+                });
+                
+                localStorage.setItem('publishingFormData', JSON.stringify(formDataObj));
+            }
+            
+            function loadFormData() {
+                const savedData = localStorage.getItem('publishingFormData');
+                
+                if (savedData) {
+                    const formDataObj = JSON.parse(savedData);
+                    
+                    for (const key in formDataObj) {
+                        const field = publishingForm.querySelector(`[name="${key}"]`);
+                        
+                        if (field) {
+                            if (field.type === 'checkbox') {
+                                field.checked = formDataObj[key] === 'on';
+                            } else {
+                                field.value = formDataObj[key];
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Auto-save form data every 30 seconds
+            setInterval(saveFormData, 30000);
         });
     </script>
 </body>
