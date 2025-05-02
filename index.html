@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://apis.google.com/js/api.js"></script>
+<script src="https://accounts.google.com/gsi/client"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skinny Brown Dog Media - Publishing Workflow Tracker</title>
@@ -1143,7 +1145,284 @@
             © Skinny Brown Dog Media, 2025 | For internal use only
         </footer>
     </div>
+    // Google Drive Integration
+let isGDriveConnected = false;
+
+// Initialize Google Drive API
+function initGoogleDriveAPI() {
+    // Check if gapi is loaded
+    if (!window.gapi) {
+        console.error('Google API client library not loaded');
+        return;
+    }
     
+    const CLIENT_ID = '720585651306-eimrp5hqb6srs3r0gkht1qjj59hie2dk.apps.googleusercontent.com';
+    const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+    
+    // Update auth status to loading
+    document.getElementById('auth-status').innerHTML = 'Initializing...';
+    document.getElementById('auth-status').style.backgroundColor = '#fef3c7';
+    
+    // Load auth2 and drive APIs
+    gapi.load('client:auth2', () => {
+        gapi.client.init({
+            clientId: CLIENT_ID,
+            scope: SCOPES,
+            discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
+        }).then(() => {
+            // Listen for sign-in state changes
+            gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+            
+            // Handle the initial sign-in state
+            updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+        }).catch(error => {
+            console.error('Error initializing Google API', error);
+            document.getElementById('auth-status').innerHTML = 'Error initializing: ' + error.message;
+            document.getElementById('auth-status').style.backgroundColor = '#fee2e2';
+        });
+    });
+}
+
+// Update UI based on sign-in status
+function updateSigninStatus(isSignedIn) {
+    isGDriveConnected = isSignedIn;
+    const authButton = document.getElementById('authButton');
+    const saveButton = document.getElementById('saveToGDriveBtn');
+    const loadButton = document.getElementById('loadFromGDriveBtn');
+    const authStatus = document.getElementById('auth-status');
+    
+    if (isSignedIn) {
+        authButton.innerHTML = 'Sign Out';
+        authButton.onclick = handleSignoutClick;
+        saveButton.disabled = false;
+        saveButton.style.opacity = '1';
+        loadButton.disabled = false;
+        loadButton.style.opacity = '1';
+        authStatus.innerHTML = 'Connected to Google Drive';
+        authStatus.style.backgroundColor = '#d1fae5';
+    } else {
+        authButton.innerHTML = 'Connect to Google Drive';
+        authButton.onclick = handleAuthClick;
+        saveButton.disabled = true;
+        saveButton.style.opacity = '0.5';
+        loadButton.disabled = true;
+        loadButton.style.opacity = '0.5';
+        authStatus.innerHTML = 'Not connected to Google Drive';
+        authStatus.style.backgroundColor = '#e5e7eb';
+    }
+}
+
+// Handle login button click
+function handleAuthClick() {
+    gapi.auth2.getAuthInstance().signIn();
+}
+
+// Handle logout button click
+function handleSignoutClick() {
+    gapi.auth2.getAuthInstance().signOut();
+}
+
+// Save projects to Google Drive
+function saveToGoogleDrive() {
+    if (!isGDriveConnected) {
+        alert('Please connect to Google Drive first');
+        return;
+    }
+    
+    // Get all projects from localStorage
+    const projectsString = localStorage.getItem('publishingProjects');
+    if (!projectsString || projectsString === '{}') {
+        alert('No projects to export.');
+        return;
+    }
+    
+    const projects = JSON.parse(projectsString);
+    const projectsJson = JSON.stringify(projects, null, 2);
+    const fileName = `publishing-projects-export-${new Date().toISOString().slice(0, 10)}.json`;
+    
+    // Create a blob with the content
+    const blob = new Blob([projectsJson], {type: 'application/json'});
+    
+    // Metadata for Google Drive
+    const metadata = {
+        'name': fileName,
+        'mimeType': 'application/json',
+    };
+    
+    // Get access token from current auth session
+    const accessToken = gapi.auth.getToken().access_token;
+    
+    // Create FormData for multipart upload
+    const form = new FormData();
+    form.append('metadata', new Blob([JSON.stringify(metadata)], {type: 'application/json'}));
+    form.append('file', blob);
+    
+    // Show loading indicator
+    document.getElementById('auth-status').innerHTML = 'Saving to Google Drive...';
+    document.getElementById('auth-status').style.backgroundColor = '#fef3c7';
+    
+    // Use fetch API to upload to Google Drive
+    fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,webViewLink', {
+        method: 'POST',
+        headers: new Headers({
+            'Authorization': 'Bearer ' + accessToken
+        }),
+        body: form,
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        if (data.id) {
+            document.getElementById('auth-status').innerHTML = `File "${data.name}" successfully saved to Google Drive!`;
+            document.getElementById('auth-status').style.backgroundColor = '#d1fae5';
+            alert(`File "${data.name}" successfully saved to Google Drive!\nYou can access it at: ${data.webViewLink}`);
+        } else {
+            document.getElementById('auth-status').innerHTML = 'Error saving to Google Drive: ' + (data.error ? data.error.message : 'Unknown error');
+            document.getElementById('auth-status').style.backgroundColor = '#fee2e2';
+            alert('Error saving to Google Drive: ' + (data.error ? data.error.message : 'Unknown error'));
+        }
+    })
+    .catch((error) => {
+        document.getElementById('auth-status').innerHTML = 'Error uploading to Google Drive: ' + error.message;
+        document.getElementById('auth-status').style.backgroundColor = '#fee2e2';
+        alert('Error uploading to Google Drive: ' + error.message);
+        console.error('Google Drive upload error:', error);
+    });
+}
+
+// Load projects from Google Drive
+function loadFromGoogleDrive() {
+    if (!isGDriveConnected) {
+        alert('Please connect to Google Drive first');
+        return;
+    }
+    
+    // Show loading indicator
+    document.getElementById('auth-status').innerHTML = 'Searching for backups...';
+    document.getElementById('auth-status').style.backgroundColor = '#fef3c7';
+    
+    // Search for JSON backup files
+    gapi.client.drive.files.list({
+        q: "mimeType='application/json' and name contains 'publishing-projects-export'",
+        spaces: 'drive',
+        fields: 'files(id, name, createdTime, webViewLink)'
+    }).then(response => {
+        const files = response.result.files;
+        
+        if (files && files.length > 0) {
+            // Sort files by creation date (newest first)
+            files.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
+            
+            // Create a dropdown for user to select which backup to load
+            let selectHtml = '<select id="backup-select" style="width: 100%; padding: 8px; margin-bottom: 20px;">';
+            files.forEach(file => {
+                selectHtml += `<option value="${file.id}">${file.name} (${new Date(file.createdTime).toLocaleString()})</option>`;
+            });
+            selectHtml += '</select>';
+            
+            // Create a custom dialog
+            const dialog = document.createElement('div');
+            dialog.style.position = 'fixed';
+            dialog.style.top = '0';
+            dialog.style.left = '0';
+            dialog.style.width = '100%';
+            dialog.style.height = '100%';
+            dialog.style.backgroundColor = 'rgba(0,0,0,0.5)';
+            dialog.style.display = 'flex';
+            dialog.style.justifyContent = 'center';
+            dialog.style.alignItems = 'center';
+            dialog.style.zIndex = '1000';
+            
+            const dialogContent = document.createElement('div');
+            dialogContent.style.backgroundColor = 'white';
+            dialogContent.style.padding = '20px';
+            dialogContent.style.borderRadius = '8px';
+            dialogContent.style.width = '50%';
+            dialogContent.style.maxWidth = '500px';
+            
+            dialogContent.innerHTML = `
+                <h3 style="margin-bottom: 20px;">Select a backup to load</h3>
+                ${selectHtml}
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                    <button id="cancel-btn" style="padding: 8px 16px; background-color: #e5e7eb; color: #374151; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
+                    <button id="load-btn" style="padding: 8px 16px; background-color: #1a56db; color: white; border: none; border-radius: 4px; cursor: pointer;">Load Selected Backup</button>
+                </div>
+            `;
+            
+            dialog.appendChild(dialogContent);
+            document.body.appendChild(dialog);
+            
+            // Handle cancel button click
+            document.getElementById('cancel-btn').onclick = () => {
+                document.body.removeChild(dialog);
+                document.getElementById('auth-status').innerHTML = 'Connected to Google Drive';
+                document.getElementById('auth-status').style.backgroundColor = '#d1fae5';
+            };
+            
+            // Handle load button click
+            document.getElementById('load-btn').onclick = () => {
+                const selectedFileId = document.getElementById('backup-select').value;
+                document.body.removeChild(dialog);
+                
+                // Update status
+                document.getElementById('auth-status').innerHTML = 'Loading backup...';
+                document.getElementById('auth-status').style.backgroundColor = '#fef3c7';
+                
+                // Download the selected file
+                gapi.client.drive.files.get({
+                    fileId: selectedFileId,
+                    alt: 'media'
+                }).then(response => {
+                    try {
+                        const importedProjects = response.result;
+                        
+                        // Validate basic structure
+                        if (typeof importedProjects !== 'object') {
+                            throw new Error('Invalid projects file format');
+                        }
+                        
+                        // Update localStorage
+                        localStorage.setItem('publishingProjects', JSON.stringify(importedProjects));
+                        
+                        document.getElementById('auth-status').innerHTML = 'Successfully loaded backup from Google Drive!';
+                        document.getElementById('auth-status').style.backgroundColor = '#d1fae5';
+                        
+                        alert('Successfully loaded backup from Google Drive! Refresh the page to see your projects.');
+                        
+                        // Reload the page to show the imported projects
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                    } catch (error) {
+                        document.getElementById('auth-status').innerHTML = 'Error loading backup: ' + error.message;
+                        document.getElementById('auth-status').style.backgroundColor = '#fee2e2';
+                        alert('Error loading backup: ' + error.message);
+                    }
+                }).catch(error => {
+                    document.getElementById('auth-status').innerHTML = 'Error downloading file: ' + error.message;
+                    document.getElementById('auth-status').style.backgroundColor = '#fee2e2';
+                    alert('Error downloading file from Google Drive: ' + error.message);
+                });
+            };
+        } else {
+            document.getElementById('auth-status').innerHTML = 'No backup files found on Google Drive';
+            document.getElementById('auth-status').style.backgroundColor = '#fee2e2';
+            alert('No backup files found on Google Drive.');
+        }
+    }).catch(error => {
+        document.getElementById('auth-status').innerHTML = 'Error searching Google Drive: ' + error.message;
+        document.getElementById('auth-status').style.backgroundColor = '#fee2e2';
+        alert('Error searching Google Drive: ' + error.message);
+    });
+}
+
+// Add this to your existing DOMContentLoaded event handler
+// Initialize Google Drive API
+initGoogleDriveAPI();
+
+// Add event listeners for Google Drive buttons
+document.getElementById('saveToGDriveBtn').addEventListener('click', saveToGoogleDrive);
+document.getElementById('loadFromGDriveBtn').addEventListener('click', loadFromGoogleDrive);
+document.getElementById('authButton').addEventListener('click', handleAuthClick);
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Link ISBN fields to display in the ISBN Platform table
@@ -1208,8 +1487,34 @@
                     resetForm();
                 }
             });
-            
-            // Export button
+            <!-- Import/Export Section -->
+<div class="import-export-section">
+    <h2>Import/Export Project Data</h2>
+    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+        <div>
+            <input type="file" id="importFile" class="file-input" accept=".json">
+            <label for="importFile" class="file-label">Import Project</label>
+            <span id="fileName" class="file-name"></span>
+        </div>
+        <button type="button" id="exportButton" class="success">Export Project</button>
+    </div>
+</div>
+
+<!-- Google Drive Backup Section -->
+<div class="import-export-section">
+    <h2>Google Drive Backup</h2>
+    <div id="google-drive-container" style="margin-top: 15px;">
+        <div id="auth-status" style="margin-bottom: 15px; padding: 10px; border-radius: 5px; background-color: #e5e7eb;">
+            Not connected to Google Drive
+        </div>
+        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <button type="button" id="authButton" class="success">Connect to Google Drive</button>
+            <button type="button" id="saveToGDriveBtn" disabled style="opacity: 0.5">Save to Google Drive</button>
+            <button type="button" id="loadFromGDriveBtn" disabled style="opacity: 0.5">Load from Google Drive</button>
+        </div>
+    </div>
+</div>
+       // Export button
             document.getElementById('exportButton').addEventListener('click', function() {
                 if (document.getElementById('bookTitle').value.trim() === '' || 
                     document.getElementById('authorName').value.trim() === '') {
