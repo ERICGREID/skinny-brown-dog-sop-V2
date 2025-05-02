@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skinny Brown Dog Media - Multi-Project Publishing Checklist</title>
+    <title>Skinny Brown Dog Media - Publishing Workflow Tracker</title>
     <style>
         :root {
             --primary: #1a56db;
@@ -20,6 +20,9 @@
             --gray-600: #4b5563;
             --gray-700: #374151;
             --gray-800: #1f2937;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
         }
         
         * {
@@ -37,20 +40,30 @@
         }
         
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             background-color: var(--white);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             padding: 40px;
             border-radius: 8px;
-            position: relative;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        header img {
+            max-width: 300px;
+            margin-bottom: 20px;
         }
         
         h1 {
             color: var(--primary);
-            text-align: center;
-            margin-bottom: 30px;
             font-size: 28px;
+            margin-bottom: 10px;
         }
         
         h2 {
@@ -61,14 +74,23 @@
             font-size: 20px;
         }
         
-        .info-section {
+        h3 {
+            color: var(--secondary);
+            margin: 20px 0 10px;
+            font-size: 18px;
+        }
+        
+        .project-info {
+            background-color: var(--light);
+            padding: 20px;
+            border-radius: 8px;
             margin-bottom: 30px;
         }
         
-        .info-grid {
+        .project-info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 20px;
         }
         
         .info-item {
@@ -82,94 +104,242 @@
             margin-bottom: 5px;
         }
         
-        .info-item input[type="text"], 
-        .info-item input[type="date"] {
+        .info-item input[type="text"],
+        .info-item input[type="date"],
+        .info-item input[type="password"],
+        .info-item textarea {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             border: 1px solid var(--gray-300);
             border-radius: 4px;
             font-family: inherit;
         }
         
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
+        .info-item input[type="password"] {
+            font-family: 'password';
+            letter-spacing: 2px;
         }
         
-        th, td {
+        .phase-container {
+            margin-bottom: 40px;
             border: 1px solid var(--gray-300);
-            padding: 10px;
-            text-align: left;
+            border-radius: 8px;
+            overflow: hidden;
         }
         
-        th {
+        .phase-header {
             background-color: var(--primary);
             color: var(--white);
-            font-weight: normal;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
-        tr:nth-child(even) {
+        .phase-header h2 {
+            margin: 0;
+            padding: 0;
+            border: none;
+            color: var(--white);
+        }
+        
+        .phase-header .status {
+            font-size: 14px;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background-color: var(--white);
+        }
+        
+        .status-not-started {
+            color: var(--gray-600);
+        }
+        
+        .status-in-progress {
+            color: var(--accent);
+        }
+        
+        .status-completed {
+            color: var(--success);
+        }
+        
+        .phase-content {
+            padding: 20px;
+            background-color: var(--white);
+        }
+        
+        .task-list {
+            list-style-type: none;
+        }
+        
+        .task-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid var(--gray-200);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .task-item:hover {
             background-color: var(--gray-100);
         }
         
-        .checkbox-item {
-            display: flex;
-            align-items: flex-start;
-            margin: 5px 0;
+        .task-item input[type="checkbox"] {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
         }
         
-        .checkbox-label {
-            margin-left: 10px;
+        .task-item.completed {
+            background-color: var(--light);
+            border-color: var(--success);
         }
         
-        input[type="checkbox"] {
-            margin-top: 5px;
+        .task-item.completed label {
+            text-decoration: line-through;
+            color: var(--gray-500);
         }
         
-        input[type="text"], 
-        input[type="date"], 
-        select, 
-        textarea {
-            padding: 5px;
+        .isbn-section {
+            background-color: var(--light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .isbn-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .platform-section {
+            background-color: var(--light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .platform-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .platform-card {
+            background-color: var(--white);
             border: 1px solid var(--gray-300);
-            border-radius: 4px;
-            width: 100%;
+            border-radius: 8px;
+            padding: 15px;
         }
         
-        select {
-            height: 30px;
+        .platform-card h3 {
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray-200);
         }
         
-        .notes-comments {
-            margin-top: 30px;
+        .transition-arrow {
+            text-align: center;
+            font-size: 24px;
+            color: var(--primary);
+            margin: 20px 0;
         }
         
-        textarea.notes {
-            width: 100%;
-            height: 100px;
-            margin-top: 10px;
-            padding: 8px;
-            font-family: inherit;
-            resize: vertical;
+        .payment-milestone {
+            background-color: var(--accent);
+            color: var(--white);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: bold;
         }
         
-        .signature-section {
-            margin-top: 30px;
+        .actions {
+            margin-top: 40px;
             display: flex;
             justify-content: space-between;
         }
         
-        .signature-item {
-            width: 45%;
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
         }
         
-        .signature-input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid var(--gray-300);
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        button.secondary {
+            background-color: var(--gray-300);
+            color: var(--gray-700);
+        }
+        
+        button.secondary:hover {
+            background-color: var(--gray-400);
+        }
+        
+        button.success {
+            background-color: var(--success);
+        }
+        
+        button.warning {
+            background-color: var(--warning);
+        }
+        
+        .timeline {
+            position: relative;
+            margin: 40px 0;
+            padding-left: 50px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: var(--primary);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 20px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--white);
+            border: 4px solid var(--primary);
+        }
+        
+        .timeline-date {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: var(--light);
             border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 10px;
         }
         
         footer {
@@ -181,325 +351,31 @@
             padding-top: 20px;
         }
         
-        .section-header {
-            background-color: var(--light);
-            padding: 10px;
-            margin-top: 15px;
-            font-weight: bold;
-            border-left: 4px solid var(--primary);
+        @media (max-width: 768px) {
+            .project-info-grid,
+            .isbn-grid,
+            .platform-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
         }
-        
-        .issue-tracking-table {
-            margin-top: 20px;
-        }
-        
-        button {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-        
-        button:hover {
-            background-color: var(--primary-dark);
-        }
-        
-        .action-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .action-buttons button {
-            flex: 1;
-            min-width: 150px;
-        }
-        
-        .error-message {
-            color: red;
-            font-size: 12px;
-            margin-top: 5px;
-        }
-        
-        .highlight {
-            background-color: #fffde7;
-            animation: fade 2s;
-        }
-        
-        @keyframes fade {
-            from { background-color: #fff9c4; }
-            to { background-color: #fffde7; }
-        }
-        
-        /* Project selector styles */
-        .project-management {
-            background-color: var(--light);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid var(--gray-300);
-        }
-        
-        .project-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .project-selector {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .project-selector select {
-            flex: 1;
-            min-width: 200px;
-            max-width: 350px;
-        }
-        
-        /* Export/Import Dialog */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .modal-content {
-            background-color: white;
-            width: 90%;
-            max-width: 600px;
-            padding: 30px;
-            border-radius: 8px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .modal-header h2 {
-            margin: 0;
-            padding: 0;
-            border: none;
-        }
-        
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--gray-500);
-        }
-        
-        .export-data {
-            width: 100%;
-            height: 200px;
-            font-family: monospace;
-            margin-top: 15px;
-            resize: vertical;
-        }
-        
-        /* Timeline view styles */
-        .timeline-toggle {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 15px;
-        }
-        
-        .timeline-toggle button {
-            margin-left: 10px;
-            background-color: var(--gray-300);
-            color: var(--gray-700);
-        }
-        
-        .timeline-toggle button.active {
-            background-color: var(--primary);
-            color: white;
-        }
-        
-        .timeline-view {
-            display: none;
-            margin-top: 20px;
-            position: relative;
-            padding-bottom: 40px;
-        }
-        
-        .timeline-track {
-            position: absolute;
-            left: 20px;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background-color: var(--primary);
-        }
-        
-        .timeline-item {
-            position: relative;
-            margin-left: 50px;
-            margin-bottom: 20px;
-            padding: 15px;
-            border-left: 4px solid var(--accent);
-            background-color: var(--light);
-        }
-        
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -29px;
-            top: 20px;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background-color: var(--primary);
-            border: 3px solid var(--white);
-        }
-        
-        .timeline-item-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-        
-        .timeline-date {
-            font-weight: bold;
-            color: var(--primary);
-        }
-        
-        .timeline-phase {
-            font-weight: bold;
-            color: var(--secondary);
-        }
-        
-        .timeline-task {
-            margin-bottom: 5px;
-        }
-        
-        .late-task {
-            color: #e53935;
-        }
-        
-        .completion-date {
-            color: #43a047;
-        }
-        
-        /* Task Duration Modal */
-        .task-duration {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--gray-200);
-        }
-        
-        .task-duration-inputs {
-            display: flex;
-            align-items: center;
-            margin-top: 5px;
-        }
-        
-        .task-duration span {
-            margin: 0 10px;
-        }
-        
-        .duration-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .duration-buttons button {
-            flex: 1;
-        }
-        
-        /* Progress bar */
-        .progress-container {
-            margin-top: 10px;
-            width: 100%;
-            background-color: var(--gray-200);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        
-        .progress-bar {
-            height: 8px;
-            background-color: var(--accent);
-            border-radius: 4px;
-            transition: width 0.5s ease-in-out;
-        }
-        
-        .progress-text {
-            font-size: 12px;
-            color: var(--gray-600);
-            margin-top: 5px;
-        }
-        
-        .project-status {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-        }
-        
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-        }
-        
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 5px;
-        }
-        
-        .status-on-track {
-            background-color: #4caf50;
-        }
-        
-        .status-at-risk {
-            background-color: #ff9800;
-        }
-        
-        .status-delayed {
-            background-color: #f44336;
-        }
-        
+
         @media print {
             body {
-                background-color: white;
+                background-color: var(--white);
                 padding: 0;
             }
             
             .container {
                 box-shadow: none;
-                padding: 10px;
                 max-width: 100%;
             }
             
-            .no-print {
-                display: none !important;
+            .actions {
+                display: none;
             }
             
             @page {
@@ -510,1218 +386,852 @@
     </style>
 </head>
 <body>
-    <!-- Project management controls -->
-    <div class="container no-print project-management">
-        <h2 style="margin-top: 0;">Project Management</h2>
+    <div class="container">
+        <header>
+            <img src="https://via.placeholder.com/300x80?text=Skinny+Brown+Dog+Media" alt="Skinny Brown Dog Media Logo">
+            <h1>Book Publishing Workflow Tracker</h1>
+        </header>
         
-        <div class="project-selector">
-            <label for="projectSelect"><strong>Select Project:</strong></label>
-            <select id="projectSelect"></select>
-            <button id="loadProjectButton">Load Project</button>
+        <div class="project-info">
+            <h2>Book Project Information</h2>
+            <div class="project-info-grid">
+                <div class="info-item">
+                    <label for="bookTitle">Book Title:</label>
+                    <input type="text" id="bookTitle" name="bookTitle">
+                </div>
+                <div class="info-item">
+                    <label for="authorName">Author Name:</label>
+                    <input type="text" id="authorName" name="authorName">
+                </div>
+                <div class="info-item">
+                    <label for="startDate">Project Start Date:</label>
+                    <input type="date" id="startDate" name="startDate">
+                </div>
+                <div class="info-item">
+                    <label for="pubDate">Target Publication Date:</label>
+                    <input type="date" id="pubDate" name="pubDate">
+                </div>
+                <div class="info-item">
+                    <label for="projectManager">Project Manager:</label>
+                    <input type="text" id="projectManager" name="projectManager">
+                </div>
+                <div class="info-item">
+                    <label for="currentStatus">Current Project Status:</label>
+                    <input type="text" id="currentStatus" name="currentStatus" value="Not Started" readonly>
+                </div>
+            </div>
         </div>
         
-        <div class="project-actions">
-            <button id="newProjectButton">New Project</button>
-            <button id="saveProjectButton">Save Current Project</button>
-            <button id="exportProjectButton">Export Project</button>
-            <button id="importProjectButton">Import Project</button>
-            <button id="deleteProjectButton">Delete Project</button>
-        </div>
-    </div>
-    
-    <form id="publishingForm">
-        <div class="container">
-            <h1>Skinny Brown Dog Media - Publishing Checklist</h1>
-            
-            <div class="project-status">
-                <div class="progress-container">
-                    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
-                </div>
-                <div class="progress-text" id="progressText">0% Complete</div>
-                
-                <div class="status-indicator">
-                    <div class="status-dot" id="statusDot"></div>
-                    <span id="statusText">Not Started</span>
-                </div>
+        <!-- Pre-Manuscript Phase -->
+        <div class="phase-container">
+            <div class="phase-header">
+                <h2>Pre-Manuscript Phase</h2>
+                <span class="status status-not-started" id="phase1Status">Not Started</span>
             </div>
-            
-            <div class="info-section">
-                <h2>Book Project Information</h2>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <label for="bookTitle">Book Title:</label>
-                        <input type="text" id="bookTitle" name="bookTitle" required>
-                    </div>
-                    <div class="info-item">
-                        <label for="authorName">Author Name:</label>
-                        <input type="text" id="authorName" name="authorName" required>
-                    </div>
-                    <div class="info-item">
-                        <label for="startDate">Project Start Date:</label>
-                        <input type="date" id="startDate" name="startDate" required>
-                    </div>
-                    <div class="info-item">
-                        <label for="pubDate">Target Publication Date:</label>
-                        <input type="date" id="pubDate" name="pubDate" required>
-                    </div>
-                    <div class="info-item">
-                        <label for="projectManager">Project Manager:</label>
-                        <input type="text" id="projectManager" name="projectManager" required>
-                    </div>
-                </div>
-                
-                <div class="action-buttons no-print">
-                    <button type="button" id="autoscheduleButton">Auto-Schedule Tasks</button>
-                    <div class="timeline-toggle">
-                        <button type="button" id="tableViewButton" class="active">Table View</button>
-                        <button type="button" id="timelineViewButton">Timeline View</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="tableView">
-                <h2>Initial Setup Phase</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Task</th>
-                            <th>Responsible</th>
-                            <th>Due Date</th>
-                            <th>Status</th>
-                            <th>Completion Date</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr data-task-id="task1" data-phase="Initial Setup" data-default-days="3">
-                            <td>
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="task1" name="task1" class="task-checkbox">
-                                    <label for="task1" class="checkbox-label">Send welcome email with onboarding forms</label>
-                                </div>
-                            </td>
-                            <td><input type="text" name="responsible1"></td>
-                            <td><input type="date" name="dueDate1" class="due-date"></td>
-                            <td>
-                                <select name="status1" class="task-status">
-                                    <option value="Not Started">Not Started</option>
-                                    <option value="In Progress">In Progress</option>
-                                    <option value="Completed">Completed</option>
-                                    <option value="Delayed">Delayed</option>
-                                </select>
-                            </td>
-                            <td><input type="date" name="completionDate1" class="completion-date"></td>
-                            <td><input type="text" name="notes1"></td>
-                        </tr>
-                        <tr data-task-id="task2" data-phase="Initial Setup" data-default-days="7" data-dependency="task1">
-                            <td>
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="task2" name="task2" class="task-checkbox">
-                                    <label for="task2" class="checkbox-label">Receive completed Author Intake Form</label>
-                                </div>
-                            </td>
-                            <td><input type="text" name="responsible2"></td>
-                            <td><input type="date" name="dueDate2" class="due-date"></td>
-                            <td>
-                                <select name="status2" class="task-status">
-                                    <option value="Not Started">Not Started</option>
-                                    <option value="In Progress">In Progress</option>
-                                    <option value="Completed">Completed</option>
-                                    <option value="Delayed">Delayed</option>
-                                </select>
-                            </td>
-                            <td><input type="date" name="completionDate2" class="completion-date"></td>
-                            <td><input type="text" name="notes2"></td>
-                        </tr>
-                        <tr data-task-id="task3" data-phase="Initial Setup" data-default-days="14" data-dependency="task1">
-                            <td>
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="task3" name="task3" class="task-checkbox">
-                                    <label for="task3" class="checkbox-label">Receive signed Publishing Agreement</label>
-                                </div>
-                            </td>
-                            <td><input type="text" name="responsible3"></td>
-                            <td><input type="date" name="dueDate3" class="due-date"></td>
-                            <td>
-                                <select name="status3" class="task-status">
-                                    <option value="Not Started">Not Started</option>
-                                    <option value="In Progress">In Progress</option>
-                                    <option value="Completed">Completed</option>
-                                    <option value="Delayed">Delayed</option>
-                                </select>
-                            </td>
-                            <td><input type="date" name="completionDate3" class="completion-date"></td>
-                            <td><input type="text" name="notes3"></td>
-                        </tr>
-                        <tr data-task-id="task4" data-phase="Initial Setup" data-default-days="14" data-dependency="task1">
-                            <td>
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="task4" name="task4" class="task-checkbox">
-                                    <label for="task4" class="checkbox-label">Receive completed W-9/tax documentation</label>
-                                </div>
-                            </td>
-                            <td><input type="text" name="responsible4"></td>
-                            <td><input type="date" name="dueDate4" class="due-date"></td>
-                            <td>
-                                <select name="status4" class="task-status">
-                                    <option value="Not Started">Not Started</option>
-                                    <option value="In Progress">In Progress</option>
-                                    <option value="Completed">Completed</option>
-                                    <option value="Delayed">Delayed</option>
-                                </select>
-                            </td>
-                            <td><input type="date" name="completionDate4" class="completion-date"></td>
-                            <td><input type="text" name="notes4"></td>
-                        </tr>
-                        <tr data-task-id="task5" data-phase="Initial Setup" data-default-days="5" data-dependency="task1">
-                            <td>
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="task5" name="task5" class="task-checkbox">
-                                    <label for="task5" class="checkbox-label">Create author folder in Google Drive</label>
-                                </div>
-                            </td>
-                            <td><input type="text" name="responsible5"></td>
-                            <td><input type="date" name="dueDate5" class="due-date"></td>
-                            <td>
-                                <select name="status5" class="task-status">
-                                    <option value="Not Started">Not Started</option>
-                                    <option value="In Progress">In Progress</option>
-                                    <option value="Completed">Completed</option>
-                                    <option value="Delayed">Delayed</option>
-                                </select>
-                            </td>
-                            <td><input type="date" name="completionDate5" class="completion-date"></td>
-                            <td><input type="text" name="notes5"></td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <h2>Account Setup Phase</h2>
-                <div class="section-header">BookVault</div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Task</th>
-                            <th>Responsible</th>
-                            <th>Due Date</th>
-                            <th>Status</th>
-                            <th>Completion Date</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr data-task-id="bv1" data-phase="Account Setup" data-default-days="21" data-dependency="task3">
-                            <td>
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="bv1" name="bv1" class="task-checkbox">
-                                    <label for="bv1" class="checkbox-label">Create BookVault sub-account</label>
-                                </div>
-                            </td>
-                            <td><input type="text" name="bvResponsible1"></td>
-                            <td><input type="date" name="bvDueDate1" class="due-date"></td>
-                            <td>
-                                <select name="bvStatus1" class="task-status">
-                                    <option value="Not Started">Not Started</option>
-                                    <option value="In Progress">In Progress</option>
-                                    <option value="Completed">Completed</option>
-                                    <option value="Delayed">Delayed</option>
-                                </select>
-                            </td>
-                            <td><input type="date" name="bvCompletionDate1" class="completion-date"></td>
-                            <td><input type="text" name="bvNotes1"></td>
-                        </tr>
-                        <tr data-task-id="bv2" data-phase="Account Setup" data-default-days="2" data-dependency="bv1">
-                            <td>
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="bv2" name="bv2" class="task-checkbox">
-                                    <label for="bv2" class="checkbox-label">Send BookVault invitation to author</label>
-                                </div>
-                            </td>
-                            <td><input type="text" name="bvResponsible2"></td>
-                            <td><input type="date" name="bvDueDate2" class="due-date"></td>
-                            <td>
-                                <select name="bvStatus2" class="task-status">
-                                    <option value="Not Started">Not Started</option>
-                                    <option value="In Progress">In Progress</option>
-                                    <option value="Completed">Completed</option>
-                                    <option value="Delayed">Delayed</option>
-                                </select>
-                            </td>
-                            <td><input type="date" name="bvCompletionDate2" class="completion-date"></td>
-                            <td><input type="text" name="bvNotes2"></td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <div class="section-header">File Preparation Phase</div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Task</th>
-                            <th>Responsible</th>
-                            <th>Due Date</th>
-                            <th>Status</th>
-                            <th>Completion Date</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr data-task-id="fp1" data-phase="File Preparation" data-default-days="30" data-dependency="task3">
-                            <td>
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="fp1" name="fp1" class="task-checkbox">
-                                    <label for="fp1" class="checkbox-label">Receive manuscript from author</label>
-                                </div>
-                            </td>
-                            <td><input type="text" name="fpResponsible1"></td>
-                            <td><input type="date" name="fpDueDate1" class="due-date"></td>
-                            <td>
-                                <select name="fpStatus1" class="task-status">
-                                    <option value="Not Started">Not Started</option>
-                                    <option value="In Progress">In Progress</option>
-                                    <option value="Completed">Completed</option>
-                                    <option value="Delayed">Delayed</option>
-                                </select>
-                            </td>
-                            <td><input type="date" name="fpCompletionDate1" class="completion-date"></td>
-                            <td><input type="text" name="fpNotes1"></td>
-                        </tr>
-                        <tr data-task-id="fp2" data-phase="File Preparation" data-default-days="3" data-dependency="fp1">
-                            <td>
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="fp2" name="fp2" class="task-checkbox">
-                                    <label for="fp2" class="checkbox-label">Format interior for print</label>
-                                </div>
-                            </td>
-                            <td><input type="text" name="fpResponsible2"></td>
-                            <td><input type="date" name="fpDueDate2" class="due-date"></td>
-                            <td>
-                                <select name="fpStatus2" class="task-status">
-                                    <option value="Not Started">Not Started</option>
-                                    <option value="In Progress">In Progress</option>
-                                    <option value="Completed">Completed</option>
-                                    <option value="Delayed">Delayed</option>
-                                </select>
-                            </td>
-                            <td><input type="date" name="fpCompletionDate2" class="completion-date"></td>
-                            <td><input type="text" name="fpNotes2"></td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <div class="section-header">Publication Phase</div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Task</th>
-                            <th>Responsible</th>
-                            <th>Due Date</th>
-                            <th>Status</th>
-                            <th>Completion Date</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr data-task-id="pub1" data-phase="Publication" data-default-days="-7" data-dependency-end="pubDate">
-                            <td>
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="pub1" name="pub1" class="task-checkbox">
-                                    <label for="pub1" class="checkbox-label">Approve for distribution on all platforms</label>
-                                </div>
-                            </td>
-                            <td><input type="text" name="pubResponsible1"></td>
-                            <td><input type="date" name="pubDueDate1" class="due-date"></td>
-                            <td>
-                                <select name="pubStatus1" class="task-status">
-                                    <option value="Not Started">Not Started</option>
-                                    <option value="In Progress">In Progress</option>
-                                    <option value="Completed">Completed</option>
-                                    <option value="Delayed">Delayed</option>
-                                </select>
-                            </td>
-                            <td><input type="date" name="pubCompletionDate1" class="completion-date"></td>
-                            <td><input type="text" name="pubNotes1"></td>
-                        </tr>
-                        <tr data-task-id="pub2" data-phase="Publication" data-default-days="0" data-dependency-end="pubDate">
-                            <td>
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="pub2" name="pub2" class="task-checkbox">
-                                    <label for="pub2" class="checkbox-label">Send Book Launch Announcement Email</label>
-                                </div>
-                            </td>
-                            <td><input type="text" name="pubResponsible2"></td>
-                            <td><input type="date" name="pubDueDate2" class="due-date"></td>
-                            <td>
-                                <select name="pubStatus2" class="task-status">
-                                    <option value="Not Started">Not Started</option>
-                                    <option value="In Progress">In Progress</option>
-                                    <option value="Completed">Completed</option>
-                                    <option value="Delayed">Delayed</option>
-                                </select>
-                            </td>
-                            <td><input type="date" name="pubCompletionDate2" class="completion-date"></td>
-                            <td><input type="text" name="pubNotes2"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <div id="timelineView" class="timeline-view">
-                <div class="timeline-track"></div>
-                <!-- Timeline items will be dynamically generated here -->
-            </div>
-            
-            <div class="notes-comments">
-                <h2>Notes & Comments</h2>
-                <textarea class="notes" name="generalNotes"></textarea>
-            </div>
-            
-            <div class="signature-section">
-                <div class="signature-item">
-                    <label for="completedBy">Checklist Completed By:</label>
-                    <input type="text" id="completedBy" name="completedBy" class="signature-input">
-                </div>
-                <div class="signature-item">
-                    <label for="dateCompleted">Date Completed:</label>
-                    <input type="date" id="dateCompleted" name="dateCompleted" class="signature-input">
-                </div>
-            </div>
-            
-            <div class="action-buttons no-print">
-                <button type="button" id="saveButton">Save Progress</button>
-                <button type="button" id="printButton">Print Checklist</button>
-                <button type="submit" id="submitButton">Submit Form</button>
-            </div>
-            
-            <footer>
-                © Skinny Brown Dog Media, 2025 | For internal use only
-            </footer>
-        </div>
-    </form>
-    
-    <!-- Task Duration Modal -->
-    <div id="taskDurationModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Customize Task Schedule</h2>
-                <button type="button" class="close-modal">&times;</button>
-            </div>
-            <div id="modalBody">
-                <p>Adjust the duration and dependencies for tasks in your publishing timeline.</p>
-                
-                <div id="taskCustomizationFields">
-                    <!-- Task fields will be populated here -->
-                </div>
-                
-                <div class="duration-buttons">
-                    <button type="button" id="applyCustomDuration">Apply Changes</button>
-                    <button type="button" id="cancelCustomDuration">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Export/Import Modal -->
-    <div id="exportImportModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="exportImportTitle">Export Project</h2>
-                <button type="button" class="close-modal">&times;</button>
-            </div>
-            <div id="exportImportBody">
-                <p id="exportImportInstructions">Copy the text below to save your project data.</p>
-                
-                <textarea id="exportImportData" class="export-data"></textarea>
-                
-                <div class="duration-buttons">
-                    <button type="button" id="copyExportButton" style="display: none;">Copy to Clipboard</button>
-                    <button type="button" id="processImportButton" style="display: none;">Import Data</button>
-                    <button type="button" id="cancelExportImport">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- New Project Modal -->
-    <div id="newProjectModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Create New Project</h2>
-                <button type="button" class="close-modal">&times;</button>
-            </div>
-            <div>
-                <p>Enter the information for your new book project:</p>
-                
+            <div class="phase-content">
                 <div class="info-item">
-                    <label for="newBookTitle">Book Title:</label>
-                    <input type="text" id="newBookTitle" required>
+                    <label for="authorGmail">Author Gmail:</label>
+                    <input type="text" id="authorGmail" name="authorGmail">
                 </div>
                 <div class="info-item">
-                    <label for="newAuthorName">Author Name:</label>
-                    <input type="text" id="newAuthorName" required>
+                    <label for="authorGmailPass">Gmail Password (stored securely):</label>
+                    <input type="password" id="authorGmailPass" name="authorGmailPass">
                 </div>
                 <div class="info-item">
-                    <label for="newStartDate">Project Start Date:</label>
-                    <input type="date" id="newStartDate" required>
+                    <label for="stripeLogin">Stripe Login:</label>
+                    <input type="text" id="stripeLogin" name="stripeLogin">
                 </div>
                 <div class="info-item">
-                    <label for="newPubDate">Target Publication Date:</label>
-                    <input type="date" id="newPubDate" required>
+                    <label for="stripePass">Stripe Password (stored securely):</label>
+                    <input type="password" id="stripePass" name="stripePass">
                 </div>
                 
-                <div class="duration-buttons">
-                    <button type="button" id="createProjectButton">Create Project</button>
-                    <button type="button" id="cancelNewProject">Cancel</button>
+                <div class="isbn-section">
+                    <h3>ISBN Assignment</h3>
+                    <div class="isbn-grid">
+                        <div class="info-item">
+                            <label for="isbnEbook">eBook ISBN:</label>
+                            <input type="text" id="isbnEbook" name="isbnEbook">
+                        </div>
+                        <div class="info-item">
+                            <label for="isbnPaperback">Paperback ISBN:</label>
+                            <input type="text" id="isbnPaperback" name="isbnPaperback">
+                        </div>
+                        <div class="info-item">
+                            <label for="isbnCaseLaminate">Case Laminate ISBN:</label>
+                            <input type="text" id="isbnCaseLaminate" name="isbnCaseLaminate">
+                        </div>
+                        <div class="info-item">
+                            <label for="isbnDustJacket">Dust Jacket ISBN:</label>
+                            <input type="text" id="isbnDustJacket" name="isbnDustJacket">
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Tasks</h3>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <input type="checkbox" id="task1" name="task1">
+                        <label for="task1">Schedule discovery/lead follow-up call</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task2" name="task2">
+                        <label for="task2">Send welcome package with publishing agreement</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task3" name="task3">
+                        <label for="task3">Receive signed agreement</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task4" name="task4">
+                        <label for="task4">Receive FIRST PAYMENT (50%)</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task5" name="task5">
+                        <label for="task5">Create author folder in Google Drive</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task6" name="task6">
+                        <label for="task6">Create entry in Employee Task Tracker</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task7" name="task7">
+                        <label for="task7">Set up author Gmail account</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task8" name="task8">
+                        <label for="task8">Set up author Stripe account</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task9" name="task9">
+                        <label for="task9">Assign ISBNs to project</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="payment-milestone">
+            FIRST PAYMENT (50%) - Due upon signing publishing agreement
+        </div>
+        
+        <!-- Manuscript Development Phase -->
+        <div class="phase-container">
+            <div class="phase-header">
+                <h2>Manuscript Development Phase (3 Months)</h2>
+                <span class="status status-not-started" id="phase2Status">Not Started</span>
+            </div>
+            <div class="phase-content">
+                <h3>Tasks</h3>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <input type="checkbox" id="task10" name="task10">
+                        <label for="task10">Receive draft manuscript or author notes</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task11" name="task11">
+                        <label for="task11">Complete developmental editing (~6 weeks)</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task12" name="task12">
+                        <label for="task12">Author implements developmental editing feedback</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task13" name="task13">
+                        <label for="task13">Complete line/copy editing (~6 weeks)</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task14" name="task14">
+                        <label for="task14">Author reviews and approves edits</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task15" name="task15">
+                        <label for="task15"><strong>MILESTONE: Approve Final Draft Copy of Manuscript</strong></label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="transition-arrow">
+            <i>↓ TRANSITION: Once final draft is approved, begin Beta Reader phase ↓</i>
+        </div>
+        
+        <!-- Beta Reader Review Phase -->
+        <div class="phase-container">
+            <div class="phase-header">
+                <h2>Beta Reader Review Phase (30 Days)</h2>
+                <span class="status status-not-started" id="phase3Status">Not Started</span>
+            </div>
+            <div class="phase-content">
+                <h3>Tasks</h3>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <input type="checkbox" id="task16" name="task16">
+                        <label for="task16">Create preliminary eBook version for beta readers</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task17" name="task17">
+                        <label for="task17">Quality check preliminary eBook</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task18" name="task18">
+                        <label for="task18">Send eBook to selected beta readers</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task19" name="task19">
+                        <label for="task19">Provide Beta Reader Feedback Form to participants</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task20" name="task20">
+                        <label for="task20">Compile all beta reader feedback</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task21" name="task21">
+                        <label for="task21">Present organized feedback to author</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task22" name="task22">
+                        <label for="task22">Make final manuscript adjustments based on feedback</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="transition-arrow">
+            <i>↓ TRANSITION: After final manuscript adjustments, begin Production phase ↓</i>
+        </div>
+        
+        <!-- Production Phase -->
+        <div class="phase-container">
+            <div class="phase-header">
+                <h2>Production Phase (2 Months)</h2>
+                <span class="status status-not-started" id="phase4Status">Not Started</span>
+            </div>
+            <div class="phase-content">
+                <h3>Tasks</h3>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <input type="checkbox" id="task23" name="task23">
+                        <label for="task23">Begin interior formatting based on final manuscript (30 days)</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task24" name="task24">
+                        <label for="task24">Submit cover design request</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task25" name="task25">
+                        <label for="task25">Receive first round of cover designs (2 weeks)</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task26" name="task26">
+                        <label for="task26">Collect author feedback on cover designs</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task27" name="task27">
+                        <label for="task27">Complete interior formatting</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task28" name="task28">
+                        <label for="task28">Complete full cover design/layout</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task29" name="task29">
+                        <label for="task29">Send completed interior and cover files to client for review</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task30" name="task30">
+                        <label for="task30">Collect and implement feedback on production files</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task31" name="task31">
+                        <label for="task31">Receive SECOND PAYMENT (50%)</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task32" name="task32">
+                        <label for="task32"><strong>MILESTONE: Author Approval of All Production Files</strong></label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="payment-milestone">
+            SECOND PAYMENT (50%) - Due upon approval of final production files
+        </div>
+        
+        <div class="transition-arrow">
+            <i>↓ TRANSITION: After all production files are approved, begin Account Setup phase ↓</i>
+        </div>
+        
+        <!-- Account Setup Phase -->
+        <div class="phase-container">
+            <div class="phase-header">
+                <h2>Account Setup Phase (1-2 Weeks)</h2>
+                <span class="status status-not-started" id="phase5Status">Not Started</span>
+            </div>
+            <div class="phase-content">
+                <div class="platform-section">
+                    <h3>Platform Accounts</h3>
+                    <div class="platform-grid">
+                        <div class="platform-card">
+                            <h3>BookVault</h3>
+                            <div class="info-item">
+                                <label for="bookVaultLogin">Login:</label>
+                                <input type="text" id="bookVaultLogin" name="bookVaultLogin">
+                            </div>
+                            <div class="info-item">
+                                <label for="bookVaultPass">Password:</label>
+                                <input type="password" id="bookVaultPass" name="bookVaultPass">
+                            </div>
+                        </div>
+                        <div class="platform-card">
+                            <h3>IngramSpark</h3>
+                            <div class="info-item">
+                                <label for="ingramLogin">Login:</label>
+                                <input type="text" id="ingramLogin" name="ingramLogin">
+                            </div>
+                            <div class="info-item">
+                                <label for="ingramPass">Password:</label>
+                                <input type="password" id="ingramPass" name="ingramPass">
+                            </div>
+                        </div>
+                        <div class="platform-card">
+                            <h3>KDP</h3>
+                            <div class="info-item">
+                                <label for="kdpLogin">Login:</label>
+                                <input type="text" id="kdpLogin" name="kdpLogin">
+                            </div>
+                            <div class="info-item">
+                                <label for="kdpPass">Password:</label>
+                                <input type="password" id="kdpPass" name="kdpPass">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="isbn-section">
+                    <h3>ISBN Platform Usage</h3>
+                    <p>Record which ISBN is used on each platform for each format:</p>
+                    <table style="width: 100%; margin-top: 15px; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background-color: var(--primary); color: white;">
+                                <th style="padding: 10px; text-align: left; border: 1px solid var(--gray-300);">Format</th>
+                                <th style="padding: 10px; text-align: left; border: 1px solid var(--gray-300);">ISBN</th>
+                                <th style="padding: 10px; text-align: left; border: 1px solid var(--gray-300);">BookVault</th>
+                                <th style="padding: 10px; text-align: left; border: 1px solid var(--gray-300);">IngramSpark</th>
+                                <th style="padding: 10px; text-align: left; border: 1px solid var(--gray-300);">KDP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid var(--gray-300);">eBook</td>
+                                <td style="padding: 10px; border: 1px solid var(--gray-300);"><span id="ebookIsbnDisplay"></span></td>
+                                <td style="padding: 10px; border: 1px solid var(--gray-300);">
+                                    <input type="checkbox" id="ebookBookVault" name="ebookBookVault" checked disabled>
+                                </td>
+                                <td style="padding: 10px; border: 1px solid var(--gray-300);">
+                                    <input type="checkbox" id="ebookIngram" name="ebookIngram" disabled>
+                                </td>
+                                <td style="padding: 10px; border: 1px solid var(--gray-300);">
+                                    <input type="checkbox" id="ebookKDP" name="ebookKDP" checked disabled>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid var(--gray-300);">Paperback</td>
+                                <td style="padding: 10px; border: 1px solid var(--gray-300);"><span id="paperbackIsbnDisplay"></span></td>
+                                <td style="padding: 10px; border: 1px solid var(--gray-300);">
+                                    <input type="checkbox" id="paperbackBookVault" name="paperbackBookVault" checked disabled>
+                                </td>
+                                <td style="padding: 10px; border: 1px solid var(--gray-300);">
+                                    <input type="checkbox" id="paperbackIngram" name="paperbackIngram" checked disabled>
+                                </td>
+                                <td style="padding: 10px; border: 1px solid var(--gray-300);">
+                                    <input type="checkbox" id="paperbackKDP" name="paperbackKDP" checked disabled>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid var(--gray-300);">Case Laminate</td>
+                                <td style="padding: 10px; border: 1px solid var(--gray-300);"><span id="laminateIsbnDisplay"></span></td>
+                                <td style="padding: 10px; border: 1px solid var(--gray-300);">
+                                    <input type="checkbox" id="laminateBookVault" name="laminateBookVault" checked disabled>
+                                </td>
+                                <td style="padding: 10px; border: 1px solid var(--gray-300);">
+                                    <input type="checkbox" id="laminateIngram" name="laminateIngram" checked disabled>
+                                </td>
+                                <td style="padding: 10px; border: 1px solid var(--gray-300);">
+                                    <input type="checkbox" id="laminateKDP" name="laminateKDP" disabled>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid var(--gray-300);">Dust Jacket</td>
+                                <td style="padding: 10px; border: 1px solid var(--gray-300);"><span id="dustjacketIsbnDisplay"></span></td>
+                                <td style="padding: 10px; border: 1px solid var(--gray-300);">
+                                    <input type="checkbox" id="dustjacketBookVault" name="dustjacketBookVault" checked disabled>
+                                </td>
+                                <td style="padding: 10px; border: 1px solid var(--gray-300);">
+                                    <input type="checkbox" id="dustjacketIngram" name="dustjacketIngram" checked disabled>
+                                </td>
+                                <td style="padding: 10px; border: 1px solid var(--gray-300);">
+                                    <input type="checkbox" id="dustjacketKDP" name="dustjacketKDP" disabled>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h3>Tasks</h3>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <input type="checkbox" id="task33" name="task33">
+                        <label for="task33">Create BookVault account</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task34" name="task34">
+                        <label for="task34">Create IngramSpark account</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task35" name="task35">
+                        <label for="task35">Create KDP account</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task36" name="task36">
+                        <label for="task36">Verify ISBN assignments across all platforms</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task37" name="task37">
+                        <label for="task37">Configure correct distribution settings on each platform</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task38" name="task38">
+                        <label for="task38">Set up proper metadata and pricing structure</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task39" name="task39">
+                        <label for="task39">Verify no conflicts between distribution channels</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- File Upload & QA Phase -->
+        <div class="phase-container">
+            <div class="phase-header">
+                <h2>File Upload & Quality Control (1-2 Weeks)</h2>
+                <span class="status status-not-started" id="phase6Status">Not Started</span>
+            </div>
+            <div class="phase-content">
+                <h3>Tasks</h3>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <input type="checkbox" id="task40" name="task40">
+                        <label for="task40">Upload interior PDF and cover files to BookVault</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task41" name="task41">
+                        <label for="task41">Upload interior PDF and cover files to IngramSpark</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task42" name="task42">
+                        <label for="task42">Upload interior PDF, cover files, and EPUB to KDP</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task43" name="task43">
+                        <label for="task43">Complete all metadata fields on all platforms</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task44" name="task44">
+                        <label for="task44">Set up pricing according to agreed strategy</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task45" name="task45">
+                        <label for="task45">Order proof copies from all platforms</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task46" name="task46">
+                        <label for="task46">Conduct internal review for quality issues</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task47" name="task47">
+                        <label for="task47">Send proof copies to author for review</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task48" name="task48">
+                        <label for="task48">Collect completed Proof Approval Form</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Publication Phase -->
+        <div class="phase-container">
+            <div class="phase-header">
+                <h2>Publication Phase - Platform Release Schedule</h2>
+                <span class="status status-not-started" id="phase7Status">Not Started</span>
+            </div>
+            <div class="phase-content">
+                <div class="info-item">
+                    <label for="launchDate">Official Launch Date:</label>
+                    <input type="date" id="launchDate" name="launchDate">
+                </div>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-date">Day 1</span>
+                        <h3>BookVault Release</h3>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <input type="checkbox" id="task49" name="task49">
+                                <label for="task49">Activate BookVault listing</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="task50" name="task50">
+                                <label for="task50">Initialize BookVault marketing tools</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="task51" name="task51">
+                                <label for="task51">Verify BookVault payment processing</label>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <span class="timeline-date">Day 3-5</span>
+                        <h3>KDP Release</h3>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <input type="checkbox" id="task52" name="task52">
+                                <label for="task52">Submit for Amazon Kindle eBook availability</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="task53" name="task53">
+                                <label for="task53">Submit for Amazon paperback publication</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="task54" name="task54">
+                                <label for="task54">Verify KDP listings are live (may take 72 hours)</label>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <span class="timeline-date">Day 7-10</span>
+                        <h3>IngramSpark Release</h3>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <input type="checkbox" id="task55" name="task55">
+                                <label for="task55">Activate global distribution channels</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="task56" name="task56">
+                                <label for="task56">Enable bookstore and library availability</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="task57" name="task57">
+                                <label for="task57">Complete distribution settings</label>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <span class="timeline-date">Day 10-14</span>
+                        <h3>Launch Announcement</h3>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <input type="checkbox" id="task58" name="task58">
+                                <label for="task58">Send Book Launch Announcement Email</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="task59" name="task59">
+                                <label for="task59">Provide author with all retail links</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="task60" name="task60">
+                                <label for="task60">Add book to Skinny Brown Dog Media website</label>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
+        
+        <!-- Post-Publication Support -->
+        <div class="phase-container">
+            <div class="phase-header">
+                <h2>Post-Publication Support</h2>
+                <span class="status status-not-started" id="phase8Status">Not Started</span>
+            </div>
+            <div class="phase-content">
+                <h3>30-Day Follow-up</h3>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <input type="checkbox" id="task61" name="task61">
+                        <label for="task61">Send 30-Day Check-In Email</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task62" name="task62">
+                        <label for="task62">Review initial sales performance</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task63" name="task63">
+                        <label for="task63">Address any distribution issues</label>
+                    </li>
+                </ul>
+                
+                <h3>90-Day Support Meeting</h3>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <input type="checkbox" id="task64" name="task64">
+                        <label for="task64">Schedule 90-day review</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task65" name="task65">
+                        <label for="task65">Prepare comprehensive review of book performance</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task66" name="task66">
+                        <label for="task66">Develop ongoing marketing strategies</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task67" name="task67">
+                        <label for="task67">Plan for future promotions</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button type="button" class="secondary" id="printButton">Print Workflow</button>
+            <button type="button" id="saveButton">Save Progress</button>
+            <button type="button" class="success" id="exportButton">Export Data</button>
+        </div>
+        
+        <footer>
+            © Skinny Brown Dog Media, 2025 | For internal use only
+        </footer>
     </div>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Get form elements
-            const publishingForm = document.getElementById('publishingForm');
-            const startDateInput = document.getElementById('startDate');
-            const pubDateInput = document.getElementById('pubDate');
-            const bookTitleInput = document.getElementById('bookTitle');
-            const authorNameInput = document.getElementById('authorName');
-            const projectManagerInput = document.getElementById('projectManager');
-            const autoscheduleButton = document.getElementById('autoscheduleButton');
-            const saveButton = document.getElementById('saveButton');
-            const printButton = document.getElementById('printButton');
-            const tableViewButton = document.getElementById('tableViewButton');
-            const timelineViewButton = document.getElementById('timelineViewButton');
-            const tableView = document.getElementById('tableView');
-            const timelineView = document.getElementById('timelineView');
-            
-            // Project management elements
-            const projectSelect = document.getElementById('projectSelect');
-            const loadProjectButton = document.getElementById('loadProjectButton');
-            const newProjectButton = document.getElementById('newProjectButton');
-            const saveProjectButton = document.getElementById('saveProjectButton');
-            const exportProjectButton = document.getElementById('exportProjectButton');
-            const importProjectButton = document.getElementById('importProjectButton');
-            const deleteProjectButton = document.getElementById('deleteProjectButton');
-            
-            // Modal elements
-            const taskDurationModal = document.getElementById('taskDurationModal');
-            const exportImportModal = document.getElementById('exportImportModal');
-            const newProjectModal = document.getElementById('newProjectModal');
-            const closeModalButtons = document.querySelectorAll('.close-modal');
-            const applyCustomDurationButton = document.getElementById('applyCustomDuration');
-            const cancelCustomDurationButton = document.getElementById('cancelCustomDuration');
-            const exportImportTitle = document.getElementById('exportImportTitle');
-            const exportImportInstructions = document.getElementById('exportImportInstructions');
-            const exportImportData = document.getElementById('exportImportData');
-            const copyExportButton = document.getElementById('copyExportButton');
-            const processImportButton = document.getElementById('processImportButton');
-            const cancelExportImportButton = document.getElementById('cancelExportImport');
-            
-            // New project modal elements
-            const newBookTitleInput = document.getElementById('newBookTitle');
-            const newAuthorNameInput = document.getElementById('newAuthorName');
-            const newStartDateInput = document.getElementById('newStartDate');
-            const newPubDateInput = document.getElementById('newPubDate');
-            const createProjectButton = document.getElementById('createProjectButton');
-            const cancelNewProjectButton = document.getElementById('cancelNewProject');
-            
-            // Progress indicators
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
-            const statusDot = document.getElementById('statusDot');
-            const statusText = document.getElementById('statusText');
-            
-            // Task tracking
-            const taskElements = document.querySelectorAll('[data-task-id]');
-            let taskData = {};
-            let projects = {};
-            let currentProjectId = null;
-            
-            // Load projects from localStorage
-            const loadProjects = function() {
-                const savedProjects = localStorage.getItem('publishingProjects');
-                if (savedProjects) {
-                    projects = JSON.parse(savedProjects);
-                }
-                updateProjectSelector();
-            };
-            
-            // Update project selector dropdown
-            const updateProjectSelector = function() {
-                projectSelect.innerHTML = '';
-                
-                // Create default option
-                const defaultOption = document.createElement('option');
-                defaultOption.value = '';
-                defaultOption.textContent = '-- Select a project --';
-                projectSelect.appendChild(defaultOption);
-                
-                // Add projects to selector
-                for (const projectId in projects) {
-                    const project = projects[projectId];
-                    const option = document.createElement('option');
-                    option.value = projectId;
-                    option.textContent = `${project.bookTitle} - ${project.authorName}`;
-                    projectSelect.appendChild(option);
-                }
-                
-                // Select current project if exists
-                if (currentProjectId) {
-                    projectSelect.value = currentProjectId;
-                }
-            };
-            
-            // Generate unique ID for projects
-            const generateProjectId = function() {
-                return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-            };
-            
-            // Initialize task data
-            const initializeTaskData = function() {
-                taskData = {};
-                taskElements.forEach(task => {
-                    const taskId = task.getAttribute('data-task-id');
-                    taskData[taskId] = {
-                        id: taskId,
-                        phase: task.getAttribute('data-phase'),
-                        defaultDays: parseInt(task.getAttribute('data-default-days'), 10),
-                        customDays: parseInt(task.getAttribute('data-default-days'), 10), // Start with default
-                        dependency: task.getAttribute('data-dependency') || null,
-                        dependencyEnd: task.getAttribute('data-dependency-end') || null,
-                        element: task,
-                        dueDateInput: task.querySelector('.due-date'),
-                        statusSelect: task.querySelector('.task-status'),
-                        completionDateInput: task.querySelector('.completion-date'),
-                        checkbox: task.querySelector('.task-checkbox')
-                    };
-                });
-            };
-            
-            // Initialize tasks
-            initializeTaskData();
-            
-            // Load saved projects
-            loadProjects();
-            
-            // Project selector change event
-            loadProjectButton.addEventListener('click', function() {
-                const selectedProjectId = projectSelect.value;
-                if (selectedProjectId && projects[selectedProjectId]) {
-                    loadProject(selectedProjectId);
-                } else {
-                    alert('Please select a project to load');
-                }
+            // Link ISBN fields to display in the ISBN Platform table
+            document.getElementById('isbnEbook').addEventListener('input', function() {
+                document.getElementById('ebookIsbnDisplay').textContent = this.value;
             });
             
-            // New project button event
-            newProjectButton.addEventListener('click', function() {
-                showNewProjectModal();
+            document.getElementById('isbnPaperback').addEventListener('input', function() {
+                document.getElementById('paperbackIsbnDisplay').textContent = this.value;
             });
             
-            // Save project button event
-            saveProjectButton.addEventListener('click', function() {
-                if (!bookTitleInput.value || !authorNameInput.value) {
-                    alert('Please enter at least the book title and author name before saving');
-                    return;
-                }
-                
-                saveCurrentProject();
+            document.getElementById('isbnCaseLaminate').addEventListener('input', function() {
+                document.getElementById('laminateIsbnDisplay').textContent = this.value;
             });
             
-            // Export project button event
-            exportProjectButton.addEventListener('click', function() {
-                if (!currentProjectId) {
-                    alert('Please load or create a project first');
-                    return;
-                }
-                
-                showExportModal();
+            document.getElementById('isbnDustJacket').addEventListener('input', function() {
+                document.getElementById('dustjacketIsbnDisplay').textContent = this.value;
             });
             
-            // Import project button event
-            importProjectButton.addEventListener('click', function() {
-                showImportModal();
-            });
-            
-            // Delete project button event
-            deleteProjectButton.addEventListener('click', function() {
-                if (!currentProjectId) {
-                    alert('Please select a project to delete');
-                    return;
-                }
-                
-                if (confirm(`Are you sure you want to delete the project "${projects[currentProjectId].bookTitle}"?`)) {
-                    deleteProject(currentProjectId);
-                }
-            });
-            
-            // Create project button event
-            createProjectButton.addEventListener('click', function() {
-                if (!newBookTitleInput.value || !newAuthorNameInput.value) {
-                    alert('Please enter at least the book title and author name');
-                    return;
-                }
-                
-                createNewProject();
-            });
-            
-            // Cancel new project button event
-            cancelNewProjectButton.addEventListener('click', function() {
-                closeModal(newProjectModal);
-            });
-            
-            // Copy export data button event
-            copyExportButton.addEventListener('click', function() {
-                exportImportData.select();
-                document.execCommand('copy');
-                alert('Project data copied to clipboard');
-            });
-            
-            // Process import button event
-            processImportButton.addEventListener('click', function() {
-                processImportData();
-            });
-            
-            // Cancel export/import button event
-            cancelExportImportButton.addEventListener('click', function() {
-                closeModal(exportImportModal);
-            });
-            
-            // Auto-schedule button event
-            autoscheduleButton.addEventListener('click', function() {
-                if (!validateDates()) {
-                    alert('Please enter valid start and publication dates first.');
-                    return;
-                }
-                
-                showTaskDurationModal();
-            });
-            
-            // View toggle buttons
-            tableViewButton.addEventListener('click', function() {
-                tableView.style.display = 'block';
-                timelineView.style.display = 'none';
-                tableViewButton.classList.add('active');
-                timelineViewButton.classList.remove('active');
-            });
-            
-            timelineViewButton.addEventListener('click', function() {
-                tableView.style.display = 'none';
-                timelineView.style.display = 'block';
-                timelineViewButton.classList.add('active');
-                tableViewButton.classList.remove('active');
-                renderTimeline();
-            });
-            
-            // Modal close buttons
-            closeModalButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const modal = button.closest('.modal');
-                    closeModal(modal);
+            // Task checkbox event listeners
+            const taskCheckboxes = document.querySelectorAll('.task-item input[type="checkbox"]');
+            taskCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const taskItem = this.closest('.task-item');
+                    if (this.checked) {
+                        taskItem.classList.add('completed');
+                    } else {
+                        taskItem.classList.remove('completed');
+                    }
+                    updatePhaseStatus();
+                    updateProjectStatus();
                 });
             });
             
-            // Apply custom durations button
-            applyCustomDurationButton.addEventListener('click', applyCustomDurations);
-            
-            // Cancel custom duration button
-            cancelCustomDurationButton.addEventListener('click', function() {
-                closeModal(taskDurationModal);
-            });
-            
-            // Print button functionality
-            printButton.addEventListener('click', function() {
+            // Print button
+            document.getElementById('printButton').addEventListener('click', function() {
                 window.print();
             });
             
-            // Save progress functionality
-            saveButton.addEventListener('click', function() {
-                if (currentProjectId) {
-                    saveCurrentProject();
-                    alert('Progress saved successfully!');
+            // Save progress button
+            document.getElementById('saveButton').addEventListener('click', function() {
+                saveFormData();
+                alert('Progress saved successfully!');
+            });
+            
+            // Export data button
+            document.getElementById('exportButton').addEventListener('click', function() {
+                exportFormData();
+            });
+            
+            // Load saved data if exists
+            loadFormData();
+            
+            // Update phase status based on tasks
+            function updatePhaseStatus() {
+                // Phase 1: Pre-Manuscript
+                updateSinglePhaseStatus('phase1Status', 'task1', 'task9');
+                
+                // Phase 2: Manuscript Development
+                updateSinglePhaseStatus('phase2Status', 'task10', 'task15');
+                
+                // Phase 3: Beta Reader Review
+                updateSinglePhaseStatus('phase3Status', 'task16', 'task22');
+                
+                // Phase 4: Production
+                updateSinglePhaseStatus('phase4Status', 'task23', 'task32');
+                
+                // Phase 5: Account Setup
+                updateSinglePhaseStatus('phase5Status', 'task33', 'task39');
+                
+                // Phase 6: File Upload & QA
+                updateSinglePhaseStatus('phase6Status', 'task40', 'task48');
+                
+                // Phase 7: Publication
+                updateSinglePhaseStatus('phase7Status', 'task49', 'task60');
+                
+                // Phase 8: Post-Publication Support
+                updateSinglePhaseStatus('phase8Status', 'task61', 'task67');
+            }
+            
+            function updateSinglePhaseStatus(phaseStatusId, firstTaskId, lastTaskId) {
+                const phaseStatus = document.getElementById(phaseStatusId);
+                const firstTaskIndex = parseInt(firstTaskId.replace('task', ''));
+                const lastTaskIndex = parseInt(lastTaskId.replace('task', ''));
+                
+                let totalTasks = 0;
+                let completedTasks = 0;
+                
+                for (let i = firstTaskIndex; i <= lastTaskIndex; i++) {
+                    const taskCheckbox = document.getElementById('task' + i);
+                    if (taskCheckbox) {
+                        totalTasks++;
+                        if (taskCheckbox.checked) {
+                            completedTasks++;
+                        }
+                    }
+                }
+                
+                if (completedTasks === 0) {
+                    phaseStatus.textContent = 'Not Started';
+                    phaseStatus.className = 'status status-not-started';
+                } else if (completedTasks === totalTasks) {
+                    phaseStatus.textContent = 'Completed';
+                    phaseStatus.className = 'status status-completed';
                 } else {
-                    showNewProjectModal();
+                    const percentage = Math.round((completedTasks / totalTasks) * 100);
+                    phaseStatus.textContent = `In Progress (${percentage}%)`;
+                    phaseStatus.className = 'status status-in-progress';
                 }
-            });
+            }
             
-            // Handle status changes
-            document.addEventListener('change', function(e) {
-                if (e.target.classList.contains('task-status')) {
-                    const row = e.target.closest('tr');
-                    const taskId = row.getAttribute('data-task-id');
-                    const status = e.target.value;
-                    const completionDateInput = row.querySelector('.completion-date');
-                    const checkbox = row.querySelector('.task-checkbox');
-                    
-                    if (status === 'Completed') {
-                        // Set today's date if completion date is empty
-                        if (!completionDateInput.value) {
-                            completionDateInput.value = new Date().toISOString().split('T')[0];
-                        }
-                        checkbox.checked = true;
-                    } else if (status === 'Not Started' || status === 'Delayed') {
-                        completionDateInput.value = '';
-                        checkbox.checked = false;
-                    }
-                } else if (e.target.classList.contains('task-checkbox')) {
-                    const row = e.target.closest('tr');
-                    const statusSelect = row.querySelector('.task-status');
-                    const completionDateInput = row.querySelector('.completion-date');
-                    
-                    if (e.target.checked) {
-                        statusSelect.value = 'Completed';
-                        // Set today's date if completion date is empty
-                        if (!completionDateInput.value) {
-                            completionDateInput.value = new Date().toISOString().split('T')[0];
-                        }
-                    } else {
-                        statusSelect.value = 'In Progress';
-                        completionDateInput.value = '';
-                    }
-                }
+            function updateProjectStatus() {
+                const currentStatus = document.getElementById('currentStatus');
+                const allCheckboxes = document.querySelectorAll('.task-item input[type="checkbox"]');
+                const totalTasks = allCheckboxes.length;
+                let completedTasks = 0;
                 
-                updateProgressIndicators();
-            });
-            
-            // Form submission
-            publishingForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Validate required fields
-                const required = publishingForm.querySelectorAll('[required]');
-                let valid = true;
-                
-                required.forEach(function(field) {
-                    if (!field.value) {
-                        field.style.borderColor = 'red';
-                        valid = false;
-                    } else {
-                        field.style.borderColor = '';
+                allCheckboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        completedTasks++;
                     }
                 });
                 
-                if (!valid) {
-                    alert('Please fill out all required fields marked in red.');
-                    return;
-                }
+                const percentage = Math.round((completedTasks / totalTasks) * 100);
                 
-                // If form is valid, you would typically submit to a server
-                alert('Form submitted successfully!');
-                
-                // After submission, keep the project data but mark as submitted
-                if (currentProjectId) {
-                    projects[currentProjectId].submitted = true;
-                    projects[currentProjectId].submitDate = new Date().toISOString().split('T')[0];
-                    saveProjects();
+                if (completedTasks === 0) {
+                    currentStatus.value = 'Not Started';
+                } else if (completedTasks === totalTasks) {
+                    currentStatus.value = 'Completed';
+                } else {
+                    currentStatus.value = `In Progress (${percentage}% complete)`;
                 }
-            });
+            }
             
-            // Functions for project management
-            function loadProject(projectId) {
-                if (!projects[projectId]) {
-                    alert('Project not found');
-                    return;
-                }
+            function saveFormData() {
+                const formData = {};
                 
-                const project = projects[projectId];
+                // Save text inputs
+                document.querySelectorAll('input[type="text"], input[type="date"], textarea, input[type="password"]').forEach(input => {
+                    formData[input.id] = input.value;
+                });
                 
-                // Set form fields
-                bookTitleInput.value = project.bookTitle || '';
-                authorNameInput.value = project.authorName || '';
-                startDateInput.value = project.startDate || '';
-                pubDateInput.value = project.pubDate || '';
-                projectManagerInput.value = project.projectManager || '';
+                // Save checkboxes
+                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    formData[checkbox.id] = checkbox.checked;
+                });
                 
-                // Set task data
-                if (project.taskData) {
-                    for (const taskId in taskData) {
-                        if (project.taskData[taskId]) {
-                            taskData[taskId].customDays = project.taskData[taskId].customDays;
-                        }
-                    }
-                }
+                // Save to localStorage
+                localStorage.setItem('publishingWorkflowData', JSON.stringify(formData));
+            }
+            
+            function loadFormData() {
+                const savedData = localStorage.getItem('publishingWorkflowData');
                 
-                // Set form data
-                if (project.formData) {
-                    const formData = project.formData;
+                if (savedData) {
+                    const formData = JSON.parse(savedData);
                     
-                    for (const key in formData) {
-                        const field = publishingForm.querySelector(`[name="${key}"]`);
-                        
-                        if (field) {
-                            if (field.type === 'checkbox') {
-                                field.checked = formData[key] === 'on';
+                    // Load text inputs
+                    document.querySelectorAll('input[type="text"], input[type="date"], textarea, input[type="password"]').forEach(input => {
+                        if (formData[input.id]) {
+                            input.value = formData[input.id];
+                        }
+                    });
+                    
+                    // Load checkboxes
+                    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                        if (formData[checkbox.id] !== undefined) {
+                            checkbox.checked = formData[checkbox.id];
+                            
+                            // Update task item style
+                            const taskItem = checkbox.closest('.task-item');
+                            if (checkbox.checked) {
+                                taskItem.classList.add('completed');
                             } else {
-                                field.value = formData[key];
+                                taskItem.classList.remove('completed');
                             }
                         }
+                    });
+                    
+                    // Update ISBN displays
+                    if (formData['isbnEbook']) {
+                        document.getElementById('ebookIsbnDisplay').textContent = formData['isbnEbook'];
                     }
-                }
-                
-                // Set current project ID
-                currentProjectId = projectId;
-                
-                // Update project selector
-                projectSelect.value = projectId;
-                
-                // Update progress indicators
-                updateProgressIndicators();
-                
-                // If we have valid dates, try to schedule tasks
-                if (validateDates()) {
-                    scheduleTasks();
-                }
-                
-                // Update timeline view if it's visible
-                if (timelineView.style.display === 'block') {
-                    renderTimeline();
+                    if (formData['isbnPaperback']) {
+                        document.getElementById('paperbackIsbnDisplay').textContent = formData['isbnPaperback'];
+                    }
+                    if (formData['isbnCaseLaminate']) {
+                        document.getElementById('laminateIsbnDisplay').textContent = formData['isbnCaseLaminate'];
+                    }
+                    if (formData['isbnDustJacket']) {
+                        document.getElementById('dustjacketIsbnDisplay').textContent = formData['isbnDustJacket'];
+                    }
+                    
+                    updatePhaseStatus();
+                    updateProjectStatus();
                 }
             }
             
-            function saveCurrentProject() {
-                // Get project title and author
-                const bookTitle = bookTitleInput.value;
-                const authorName = authorNameInput.value;
-                
-                if (!bookTitle || !authorName) {
-                    alert('Please enter at least the book title and author name');
-                    return;
-                }
-                
-                // Create or update project
-                if (!currentProjectId) {
-                    currentProjectId = generateProjectId();
-                }
-                
-                // Get form data
+            function exportFormData() {
                 const formData = {};
-                new FormData(publishingForm).forEach((value, key) => {
-                    formData[key] = value;
+                
+                // Collect text inputs
+                document.querySelectorAll('input[type="text"], input[type="date"], textarea').forEach(input => {
+                    formData[input.id] = input.value;
                 });
                 
-                // Create project data object
-                const projectData = {
-                    id: currentProjectId,
-                    bookTitle: bookTitle,
-                    authorName: authorName,
-                    startDate: startDateInput.value,
-                    pubDate: pubDateInput.value,
-                    projectManager: projectManagerInput.value,
-                    lastUpdated: new Date().toISOString(),
-                    taskData: {},
-                    formData: formData
-                };
+                // Collect checkboxes
+                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    formData[checkbox.id] = checkbox.checked;
+                });
                 
-                // Add task custom durations
-                for (const taskId in taskData) {
-                    projectData.taskData[taskId] = {
-                        customDays: taskData[taskId].customDays
-                    };
-                }
-                
-                // Save to projects object
-                projects[currentProjectId] = projectData;
-                
-                // Save projects to localStorage
-                saveProjects();
-                
-                // Update project selector
-                updateProjectSelector();
-                
-                return currentProjectId;
+                // Create and download export file
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(formData, null, 2));
+                const downloadAnchorNode = document.createElement('a');
+                downloadAnchorNode.setAttribute("href", dataStr);
+                downloadAnchorNode.setAttribute("download", `${formData.bookTitle || 'publishing-workflow'}-export.json`);
+                document.body.appendChild(downloadAnchorNode);
+                downloadAnchorNode.click();
+                downloadAnchorNode.remove();
             }
             
-            function deleteProject(projectId) {
-                if (projects[projectId]) {
-                    delete projects[projectId];
-                    saveProjects();
-                    updateProjectSelector();
-                    
-                    if (currentProjectId === projectId) {
-                        clearForm();
-                        currentProjectId = null;
-                    }
-                }
-            }
-            
-            function createNewProject() {
-                // Reset form
-                clearForm();
-                
-                // Set basic project info
-                bookTitleInput.value = newBookTitleInput.value;
-                authorNameInput.value = newAuthorNameInput.value;
-                startDateInput.value = newStartDateInput.value;
-                pubDateInput.value = newPubDateInput.value;
-                
-                // Save new project
-                currentProjectId = saveCurrentProject();
-                
-                // Auto-schedule if dates are valid
-                if (validateDates()) {
-                    scheduleTasks();
-                }
-                
-                // Update progress indicators
-                updateProgressIndicators();
-                
-                // Close modal
-                closeModal(newProjectModal);
-                
-                // Clear new project form
-                newBookTitleInput.value = '';
-                newAuthorNameInput.value = '';
-                newStartDateInput.value = '';
-                newPubDateInput.value = '';
-            }
-            
-            function clearForm() {
-                publishingForm.reset();
-                
-                // Reset task status
-                for (const taskId in taskData) {
-                    if (taskData[taskId].statusSelect) {
-                        taskData[taskId].statusSelect.value = 'Not Started';
-                    }
-                    if (taskData[taskId].completionDateInput) {
-                        taskData[taskId].completionDateInput.value = '';
-                    }
-                    if (taskData[taskId].checkbox) {
-                        taskData[taskId].checkbox.checked = false;
-                    }
-                }
-                
-                // Reset progress indicators
-                updateProgressIndicators();
-            }
-            
-            function saveProjects() {
-                localStorage.setItem('publishingProjects', JSON.stringify(projects));
-            }
-            
-            function showExportModal() {
-                exportImportTitle.textContent = 'Export Project';
-                exportImportInstructions.textContent = 'Copy the text below to save your project data.';
-                exportImportData.value = JSON.stringify(projects[currentProjectId]);
-                copyExportButton.style.display = 'block';
-                processImportButton.style.display = 'none';
-                
-                openModal(exportImportModal);
-            }
-            
-            function showImportModal() {
-                exportImportTitle.textContent = 'Import Project';
-                exportImportInstructions.textContent = 'Paste your project data below and click "Import Data"';
-                exportImportData.value = '';
-                copyExportButton.style.display = 'none';
-                processImportButton.style.display = 'block';
-                
-                openModal(exportImportModal);
-            }
-            
-            function processImportData() {
-                try {
-                    const importData = JSON.parse(exportImportData.value);
-                    
-                    // Validate import data
-                    if (!importData.bookTitle || !importData.authorName || !importData.id) {
-                        throw new Error('Invalid project data');
-                    }
-                    
-                    // Check if project already exists
-                    if (projects[importData.id] && !confirm('A project with this ID already exists. Overwrite?')) {
-                        return;
-                    }
-                    
-                    // Import project
-                    projects[importData.id] = importData;
-                    saveProjects();
-                    updateProjectSelector();
-                    
-                    // Load imported project
-                    loadProject(importData.id);
-                    
-                    // Close modal
-                    closeModal(exportImportModal);
-                    
-                    alert('Project imported successfully!');
-                } catch (error) {
-                    alert('Invalid project data. Please check your input and try again.');
-                }
-            }
-            
-            function showNewProjectModal() {
-                // Set today's date as default start date
-                const today = new Date().toISOString().split('T')[0];
-                newStartDateInput.value = today;
-                
-                // Set default publication date (6 months from today)
-                const sixMonthsLater = new Date();
-                sixMonthsLater.setMonth(sixMonthsLater.getMonth() + 6);
-                newPubDateInput.value = sixMonthsLater.toISOString().split('T')[0];
-                
-                openModal(newProjectModal);
-            }
-            
-            function showTaskDurationModal() {
-                // Populate the modal with task data
-                const customizationFields = document.getElementById('taskCustomizationFields');
-                customizationFields.innerHTML = '';
-                
-                // Group tasks by phase
-                const phases = {};
-                for (const taskId in taskData) {
-                    const task = taskData[taskId];
-                    const phase = task.phase;
-                    
-                    if (!phases[phase]) {
-                        phases[phase] = [];
-                    }
-                    phases[phase].push(task);
-                }
-                
-                // Create section for each phase
-                for (const phase in phases) {
-                    const phaseHeader = document.createElement('h3');
-                    phaseHeader.textContent = phase + ' Phase';
-                    customizationFields.appendChild(phaseHeader);
-                    
-                    phases[phase].forEach(task => {
-                        const taskLabel = task.element.querySelector('.checkbox-label').textContent;
-                        
-                        const taskField = document.createElement('div');
-                        taskField.classList.add('task-duration');
-                        
-                        const taskName = document.createElement('div');
-                        taskName.textContent = taskLabel;
-                        
-                        const taskInputs = document.createElement('div');
-                        taskInputs.classList.add('task-duration-inputs');
-                        
-                        let dependencyText = 'from start';
-                        if (task.dependency) {
-                            dependencyText = 'after ' + taskData[task.dependency].element.querySelector('.checkbox-label').textContent;
-                        } else if (task.dependencyEnd) {
-                            dependencyText = 'before publication';
-                        }
-                        
-                        taskInputs.innerHTML = `
-                            <input type="number" id="duration-${task.id}" value="${task.customDays}" min="1" style="width: 60px;">
-                            <span>days ${dependencyText}</span>
-                        `;
-                        
-                        taskField.appendChild(taskName);
-                        taskField.appendChild(taskInputs);
-                        customizationFields.appendChild(taskField);
-                    });
-                }
-                
-                openModal(taskDurationModal);
-            }
-            
-            function openModal(modal) {
-                modal.style.display = 'flex';
-            }
-            
-            function closeModal(modal) {
-                modal.style.display = 'none';
-            }
-            
-            function applyCustomDurations() {
-                // Update custom durations from modal inputs
-                for (const taskId in taskData) {
-                    const durationInput = document.getElementById(`duration-${taskId}`);
-                    if (durationInput) {
-                        taskData[taskId].customDays = parseInt(durationInput.value, 10);
-                    }
-                }
-                
-                // Schedule tasks based on start and publication dates
-                scheduleTasks();
-                
-                // Close the modal
-                closeModal(taskDurationModal);
-                
-                // Highlight updated due dates
-                for (const taskId in taskData) {
-                    if (taskData[taskId].dueDateInput) {
-                        taskData[taskId].dueDateInput.classList.add('highlight');
-                        setTimeout(() => {
-                            taskData[taskId].dueDateInput.classList.remove('highlight');
-                        }, 3000);
-                    }
-                }
-                
-                // Update timeline if it's visible
-                if (timelineView.style.display === 'block') {
-                    renderTimeline();
-                }
-                
-                // Save current project with updated task durations
-                if (currentProjectId) {
-                    saveCurrentProject();
-                }
-            }
-            
-            function validateDates() {
-                const startDate = new Date(startDateInput.value);
-                const pubDate = new Date(pubDateInput.value);
-                
-                if (isNaN(startDate.getTime()) || isNaN(pubDate.getTime())) {
-                    return false;
-                }
-                
-                if (pubDate <= startDate) {
-                    return false;
-                }
-                
-                return true;
-            }
-            
-            function scheduleTasks() {
-                if (!validateDates()) {
-                    return;
-                }
-                
-                const startDate = new Date(startDateInput.value);
-                const pubDate = new Date(pubDateInput.value);
-                
-                // First pass: schedule tasks with dependencies on start date or publication date
-                for (const taskId in taskData) {
-                    const task = taskData[taskId];
-                    
-                    if (!task.dependency && !task.dependencyEnd) {
-                        // Task depends on start date
-                        const dueDate = new Date(startDate);
-                        dueDate.setDate(dueDate.getDate() + task.customDays);
-                        task.calculatedDate = dueDate;
-                        
-                        if (task.dueDateInput) {
-                            task.dueDateInput.value = dueDate.toISOString().split('T')[0];
-                        }
-                    } else if (task.dependencyEnd === 'pubDate') {
-                        // Task depends on publication date (counting backward)
-                        const dueDate = new Date(pubDate);
-                        dueDate.setDate(dueDate.getDate() + task.customDays); // Note: customDays may be negative
-                        task.calculatedDate = dueDate;
-                        
-                        if (task.dueDateInput) {
-                            task.dueDateInput.value = dueDate.toISOString().split('T')[0];
-                        }
-                    }
-                }
-                
-                // Second pass: schedule tasks with dependencies on other tasks
-                let changed = true;
-                let iterations = 0;
-                const maxIterations = 10; // Prevent infinite loops
-                
-                while (changed && iterations < maxIterations) {
-                    changed = false;
-                    iterations++;
-                    
-                    for (const taskId in taskData) {
-                        const task = taskData[taskId];
-                        
-                        if (task.dependency && taskData[task.dependency].calculatedDate) {
-                            const dependencyDate = new Date(taskData[task.dependency].calculate
+            // Auto save every minute
+            setInterval(saveFormData, 60000);
+        });
+    </script>
+</body>
+</html>
