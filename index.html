@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skinny Brown Dog Media - Book Publishing Checklist with Auto-Scheduling</title>
+    <title>Skinny Brown Dog Media - Multi-Project Publishing Checklist</title>
     <style>
         :root {
             --primary: #1a56db;
@@ -212,6 +212,13 @@
             display: flex;
             justify-content: space-between;
             margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .action-buttons button {
+            flex: 1;
+            min-width: 150px;
         }
         
         .error-message {
@@ -228,6 +235,255 @@
         @keyframes fade {
             from { background-color: #fff9c4; }
             to { background-color: #fffde7; }
+        }
+        
+        /* Project selector styles */
+        .project-management {
+            background-color: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid var(--gray-300);
+        }
+        
+        .project-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .project-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .project-selector select {
+            flex: 1;
+            min-width: 200px;
+            max-width: 350px;
+        }
+        
+        /* Export/Import Dialog */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            border-radius: 8px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray-500);
+        }
+        
+        .export-data {
+            width: 100%;
+            height: 200px;
+            font-family: monospace;
+            margin-top: 15px;
+            resize: vertical;
+        }
+        
+        /* Timeline view styles */
+        .timeline-toggle {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+        }
+        
+        .timeline-toggle button {
+            margin-left: 10px;
+            background-color: var(--gray-300);
+            color: var(--gray-700);
+        }
+        
+        .timeline-toggle button.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .timeline-view {
+            display: none;
+            margin-top: 20px;
+            position: relative;
+            padding-bottom: 40px;
+        }
+        
+        .timeline-track {
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: var(--primary);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-left: 50px;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-left: 4px solid var(--accent);
+            background-color: var(--light);
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -29px;
+            top: 20px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            border: 3px solid var(--white);
+        }
+        
+        .timeline-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-date {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .timeline-phase {
+            font-weight: bold;
+            color: var(--secondary);
+        }
+        
+        .timeline-task {
+            margin-bottom: 5px;
+        }
+        
+        .late-task {
+            color: #e53935;
+        }
+        
+        .completion-date {
+            color: #43a047;
+        }
+        
+        /* Task Duration Modal */
+        .task-duration {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .task-duration-inputs {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+        
+        .task-duration span {
+            margin: 0 10px;
+        }
+        
+        .duration-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .duration-buttons button {
+            flex: 1;
+        }
+        
+        /* Progress bar */
+        .progress-container {
+            margin-top: 10px;
+            width: 100%;
+            background-color: var(--gray-200);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: var(--accent);
+            border-radius: 4px;
+            transition: width 0.5s ease-in-out;
+        }
+        
+        .progress-text {
+            font-size: 12px;
+            color: var(--gray-600);
+            margin-top: 5px;
+        }
+        
+        .project-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .status-on-track {
+            background-color: #4caf50;
+        }
+        
+        .status-at-risk {
+            background-color: #ff9800;
+        }
+        
+        .status-delayed {
+            background-color: #f44336;
         }
         
         @media print {
@@ -251,160 +507,43 @@
                 margin: 0.5in;
             }
         }
-
-        /* Additional styling for timeline view */
-        .timeline-toggle {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 15px;
-        }
-
-        .timeline-toggle button {
-            margin-left: 10px;
-            background-color: var(--gray-300);
-            color: var(--gray-700);
-        }
-
-        .timeline-toggle button.active {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .timeline-view {
-            display: none;
-            margin-top: 20px;
-            position: relative;
-            padding-bottom: 40px;
-        }
-
-        .timeline-track {
-            position: absolute;
-            left: 20px;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background-color: var(--primary);
-        }
-
-        .timeline-item {
-            position: relative;
-            margin-left: 50px;
-            margin-bottom: 20px;
-            padding: 15px;
-            border-left: 4px solid var(--accent);
-            background-color: var(--light);
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -29px;
-            top: 20px;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background-color: var(--primary);
-            border: 3px solid var(--white);
-        }
-
-        .timeline-item-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .timeline-date {
-            font-weight: bold;
-            color: var(--primary);
-        }
-
-        .timeline-phase {
-            font-weight: bold;
-            color: var(--secondary);
-        }
-
-        .timeline-task {
-            margin-bottom: 5px;
-        }
-
-        .late-task {
-            color: #e53935;
-        }
-
-        .completion-date {
-            color: #43a047;
-        }
-
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            width: 90%;
-            max-width: 600px;
-            padding: 30px;
-            border-radius: 8px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-header h2 {
-            margin: 0;
-            padding: 0;
-            border: none;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--gray-500);
-        }
-
-        .task-duration {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .task-duration span {
-            margin: 0 10px;
-        }
-
-        .duration-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .duration-buttons button {
-            flex: 1;
-        }
     </style>
 </head>
 <body>
+    <!-- Project management controls -->
+    <div class="container no-print project-management">
+        <h2 style="margin-top: 0;">Project Management</h2>
+        
+        <div class="project-selector">
+            <label for="projectSelect"><strong>Select Project:</strong></label>
+            <select id="projectSelect"></select>
+            <button id="loadProjectButton">Load Project</button>
+        </div>
+        
+        <div class="project-actions">
+            <button id="newProjectButton">New Project</button>
+            <button id="saveProjectButton">Save Current Project</button>
+            <button id="exportProjectButton">Export Project</button>
+            <button id="importProjectButton">Import Project</button>
+            <button id="deleteProjectButton">Delete Project</button>
+        </div>
+    </div>
+    
     <form id="publishingForm">
         <div class="container">
-            <h1>Skinny Brown Dog Media - Book Publishing Checklist with Auto-Scheduling</h1>
+            <h1>Skinny Brown Dog Media - Publishing Checklist</h1>
+            
+            <div class="project-status">
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                </div>
+                <div class="progress-text" id="progressText">0% Complete</div>
+                
+                <div class="status-indicator">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span id="statusText">Not Started</span>
+                </div>
+            </div>
             
             <div class="info-section">
                 <h2>Book Project Information</h2>
@@ -782,12 +921,71 @@
         </div>
     </div>
     
+    <!-- Export/Import Modal -->
+    <div id="exportImportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="exportImportTitle">Export Project</h2>
+                <button type="button" class="close-modal">&times;</button>
+            </div>
+            <div id="exportImportBody">
+                <p id="exportImportInstructions">Copy the text below to save your project data.</p>
+                
+                <textarea id="exportImportData" class="export-data"></textarea>
+                
+                <div class="duration-buttons">
+                    <button type="button" id="copyExportButton" style="display: none;">Copy to Clipboard</button>
+                    <button type="button" id="processImportButton" style="display: none;">Import Data</button>
+                    <button type="button" id="cancelExportImport">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- New Project Modal -->
+    <div id="newProjectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Project</h2>
+                <button type="button" class="close-modal">&times;</button>
+            </div>
+            <div>
+                <p>Enter the information for your new book project:</p>
+                
+                <div class="info-item">
+                    <label for="newBookTitle">Book Title:</label>
+                    <input type="text" id="newBookTitle" required>
+                </div>
+                <div class="info-item">
+                    <label for="newAuthorName">Author Name:</label>
+                    <input type="text" id="newAuthorName" required>
+                </div>
+                <div class="info-item">
+                    <label for="newStartDate">Project Start Date:</label>
+                    <input type="date" id="newStartDate" required>
+                </div>
+                <div class="info-item">
+                    <label for="newPubDate">Target Publication Date:</label>
+                    <input type="date" id="newPubDate" required>
+                </div>
+                
+                <div class="duration-buttons">
+                    <button type="button" id="createProjectButton">Create Project</button>
+                    <button type="button" id="cancelNewProject">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Get form elements
             const publishingForm = document.getElementById('publishingForm');
             const startDateInput = document.getElementById('startDate');
             const pubDateInput = document.getElementById('pubDate');
+            const bookTitleInput = document.getElementById('bookTitle');
+            const authorNameInput = document.getElementById('authorName');
+            const projectManagerInput = document.getElementById('projectManager');
             const autoscheduleButton = document.getElementById('autoscheduleButton');
             const saveButton = document.getElementById('saveButton');
             const printButton = document.getElementById('printButton');
@@ -796,32 +994,197 @@
             const tableView = document.getElementById('tableView');
             const timelineView = document.getElementById('timelineView');
             
+            // Project management elements
+            const projectSelect = document.getElementById('projectSelect');
+            const loadProjectButton = document.getElementById('loadProjectButton');
+            const newProjectButton = document.getElementById('newProjectButton');
+            const saveProjectButton = document.getElementById('saveProjectButton');
+            const exportProjectButton = document.getElementById('exportProjectButton');
+            const importProjectButton = document.getElementById('importProjectButton');
+            const deleteProjectButton = document.getElementById('deleteProjectButton');
+            
             // Modal elements
             const taskDurationModal = document.getElementById('taskDurationModal');
-            const closeModalButton = document.querySelector('.close-modal');
+            const exportImportModal = document.getElementById('exportImportModal');
+            const newProjectModal = document.getElementById('newProjectModal');
+            const closeModalButtons = document.querySelectorAll('.close-modal');
             const applyCustomDurationButton = document.getElementById('applyCustomDuration');
             const cancelCustomDurationButton = document.getElementById('cancelCustomDuration');
+            const exportImportTitle = document.getElementById('exportImportTitle');
+            const exportImportInstructions = document.getElementById('exportImportInstructions');
+            const exportImportData = document.getElementById('exportImportData');
+            const copyExportButton = document.getElementById('copyExportButton');
+            const processImportButton = document.getElementById('processImportButton');
+            const cancelExportImportButton = document.getElementById('cancelExportImport');
+            
+            // New project modal elements
+            const newBookTitleInput = document.getElementById('newBookTitle');
+            const newAuthorNameInput = document.getElementById('newAuthorName');
+            const newStartDateInput = document.getElementById('newStartDate');
+            const newPubDateInput = document.getElementById('newPubDate');
+            const createProjectButton = document.getElementById('createProjectButton');
+            const cancelNewProjectButton = document.getElementById('cancelNewProject');
+            
+            // Progress indicators
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
             
             // Task tracking
             const taskElements = document.querySelectorAll('[data-task-id]');
             let taskData = {};
+            let projects = {};
+            let currentProjectId = null;
+            
+            // Load projects from localStorage
+            const loadProjects = function() {
+                const savedProjects = localStorage.getItem('publishingProjects');
+                if (savedProjects) {
+                    projects = JSON.parse(savedProjects);
+                }
+                updateProjectSelector();
+            };
+            
+            // Update project selector dropdown
+            const updateProjectSelector = function() {
+                projectSelect.innerHTML = '';
+                
+                // Create default option
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = '-- Select a project --';
+                projectSelect.appendChild(defaultOption);
+                
+                // Add projects to selector
+                for (const projectId in projects) {
+                    const project = projects[projectId];
+                    const option = document.createElement('option');
+                    option.value = projectId;
+                    option.textContent = `${project.bookTitle} - ${project.authorName}`;
+                    projectSelect.appendChild(option);
+                }
+                
+                // Select current project if exists
+                if (currentProjectId) {
+                    projectSelect.value = currentProjectId;
+                }
+            };
+            
+            // Generate unique ID for projects
+            const generateProjectId = function() {
+                return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+            };
             
             // Initialize task data
-            taskElements.forEach(task => {
-                const taskId = task.getAttribute('data-task-id');
-                taskData[taskId] = {
-                    id: taskId,
-                    phase: task.getAttribute('data-phase'),
-                    defaultDays: parseInt(task.getAttribute('data-default-days'), 10),
-                    customDays: parseInt(task.getAttribute('data-default-days'), 10), // Start with default
-                    dependency: task.getAttribute('data-dependency') || null,
-                    dependencyEnd: task.getAttribute('data-dependency-end') || null,
-                    element: task,
-                    dueDateInput: task.querySelector('.due-date'),
-                    statusSelect: task.querySelector('.task-status'),
-                    completionDateInput: task.querySelector('.completion-date'),
-                    checkbox: task.querySelector('.task-checkbox')
-                };
+            const initializeTaskData = function() {
+                taskData = {};
+                taskElements.forEach(task => {
+                    const taskId = task.getAttribute('data-task-id');
+                    taskData[taskId] = {
+                        id: taskId,
+                        phase: task.getAttribute('data-phase'),
+                        defaultDays: parseInt(task.getAttribute('data-default-days'), 10),
+                        customDays: parseInt(task.getAttribute('data-default-days'), 10), // Start with default
+                        dependency: task.getAttribute('data-dependency') || null,
+                        dependencyEnd: task.getAttribute('data-dependency-end') || null,
+                        element: task,
+                        dueDateInput: task.querySelector('.due-date'),
+                        statusSelect: task.querySelector('.task-status'),
+                        completionDateInput: task.querySelector('.completion-date'),
+                        checkbox: task.querySelector('.task-checkbox')
+                    };
+                });
+            };
+            
+            // Initialize tasks
+            initializeTaskData();
+            
+            // Load saved projects
+            loadProjects();
+            
+            // Project selector change event
+            loadProjectButton.addEventListener('click', function() {
+                const selectedProjectId = projectSelect.value;
+                if (selectedProjectId && projects[selectedProjectId]) {
+                    loadProject(selectedProjectId);
+                } else {
+                    alert('Please select a project to load');
+                }
+            });
+            
+            // New project button event
+            newProjectButton.addEventListener('click', function() {
+                showNewProjectModal();
+            });
+            
+            // Save project button event
+            saveProjectButton.addEventListener('click', function() {
+                if (!bookTitleInput.value || !authorNameInput.value) {
+                    alert('Please enter at least the book title and author name before saving');
+                    return;
+                }
+                
+                saveCurrentProject();
+            });
+            
+            // Export project button event
+            exportProjectButton.addEventListener('click', function() {
+                if (!currentProjectId) {
+                    alert('Please load or create a project first');
+                    return;
+                }
+                
+                showExportModal();
+            });
+            
+            // Import project button event
+            importProjectButton.addEventListener('click', function() {
+                showImportModal();
+            });
+            
+            // Delete project button event
+            deleteProjectButton.addEventListener('click', function() {
+                if (!currentProjectId) {
+                    alert('Please select a project to delete');
+                    return;
+                }
+                
+                if (confirm(`Are you sure you want to delete the project "${projects[currentProjectId].bookTitle}"?`)) {
+                    deleteProject(currentProjectId);
+                }
+            });
+            
+            // Create project button event
+            createProjectButton.addEventListener('click', function() {
+                if (!newBookTitleInput.value || !newAuthorNameInput.value) {
+                    alert('Please enter at least the book title and author name');
+                    return;
+                }
+                
+                createNewProject();
+            });
+            
+            // Cancel new project button event
+            cancelNewProjectButton.addEventListener('click', function() {
+                closeModal(newProjectModal);
+            });
+            
+            // Copy export data button event
+            copyExportButton.addEventListener('click', function() {
+                exportImportData.select();
+                document.execCommand('copy');
+                alert('Project data copied to clipboard');
+            });
+            
+            // Process import button event
+            processImportButton.addEventListener('click', function() {
+                processImportData();
+            });
+            
+            // Cancel export/import button event
+            cancelExportImportButton.addEventListener('click', function() {
+                closeModal(exportImportModal);
             });
             
             // Auto-schedule button event
@@ -850,10 +1213,21 @@
                 renderTimeline();
             });
             
-            // Modal event listeners
-            closeModalButton.addEventListener('click', closeTaskDurationModal);
+            // Modal close buttons
+            closeModalButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const modal = button.closest('.modal');
+                    closeModal(modal);
+                });
+            });
+            
+            // Apply custom durations button
             applyCustomDurationButton.addEventListener('click', applyCustomDurations);
-            cancelCustomDurationButton.addEventListener('click', closeTaskDurationModal);
+            
+            // Cancel custom duration button
+            cancelCustomDurationButton.addEventListener('click', function() {
+                closeModal(taskDurationModal);
+            });
             
             // Print button functionality
             printButton.addEventListener('click', function() {
@@ -862,8 +1236,12 @@
             
             // Save progress functionality
             saveButton.addEventListener('click', function() {
-                saveFormData();
-                alert('Progress saved successfully!');
+                if (currentProjectId) {
+                    saveCurrentProject();
+                    alert('Progress saved successfully!');
+                } else {
+                    showNewProjectModal();
+                }
             });
             
             // Handle status changes
@@ -901,10 +1279,9 @@
                         completionDateInput.value = '';
                     }
                 }
+                
+                updateProgressIndicators();
             });
-            
-            // Load saved form data if exists
-            loadFormData();
             
             // Form submission
             publishingForm.addEventListener('submit', function(e) {
@@ -931,25 +1308,259 @@
                 // If form is valid, you would typically submit to a server
                 alert('Form submitted successfully!');
                 
-                // Clear form data from storage after submission
-                localStorage.removeItem('publishingFormData');
+                // After submission, keep the project data but mark as submitted
+                if (currentProjectId) {
+                    projects[currentProjectId].submitted = true;
+                    projects[currentProjectId].submitDate = new Date().toISOString().split('T')[0];
+                    saveProjects();
+                }
             });
             
-            // Functions
-            function validateDates() {
-                const startDate = new Date(startDateInput.value);
-                const pubDate = new Date(pubDateInput.value);
-                
-                if (isNaN(startDate.getTime()) || isNaN(pubDate.getTime())) {
-                    return false;
+            // Functions for project management
+            function loadProject(projectId) {
+                if (!projects[projectId]) {
+                    alert('Project not found');
+                    return;
                 }
                 
-                if (pubDate <= startDate) {
-                    alert('Publication date must be after the start date.');
-                    return false;
+                const project = projects[projectId];
+                
+                // Set form fields
+                bookTitleInput.value = project.bookTitle || '';
+                authorNameInput.value = project.authorName || '';
+                startDateInput.value = project.startDate || '';
+                pubDateInput.value = project.pubDate || '';
+                projectManagerInput.value = project.projectManager || '';
+                
+                // Set task data
+                if (project.taskData) {
+                    for (const taskId in taskData) {
+                        if (project.taskData[taskId]) {
+                            taskData[taskId].customDays = project.taskData[taskId].customDays;
+                        }
+                    }
                 }
                 
-                return true;
+                // Set form data
+                if (project.formData) {
+                    const formData = project.formData;
+                    
+                    for (const key in formData) {
+                        const field = publishingForm.querySelector(`[name="${key}"]`);
+                        
+                        if (field) {
+                            if (field.type === 'checkbox') {
+                                field.checked = formData[key] === 'on';
+                            } else {
+                                field.value = formData[key];
+                            }
+                        }
+                    }
+                }
+                
+                // Set current project ID
+                currentProjectId = projectId;
+                
+                // Update project selector
+                projectSelect.value = projectId;
+                
+                // Update progress indicators
+                updateProgressIndicators();
+                
+                // If we have valid dates, try to schedule tasks
+                if (validateDates()) {
+                    scheduleTasks();
+                }
+                
+                // Update timeline view if it's visible
+                if (timelineView.style.display === 'block') {
+                    renderTimeline();
+                }
+            }
+            
+            function saveCurrentProject() {
+                // Get project title and author
+                const bookTitle = bookTitleInput.value;
+                const authorName = authorNameInput.value;
+                
+                if (!bookTitle || !authorName) {
+                    alert('Please enter at least the book title and author name');
+                    return;
+                }
+                
+                // Create or update project
+                if (!currentProjectId) {
+                    currentProjectId = generateProjectId();
+                }
+                
+                // Get form data
+                const formData = {};
+                new FormData(publishingForm).forEach((value, key) => {
+                    formData[key] = value;
+                });
+                
+                // Create project data object
+                const projectData = {
+                    id: currentProjectId,
+                    bookTitle: bookTitle,
+                    authorName: authorName,
+                    startDate: startDateInput.value,
+                    pubDate: pubDateInput.value,
+                    projectManager: projectManagerInput.value,
+                    lastUpdated: new Date().toISOString(),
+                    taskData: {},
+                    formData: formData
+                };
+                
+                // Add task custom durations
+                for (const taskId in taskData) {
+                    projectData.taskData[taskId] = {
+                        customDays: taskData[taskId].customDays
+                    };
+                }
+                
+                // Save to projects object
+                projects[currentProjectId] = projectData;
+                
+                // Save projects to localStorage
+                saveProjects();
+                
+                // Update project selector
+                updateProjectSelector();
+                
+                return currentProjectId;
+            }
+            
+            function deleteProject(projectId) {
+                if (projects[projectId]) {
+                    delete projects[projectId];
+                    saveProjects();
+                    updateProjectSelector();
+                    
+                    if (currentProjectId === projectId) {
+                        clearForm();
+                        currentProjectId = null;
+                    }
+                }
+            }
+            
+            function createNewProject() {
+                // Reset form
+                clearForm();
+                
+                // Set basic project info
+                bookTitleInput.value = newBookTitleInput.value;
+                authorNameInput.value = newAuthorNameInput.value;
+                startDateInput.value = newStartDateInput.value;
+                pubDateInput.value = newPubDateInput.value;
+                
+                // Save new project
+                currentProjectId = saveCurrentProject();
+                
+                // Auto-schedule if dates are valid
+                if (validateDates()) {
+                    scheduleTasks();
+                }
+                
+                // Update progress indicators
+                updateProgressIndicators();
+                
+                // Close modal
+                closeModal(newProjectModal);
+                
+                // Clear new project form
+                newBookTitleInput.value = '';
+                newAuthorNameInput.value = '';
+                newStartDateInput.value = '';
+                newPubDateInput.value = '';
+            }
+            
+            function clearForm() {
+                publishingForm.reset();
+                
+                // Reset task status
+                for (const taskId in taskData) {
+                    if (taskData[taskId].statusSelect) {
+                        taskData[taskId].statusSelect.value = 'Not Started';
+                    }
+                    if (taskData[taskId].completionDateInput) {
+                        taskData[taskId].completionDateInput.value = '';
+                    }
+                    if (taskData[taskId].checkbox) {
+                        taskData[taskId].checkbox.checked = false;
+                    }
+                }
+                
+                // Reset progress indicators
+                updateProgressIndicators();
+            }
+            
+            function saveProjects() {
+                localStorage.setItem('publishingProjects', JSON.stringify(projects));
+            }
+            
+            function showExportModal() {
+                exportImportTitle.textContent = 'Export Project';
+                exportImportInstructions.textContent = 'Copy the text below to save your project data.';
+                exportImportData.value = JSON.stringify(projects[currentProjectId]);
+                copyExportButton.style.display = 'block';
+                processImportButton.style.display = 'none';
+                
+                openModal(exportImportModal);
+            }
+            
+            function showImportModal() {
+                exportImportTitle.textContent = 'Import Project';
+                exportImportInstructions.textContent = 'Paste your project data below and click "Import Data"';
+                exportImportData.value = '';
+                copyExportButton.style.display = 'none';
+                processImportButton.style.display = 'block';
+                
+                openModal(exportImportModal);
+            }
+            
+            function processImportData() {
+                try {
+                    const importData = JSON.parse(exportImportData.value);
+                    
+                    // Validate import data
+                    if (!importData.bookTitle || !importData.authorName || !importData.id) {
+                        throw new Error('Invalid project data');
+                    }
+                    
+                    // Check if project already exists
+                    if (projects[importData.id] && !confirm('A project with this ID already exists. Overwrite?')) {
+                        return;
+                    }
+                    
+                    // Import project
+                    projects[importData.id] = importData;
+                    saveProjects();
+                    updateProjectSelector();
+                    
+                    // Load imported project
+                    loadProject(importData.id);
+                    
+                    // Close modal
+                    closeModal(exportImportModal);
+                    
+                    alert('Project imported successfully!');
+                } catch (error) {
+                    alert('Invalid project data. Please check your input and try again.');
+                }
+            }
+            
+            function showNewProjectModal() {
+                // Set today's date as default start date
+                const today = new Date().toISOString().split('T')[0];
+                newStartDateInput.value = today;
+                
+                // Set default publication date (6 months from today)
+                const sixMonthsLater = new Date();
+                sixMonthsLater.setMonth(sixMonthsLater.getMonth() + 6);
+                newPubDateInput.value = sixMonthsLater.toISOString().split('T')[0];
+                
+                openModal(newProjectModal);
             }
             
             function showTaskDurationModal() {
@@ -980,23 +1591,40 @@
                         
                         const taskField = document.createElement('div');
                         taskField.classList.add('task-duration');
-                        taskField.innerHTML = `
-                            <div>${taskLabel}</div>
-                            <div style="margin-top: 5px;">
-                                <input type="number" id="duration-${task.id}" value="${task.customDays}" min="1" style="width: 60px;">
-                                <span>days ${task.dependency ? 'after ' + taskData[task.dependency].element.querySelector('.checkbox-label').textContent : task.dependencyEnd ? 'before publication' : 'from start'}</span>
-                            </div>
+                        
+                        const taskName = document.createElement('div');
+                        taskName.textContent = taskLabel;
+                        
+                        const taskInputs = document.createElement('div');
+                        taskInputs.classList.add('task-duration-inputs');
+                        
+                        let dependencyText = 'from start';
+                        if (task.dependency) {
+                            dependencyText = 'after ' + taskData[task.dependency].element.querySelector('.checkbox-label').textContent;
+                        } else if (task.dependencyEnd) {
+                            dependencyText = 'before publication';
+                        }
+                        
+                        taskInputs.innerHTML = `
+                            <input type="number" id="duration-${task.id}" value="${task.customDays}" min="1" style="width: 60px;">
+                            <span>days ${dependencyText}</span>
                         `;
                         
+                        taskField.appendChild(taskName);
+                        taskField.appendChild(taskInputs);
                         customizationFields.appendChild(taskField);
                     });
                 }
                 
-                taskDurationModal.style.display = 'flex';
+                openModal(taskDurationModal);
             }
             
-            function closeTaskDurationModal() {
-                taskDurationModal.style.display = 'none';
+            function openModal(modal) {
+                modal.style.display = 'flex';
+            }
+            
+            function closeModal(modal) {
+                modal.style.display = 'none';
             }
             
             function applyCustomDurations() {
@@ -1012,7 +1640,7 @@
                 scheduleTasks();
                 
                 // Close the modal
-                closeTaskDurationModal();
+                closeModal(taskDurationModal);
                 
                 // Highlight updated due dates
                 for (const taskId in taskData) {
@@ -1028,6 +1656,26 @@
                 if (timelineView.style.display === 'block') {
                     renderTimeline();
                 }
+                
+                // Save current project with updated task durations
+                if (currentProjectId) {
+                    saveCurrentProject();
+                }
+            }
+            
+            function validateDates() {
+                const startDate = new Date(startDateInput.value);
+                const pubDate = new Date(pubDateInput.value);
+                
+                if (isNaN(startDate.getTime()) || isNaN(pubDate.getTime())) {
+                    return false;
+                }
+                
+                if (pubDate <= startDate) {
+                    return false;
+                }
+                
+                return true;
             }
             
             function scheduleTasks() {
@@ -1076,171 +1724,4 @@
                         const task = taskData[taskId];
                         
                         if (task.dependency && taskData[task.dependency].calculatedDate) {
-                            const dependencyDate = new Date(taskData[task.dependency].calculatedDate);
-                            const dueDate = new Date(dependencyDate);
-                            dueDate.setDate(dueDate.getDate() + task.customDays);
-                            
-                            // Only update if we haven't calculated this task yet or the date has changed
-                            if (!task.calculatedDate || task.calculatedDate.getTime() !== dueDate.getTime()) {
-                                task.calculatedDate = dueDate;
-                                
-                                if (task.dueDateInput) {
-                                    task.dueDateInput.value = dueDate.toISOString().split('T')[0];
-                                }
-                                
-                                changed = true;
-                            }
-                        }
-                    }
-                }
-            }
-            
-            function renderTimeline() {
-                if (!validateDates()) {
-                    return;
-                }
-                
-                // Clear existing timeline
-                timelineView.innerHTML = '<div class="timeline-track"></div>';
-                
-                // Group tasks by calculated date
-                const tasksByDate = {};
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                
-                for (const taskId in taskData) {
-                    const task = taskData[taskId];
-                    const dueDate = task.dueDateInput ? task.dueDateInput.value : '';
-                    
-                    if (dueDate) {
-                        if (!tasksByDate[dueDate]) {
-                            tasksByDate[dueDate] = [];
-                        }
-                        tasksByDate[dueDate].push(task);
-                    }
-                }
-                
-                // Sort dates
-                const sortedDates = Object.keys(tasksByDate).sort((a, b) => {
-                    return new Date(a) - new Date(b);
-                });
-                
-                // Create timeline items
-                sortedDates.forEach(dateStr => {
-                    const date = new Date(dateStr);
-                    const tasks = tasksByDate[dateStr];
-                    
-                    const timelineItem = document.createElement('div');
-                    timelineItem.classList.add('timeline-item');
-                    
-                    // Check if this date is in the past
-                    const isPastDue = date < today;
-                    
-                    // Create header
-                    const header = document.createElement('div');
-                    header.classList.add('timeline-item-header');
-                    
-                    const dateElement = document.createElement('div');
-                    dateElement.classList.add('timeline-date');
-                    dateElement.textContent = date.toDateString();
-                    
-                    const phaseElement = document.createElement('div');
-                    phaseElement.classList.add('timeline-phase');
-                    phaseElement.textContent = tasks[0].phase + ' Phase';
-                    
-                    header.appendChild(dateElement);
-                    header.appendChild(phaseElement);
-                    timelineItem.appendChild(header);
-                    
-                    // Add tasks
-                    tasks.forEach(task => {
-                        const taskElement = document.createElement('div');
-                        taskElement.classList.add('timeline-task');
-                        
-                        const isCompleted = task.statusSelect && task.statusSelect.value === 'Completed';
-                        const taskName = task.element.querySelector('.checkbox-label').textContent;
-                        
-                        if (isPastDue && !isCompleted) {
-                            taskElement.classList.add('late-task');
-                            taskElement.innerHTML = `<strong>OVERDUE:</strong> ${taskName}`;
-                        } else if (isCompleted) {
-                            const completionDate = task.completionDateInput ? task.completionDateInput.value : '';
-                            
-                            taskElement.innerHTML = `
-                                <span style="text-decoration: line-through;">${taskName}</span>
-                                ${completionDate ? `<span class="completion-date">(Completed: ${new Date(completionDate).toDateString()})</span>` : ''}
-                            `;
-                        } else {
-                            taskElement.textContent = taskName;
-                        }
-                        
-                        timelineItem.appendChild(taskElement);
-                    });
-                    
-                    timelineView.appendChild(timelineItem);
-                });
-            }
-            
-            function saveFormData() {
-                const formData = new FormData(publishingForm);
-                const formDataObj = {};
-                
-                formData.forEach(function(value, key) {
-                    formDataObj[key] = value;
-                });
-                
-                // Save task custom durations
-                formDataObj.taskCustomDurations = {};
-                for (const taskId in taskData) {
-                    formDataObj.taskCustomDurations[taskId] = taskData[taskId].customDays;
-                }
-                
-                localStorage.setItem('publishingFormData', JSON.stringify(formDataObj));
-            }
-            
-            function loadFormData() {
-                const savedData = localStorage.getItem('publishingFormData');
-                
-                if (savedData) {
-                    const formDataObj = JSON.parse(savedData);
-                    
-                    // Restore form fields
-                    for (const key in formDataObj) {
-                        if (key === 'taskCustomDurations') continue;
-                        
-                        const field = publishingForm.querySelector(`[name="${key}"]`);
-                        
-                        if (field) {
-                            if (field.type === 'checkbox') {
-                                field.checked = formDataObj[key] === 'on';
-                            } else {
-                                field.value = formDataObj[key];
-                            }
-                        }
-                    }
-                    
-                    // Restore task custom durations
-                    if (formDataObj.taskCustomDurations) {
-                        for (const taskId in formDataObj.taskCustomDurations) {
-                            if (taskData[taskId]) {
-                                taskData[taskId].customDays = formDataObj.taskCustomDurations[taskId];
-                            }
-                        }
-                    }
-                    
-                    // If we have valid dates, try to schedule tasks
-                    if (validateDates()) {
-                        scheduleTasks();
-                    }
-                }
-            }
-            
-            // Set up the timeline view initially
-            renderTimeline();
-            
-            // Auto-save form data every 30 seconds
-            setInterval(saveFormData, 30000);
-        });
-    </script>
-</body>
-</html>
+                            const dependencyDate = new Date(taskData[task.dependency].calculate
