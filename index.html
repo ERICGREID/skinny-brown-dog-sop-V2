@@ -1,11 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skinny Brown Dog Media - Publishing Workflow Tracker</title>
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script src="https://accounts.google.com/gsi/client"></script>
     <style>
         :root {
             --primary: #1a56db;
@@ -610,8 +609,7 @@
             .project-selector,
             .import-export-section,
             .client-overview,
-            .batch-controls,
-            .google-drive-section {
+            .batch-controls {
                 display: none;
             }
             
@@ -625,8 +623,6 @@
             }
         }
     </style>
-    <script src="https://apis.google.com/js/api.js"></script>
-<script src="https://accounts.google.com/gsi/client"></script>
 </head>
 <body>
     <div class="container">
@@ -1313,21 +1309,6 @@
             </div>
         </div>
         
-        <!-- Google Drive Backup Section -->
-        <div class="import-export-section">
-            <h2>Google Drive Backup</h2>
-            <div id="google-drive-container" style="margin-top: 15px;">
-                <div id="auth-status" style="margin-bottom: 15px; padding: 10px; border-radius: 5px; background-color: #e5e7eb;">
-                    Not connected to Google Drive
-                </div>
-                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                    <button type="button" id="authButton" class="success">Connect to Google Drive</button>
-                    <button type="button" id="saveToGDriveBtn" disabled style="opacity: 0.5">Save to Google Drive</button>
-                    <button type="button" id="loadFromGDriveBtn" disabled style="opacity: 0.5">Load from Google Drive</button>
-                </div>
-            </div>
-        </div>
-        
         <div class="actions">
             <button type="button" class="secondary" id="printButton">Print Workflow</button>
             <button type="button" id="saveButton">Save Progress</button>
@@ -1561,3 +1542,608 @@
                 updateSinglePhaseStatus('phase5Status', 'task33', 'task39');
                 
                 // Phase 6: File Upload & QA
+                updateSinglePhaseStatus('phase6Status', 'task40', 'task48');
+                
+                // Phase 7: Publication
+                updateSinglePhaseStatus('phase7Status', 'task49', 'task60');
+                
+                // Phase 8: Post-Publication Support
+                updateSinglePhaseStatus('phase8Status', 'task61', 'task67');
+            }
+            
+            function updateSinglePhaseStatus(phaseStatusId, firstTaskId, lastTaskId) {
+                const phaseStatus = document.getElementById(phaseStatusId);
+                const firstTaskIndex = parseInt(firstTaskId.replace('task', ''));
+                const lastTaskIndex = parseInt(lastTaskId.replace('task', ''));
+                
+                let totalTasks = 0;
+                let completedTasks = 0;
+                
+                for (let i = firstTaskIndex; i <= lastTaskIndex; i++) {
+                    const taskCheckbox = document.getElementById('task' + i);
+                    if (taskCheckbox) {
+                        totalTasks++;
+                        if (taskCheckbox.checked) {
+                            completedTasks++;
+                        }
+                    }
+                }
+                
+                if (completedTasks === 0) {
+                    phaseStatus.textContent = 'Not Started';
+                    phaseStatus.className = 'status status-not-started';
+                } else if (completedTasks === totalTasks) {
+                    phaseStatus.textContent = 'Completed';
+                    phaseStatus.className = 'status status-completed';
+                } else {
+                    const percentage = Math.round((completedTasks / totalTasks) * 100);
+                    phaseStatus.textContent = `In Progress (${percentage}%)`;
+                    phaseStatus.className = 'status status-in-progress';
+                }
+            }
+            
+            function updateProjectStatus() {
+                const currentStatus = document.getElementById('currentStatus');
+                const progressBar = document.getElementById('overallProgress');
+                const allCheckboxes = document.querySelectorAll('.task-item input[type="checkbox"]');
+                const totalTasks = allCheckboxes.length;
+                let completedTasks = 0;
+                
+                allCheckboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        completedTasks++;
+                    }
+                });
+                
+                const percentage = Math.round((completedTasks / totalTasks) * 100);
+                progressBar.style.width = percentage + '%';
+                
+                if (completedTasks === 0) {
+                    currentStatus.value = 'Not Started';
+                } else if (completedTasks === totalTasks) {
+                    currentStatus.value = 'Completed';
+                } else {
+                    currentStatus.value = `In Progress (${percentage}% complete)`;
+                }
+            }
+            
+            function getFormData() {
+                const formData = {
+                    projectDetails: {
+                        bookTitle: document.getElementById('bookTitle').value,
+                        authorName: document.getElementById('authorName').value,
+                        startDate: document.getElementById('startDate').value,
+                        pubDate: document.getElementById('pubDate').value,
+                        projectManager: document.getElementById('projectManager').value,
+                        launchDate: document.getElementById('launchDate').value
+                    },
+                    credentials: {
+                        authorGmail: document.getElementById('authorGmail').value,
+                        authorGmailPass: document.getElementById('authorGmailPass').value,
+                        stripeLogin: document.getElementById('stripeLogin').value,
+                        stripePass: document.getElementById('stripePass').value,
+                        bookVaultLogin: document.getElementById('bookVaultLogin').value,
+                        bookVaultPass: document.getElementById('bookVaultPass').value,
+                        ingramLogin: document.getElementById('ingramLogin').value,
+                        ingramPass: document.getElementById('ingramPass').value,
+                        kdpLogin: document.getElementById('kdpLogin').value,
+                        kdpPass: document.getElementById('kdpPass').value
+                    },
+                    isbns: {
+                        ebook: document.getElementById('isbnEbook').value,
+                        paperback: document.getElementById('isbnPaperback').value,
+                        caseLaminate: document.getElementById('isbnCaseLaminate').value,
+                        dustJacket: document.getElementById('isbnDustJacket').value
+                    },
+                    tasks: {}
+                };
+                
+                // Save checkbox states
+                document.querySelectorAll('.task-item input[type="checkbox"]').forEach(checkbox => {
+                    formData.tasks[checkbox.id] = checkbox.checked;
+                });
+                
+                return formData;
+            }
+            
+            function saveCurrentProject() {
+                const formData = getFormData();
+                const projectDetails = formData.projectDetails;
+                
+                if (!projectDetails.bookTitle || !projectDetails.authorName) {
+                    alert('Please enter at least the Book Title and Author Name.');
+                    return false;
+                }
+                
+                // Create a new project ID if we don't have one
+                if (!currentProjectId) {
+                    currentProjectId = 'project_' + Date.now();
+                }
+                
+                // Get or initialize the projects object
+                const projects = getProjects();
+                
+                // Calculate project status
+                const allCheckboxes = document.querySelectorAll('.task-item input[type="checkbox"]');
+                const totalTasks = allCheckboxes.length;
+                let completedTasks = 0;
+                
+                allCheckboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        completedTasks++;
+                    }
+                });
+                
+                const progress = Math.round((completedTasks / totalTasks) * 100);
+                
+                // Add/update current project
+                projects[currentProjectId] = {
+                    id: currentProjectId,
+                    name: `${projectDetails.bookTitle} - ${projectDetails.authorName}`,
+                    lastUpdated: new Date().toISOString(),
+                    data: formData,
+                    progress: progress,
+                    status: document.getElementById('currentStatus').value,
+                    currentPhase: getCurrentPhase()
+                };
+                
+                // Save to localStorage
+                localStorage.setItem('publishingProjects', JSON.stringify(projects));
+                
+                // Update projects list
+                loadProjectsList();
+                
+                return true;
+            }
+            
+            function loadProject(projectId) {
+                const projects = getProjects();
+                const project = projects[projectId];
+                
+                if (!project) {
+                    alert('Project not found.');
+                    return;
+                }
+                
+                resetForm(); // Clear current form
+                
+                const formData = project.data;
+                
+                // Load project details
+                for (const key in formData.projectDetails) {
+                    const element = document.getElementById(key);
+                    if (element) {
+                        element.value = formData.projectDetails[key];
+                    }
+                }
+                
+                // Load credentials
+                for (const key in formData.credentials) {
+                    const element = document.getElementById(key);
+                    if (element) {
+                        element.value = formData.credentials[key];
+                    }
+                }
+                
+                // Load ISBNs
+                document.getElementById('isbnEbook').value = formData.isbns.ebook || '';
+                document.getElementById('isbnPaperback').value = formData.isbns.paperback || '';
+                document.getElementById('isbnCaseLaminate').value = formData.isbns.caseLaminate || '';
+                document.getElementById('isbnDustJacket').value = formData.isbns.dustJacket || '';
+                
+                // Update ISBN displays
+                document.getElementById('ebookIsbnDisplay').textContent = formData.isbns.ebook || '';
+                document.getElementById('paperbackIsbnDisplay').textContent = formData.isbns.paperback || '';
+                document.getElementById('laminateIsbnDisplay').textContent = formData.isbns.caseLaminate || '';
+                document.getElementById('dustjacketIsbnDisplay').textContent = formData.isbns.dustJacket || '';
+                
+                // Load task states
+                for (const taskId in formData.tasks) {
+                    const checkbox = document.getElementById(taskId);
+                    if (checkbox) {
+                        checkbox.checked = formData.tasks[taskId];
+                        const taskItem = checkbox.closest('.task-item');
+                        if (checkbox.checked) {
+                            taskItem.classList.add('completed');
+                        } else {
+                            taskItem.classList.remove('completed');
+                        }
+                    }
+                }
+                
+                // Set current project ID
+                currentProjectId = projectId;
+                
+                // Update status indicators
+                updatePhaseStatus();
+                updateProjectStatus();
+                
+                // Update project selector
+                projectSelect.value = projectId;
+                
+                return true;
+            }
+            
+            function deleteProject(projectId) {
+                const projects = getProjects();
+                
+                if (projects[projectId]) {
+                    delete projects[projectId];
+                    localStorage.setItem('publishingProjects', JSON.stringify(projects));
+                    
+                    // Update projects list
+                    loadProjectsList();
+                    
+                    // Reset form if we deleted the current project
+                    if (currentProjectId === projectId) {
+                        resetForm();
+                        currentProjectId = null;
+                    }
+                    
+                    return true;
+                }
+                
+                return false;
+            }
+            
+            function resetForm() {
+                // Clear all text inputs and date inputs
+                document.querySelectorAll('input[type="text"], input[type="date"], input[type="password"], textarea').forEach(input => {
+                    input.value = '';
+                });
+                
+                // Uncheck all checkboxes
+                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                    const taskItem = checkbox.closest('.task-item');
+                    if (taskItem) {
+                        taskItem.classList.remove('completed');
+                    }
+                });
+                
+                // Clear ISBN displays
+                document.getElementById('ebookIsbnDisplay').textContent = '';
+                document.getElementById('paperbackIsbnDisplay').textContent = '';
+                document.getElementById('laminateIsbnDisplay').textContent = '';
+                document.getElementById('dustjacketIsbnDisplay').textContent = '';
+                
+                // Reset status indicators
+                updatePhaseStatus();
+                updateProjectStatus();
+                
+                // Expand all phases
+                document.querySelectorAll('.phase-container').forEach(container => {
+                    container.classList.remove('collapsed');
+                });
+            }
+            
+            function getProjects() {
+                const projectsString = localStorage.getItem('publishingProjects');
+                return projectsString ? JSON.parse(projectsString) : {};
+            }
+            
+            function getProjectName(projectId) {
+                const projects = getProjects();
+                return projects[projectId] ? projects[projectId].name : 'Unknown Project';
+            }
+            
+            function loadProjectsList() {
+                const projects = getProjects();
+                projectSelect.innerHTML = '<option value="">-- Select a saved project --</option>';
+                
+                // Sort projects by last updated date (newest first)
+                const sortedProjects = Object.values(projects).sort((a, b) => {
+                    return new Date(b.lastUpdated) - new Date(a.lastUpdated);
+                });
+                
+                sortedProjects.forEach(project => {
+                    const option = document.createElement('option');
+                    option.value = project.id;
+                    option.textContent = project.name;
+                    if (project.id === currentProjectId) {
+                        option.selected = true;
+                    }
+                    projectSelect.appendChild(option);
+                });
+                
+                // Refresh client overview table
+                refreshClientOverview();
+            }
+            
+            function exportProject() {
+                // Save current project first
+                if (!saveCurrentProject()) {
+                    return;
+                }
+                
+                const projects = getProjects();
+                const project = projects[currentProjectId];
+                
+                // Create and download export file
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(project, null, 2));
+                const downloadAnchorNode = document.createElement('a');
+                downloadAnchorNode.setAttribute("href", dataStr);
+                downloadAnchorNode.setAttribute("download", `${project.data.projectDetails.bookTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase()}-export.json`);
+                document.body.appendChild(downloadAnchorNode);
+                downloadAnchorNode.click();
+                downloadAnchorNode.remove();
+            }
+            
+            function exportAllProjects() {
+                const projects = getProjects();
+                
+                if (Object.keys(projects).length === 0) {
+                    alert('No projects to export.');
+                    return;
+                }
+                
+                // Create and download export file
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(projects, null, 2));
+                const downloadAnchorNode = document.createElement('a');
+                downloadAnchorNode.setAttribute("href", dataStr);
+                downloadAnchorNode.setAttribute("download", "all-projects-export.json");
+                document.body.appendChild(downloadAnchorNode);
+                downloadAnchorNode.click();
+                downloadAnchorNode.remove();
+            }
+            
+            function importProject(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const project = JSON.parse(e.target.result);
+                        
+                        // Validate basic project structure
+                        if (!project.id || !project.data || !project.data.projectDetails) {
+                            throw new Error('Invalid project file format');
+                        }
+                        
+                        // Generate a new project ID to avoid overwriting existing projects
+                        const newProjectId = 'project_' + Date.now();
+                        project.id = newProjectId;
+                        
+                        // Add to projects list
+                        const projects = getProjects();
+                        projects[newProjectId] = project;
+                        localStorage.setItem('publishingProjects', JSON.stringify(projects));
+                        
+                        // Load the imported project
+                        loadProjectsList();
+                        loadProject(newProjectId);
+                        
+                        alert('Project imported successfully!');
+                    } catch (error) {
+                        alert('Error importing project: ' + error.message);
+                        document.getElementById('fileName').textContent = '';
+                    }
+                };
+                reader.readAsText(file);
+            }
+            
+            function importBatchFile(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedProjects = JSON.parse(e.target.result);
+                        
+                        // Validate it's an object with projects
+                        if (typeof importedProjects !== 'object' || importedProjects === null) {
+                            throw new Error('Invalid batch file format');
+                        }
+                        
+                        // Get existing projects
+                        const projects = getProjects();
+                        
+                        // Generate new IDs for all imported projects
+                        let importCount = 0;
+                        for (const key in importedProjects) {
+                            const project = importedProjects[key];
+                            const newId = 'project_' + Date.now() + '_' + Math.round(Math.random() * 1000) + '_' + importCount;
+                            project.id = newId;
+                            projects[newId] = project;
+                            importCount++;
+                        }
+                        
+                        // Save merged projects
+                        localStorage.setItem('publishingProjects', JSON.stringify(projects));
+                        
+                        // Refresh projects list
+                        loadProjectsList();
+                        
+                        alert(`${importCount} projects imported successfully!`);
+                    } catch (error) {
+                        alert('Error importing batch: ' + error.message);
+                        document.getElementById('batchFileName').textContent = '';
+                    }
+                };
+                reader.readAsText(file);
+            }
+            
+            function getCurrentPhase() {
+                // Check phases from last to first to find the current phase
+                const phase8Tasks = document.querySelectorAll('#phase8Container .task-item input[type="checkbox"]:checked').length;
+                if (phase8Tasks > 0) return 'Post-Publication Support';
+                
+                const phase7Tasks = document.querySelectorAll('#phase7Container .task-item input[type="checkbox"]:checked').length;
+                if (phase7Tasks > 0) return 'Publication Phase';
+                
+                const phase6Tasks = document.querySelectorAll('#phase6Container .task-item input[type="checkbox"]:checked').length;
+                if (phase6Tasks > 0) return 'File Upload & QA';
+                
+                const phase5Tasks = document.querySelectorAll('#phase5Container .task-item input[type="checkbox"]:checked').length;
+                if (phase5Tasks > 0) return 'Account Setup';
+                
+                const phase4Tasks = document.querySelectorAll('#phase4Container .task-item input[type="checkbox"]:checked').length;
+                if (phase4Tasks > 0) return 'Production';
+                
+                const phase3Tasks = document.querySelectorAll('#phase3Container .task-item input[type="checkbox"]:checked').length;
+                if (phase3Tasks > 0) return 'Beta Reader Review';
+                
+                const phase2Tasks = document.querySelectorAll('#phase2Container .task-item input[type="checkbox"]:checked').length;
+                if (phase2Tasks > 0) return 'Manuscript Development';
+                
+                const phase1Tasks = document.querySelectorAll('#phase1Container .task-item input[type="checkbox"]:checked').length;
+                if (phase1Tasks > 0) return 'Pre-Manuscript';
+                
+                return 'Not Started';
+            }
+            
+            function refreshClientOverview() {
+                const projects = getProjects();
+                const tableBody = document.getElementById('clientTableBody');
+                tableBody.innerHTML = '';
+                
+                const searchTerm = clientSearch.value.toLowerCase();
+                const statusFilterValue = statusFilter.value;
+                
+                // Sort projects by last updated date (newest first)
+                const sortedProjects = Object.values(projects).sort((a, b) => {
+                    return new Date(b.lastUpdated) - new Date(a.lastUpdated);
+                });
+                
+                sortedProjects.forEach(project => {
+                    // Apply filtering
+                    if (searchTerm && 
+                        !project.name.toLowerCase().includes(searchTerm) &&
+                        !project.data.projectDetails.projectManager.toLowerCase().includes(searchTerm)) {
+                        return;
+                    }
+                    
+                    if (statusFilterValue !== 'all') {
+                        if (statusFilterValue === 'not-started' && project.status !== 'Not Started') return;
+                        if (statusFilterValue === 'in-progress' && !project.status.includes('In Progress')) return;
+                        if (statusFilterValue === 'completed' && project.status !== 'Completed') return;
+                        if (statusFilterValue === 'at-risk') {
+                            // Define "at risk" logic - for example, less than 25% progress 
+                            // and the due date is within 30 days
+                            const isAtRisk = project.progress < 25 && 
+                                project.data.projectDetails.pubDate && 
+                                new Date(project.data.projectDetails.pubDate) < new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+                            
+                            if (!isAtRisk) return;
+                        }
+                    }
+                    
+                    const row = document.createElement('tr');
+                    
+                    // Book Title
+                    const titleCell = document.createElement('td');
+                    titleCell.textContent = project.data.projectDetails.bookTitle;
+                    row.appendChild(titleCell);
+                    
+                    // Author
+                    const authorCell = document.createElement('td');
+                    authorCell.textContent = project.data.projectDetails.authorName;
+                    row.appendChild(authorCell);
+                    
+                    // Start Date
+                    const startDateCell = document.createElement('td');
+                    startDateCell.textContent = project.data.projectDetails.startDate || 'N/A';
+                    row.appendChild(startDateCell);
+                    
+                    // Target Pub Date
+                    const pubDateCell = document.createElement('td');
+                    pubDateCell.textContent = project.data.projectDetails.pubDate || 'N/A';
+                    row.appendChild(pubDateCell);
+                    
+                    // Current Phase
+                    const phaseCell = document.createElement('td');
+                    phaseCell.textContent = project.currentPhase || 'Not Started';
+                    row.appendChild(phaseCell);
+                    
+                    // Status
+                    const statusCell = document.createElement('td');
+                    const statusPill = document.createElement('span');
+                    statusPill.textContent = project.status;
+                    statusPill.className = 'status-pill';
+                    
+                    if (project.status === 'Not Started') {
+                        statusPill.classList.add('not-started');
+                    } else if (project.status === 'Completed') {
+                        statusPill.classList.add('completed');
+                    } else if (project.progress < 25) {
+                        statusPill.classList.add('at-risk');
+                    } else {
+                        statusPill.classList.add('in-progress');
+                    }
+                    
+                    statusCell.appendChild(statusPill);
+                    row.appendChild(statusCell);
+                    
+                    // Progress
+                    const progressCell = document.createElement('td');
+                    
+                    const progressContainer = document.createElement('div');
+                    progressContainer.className = 'progress-container';
+                    
+                    const progressBar = document.createElement('div');
+                    progressBar.className = 'progress-bar';
+                    progressBar.style.width = `${project.progress || 0}%`;
+                    
+                    progressContainer.appendChild(progressBar);
+                    progressCell.appendChild(progressContainer);
+                    
+                    const progressText = document.createElement('span');
+                    progressText.textContent = `${project.progress || 0}%`;
+                    progressText.className = 'text-xs';
+                    progressCell.appendChild(progressText);
+                    
+                    row.appendChild(progressCell);
+                    
+                    // Actions
+                    const actionsCell = document.createElement('td');
+                    actionsCell.className = 'action-column';
+                    
+                    const editButton = document.createElement('button');
+                    editButton.textContent = 'Edit';
+                    editButton.className = 'bg-blue-600 text-white px-2 py-1 rounded text-sm mr-1';
+                    editButton.addEventListener('click', () => loadProject(project.id));
+                    
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.className = 'bg-red-500 text-white px-2 py-1 rounded text-sm';
+                    deleteButton.addEventListener('click', () => {
+                        if (confirm(`Are you sure you want to delete the project "${project.name}"? This cannot be undone.`)) {
+                            deleteProject(project.id);
+                            refreshClientOverview();
+                        }
+                    });
+                    
+                    actionsCell.appendChild(editButton);
+                    actionsCell.appendChild(deleteButton);
+                    row.appendChild(actionsCell);
+                    
+                    tableBody.appendChild(row);
+                });
+                
+                // If no projects match filters
+                if (tableBody.children.length === 0) {
+                    const emptyRow = document.createElement('tr');
+                    const emptyCell = document.createElement('td');
+                    emptyCell.colSpan = 8;
+                    emptyCell.textContent = 'No projects match your filters';
+                    emptyCell.className = 'text-center py-4';
+                    emptyRow.appendChild(emptyCell);
+                    tableBody.appendChild(emptyRow);
+                }
+            }
+            
+            function filterClientTable() {
+                refreshClientOverview();
+            }
+            
+            // Initialize the app
+            loadProjectsList();
+            updatePhaseStatus();
+            updateProjectStatus();
+            
+            // Auto save every 5 minutes
+            setInterval(function() {
+                if (currentProjectId && (document.getElementById('bookTitle').value.trim() !== '' || 
+                    document.getElementById('authorName').value.trim() !== '')) {
+                    saveCurrentProject();
+                    console.log('Auto-saved at ' + new Date().toLocaleTimeString());
+                }
+            }, 300000); // 5 minutes
+        });
+    </script>
