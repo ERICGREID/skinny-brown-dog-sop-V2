@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skinny Brown Dog Media - Publishing Workflow Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --primary: #1a56db;
@@ -24,13 +25,13 @@
             --warning: #f59e0b;
             --danger: #ef4444;
         }
-        
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--gray-100);
@@ -38,7 +39,7 @@
             line-height: 1.6;
             padding: 20px;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -47,25 +48,25 @@
             padding: 40px;
             border-radius: 8px;
         }
-        
+
         header {
             text-align: center;
             margin-bottom: 40px;
             padding-bottom: 20px;
             border-bottom: 1px solid var(--gray-200);
         }
-        
+
         header img {
             max-width: 300px;
             margin-bottom: 20px;
         }
-        
+
         h1 {
             color: var(--primary);
             font-size: 28px;
             margin-bottom: 10px;
         }
-        
+
         h2 {
             color: var(--primary);
             margin: 30px 0 15px;
@@ -73,37 +74,37 @@
             border-bottom: 2px solid var(--accent);
             font-size: 20px;
         }
-        
+
         h3 {
             color: var(--secondary);
             margin: 20px 0 10px;
             font-size: 18px;
         }
-        
+
         .project-info {
             background-color: var(--light);
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 30px;
         }
-        
+
         .project-info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
-        
+
         .info-item {
             margin-bottom: 15px;
         }
-        
+
         .info-item label {
             display: block;
             font-weight: bold;
             color: var(--secondary);
             margin-bottom: 5px;
         }
-        
+
         .info-item input[type="text"],
         .info-item input[type="date"],
         .info-item input[type="password"],
@@ -114,19 +115,19 @@
             border-radius: 4px;
             font-family: inherit;
         }
-        
+
         .info-item input[type="password"] {
             font-family: 'password';
             letter-spacing: 2px;
         }
-        
+
         .phase-container {
             margin-bottom: 40px;
             border: 1px solid var(--gray-300);
             border-radius: 8px;
             overflow: hidden;
         }
-        
+
         .phase-header {
             background-color: var(--primary);
             color: var(--white);
@@ -136,14 +137,14 @@
             align-items: center;
             cursor: pointer;
         }
-        
+
         .phase-header h2 {
             margin: 0;
             padding: 0;
             border: none;
             color: var(--white);
         }
-        
+
         .phase-header .status {
             font-size: 14px;
             font-weight: bold;
@@ -151,42 +152,42 @@
             border-radius: 20px;
             background-color: var(--white);
         }
-        
+
         .status-not-started {
             color: var(--gray-600);
         }
-        
+
         .status-in-progress {
             color: var(--accent);
         }
-        
+
         .status-completed {
             color: var(--success);
         }
-        
+
         .phase-content {
             padding: 20px;
             background-color: var(--white);
         }
-        
+
         .phase-container.collapsed .phase-content {
             display: none;
         }
-        
+
         .phase-header:after {
-            content: "▼";
+            content: " ▼ ";
             font-size: 12px;
             transition: transform 0.3s;
         }
-        
+
         .phase-container.collapsed .phase-header:after {
             transform: rotate(-90deg);
         }
-        
+
         .task-list {
             list-style-type: none;
         }
-        
+
         .task-item {
             padding: 12px;
             margin-bottom: 10px;
@@ -195,60 +196,60 @@
             display: flex;
             align-items: center;
         }
-        
+
         .task-item:hover {
             background-color: var(--gray-100);
         }
-        
+
         .task-item input[type="checkbox"] {
             margin-right: 10px;
             width: 20px;
             height: 20px;
         }
-        
+
         .task-item.completed {
             background-color: var(--light);
             border-color: var(--success);
         }
-        
+
         .task-item.completed label {
             text-decoration: line-through;
             color: var(--gray-500);
         }
-        
+
         .isbn-section {
             background-color: var(--light);
             padding: 20px;
             border-radius: 8px;
             margin-top: 20px;
         }
-        
+
         .isbn-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
-        
+
         .platform-section {
             background-color: var(--light);
             padding: 20px;
             border-radius: 8px;
             margin-top: 20px;
         }
-        
+
         .platform-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 20px;
         }
-        
+
         .platform-card {
             background-color: var(--white);
             border: 1px solid var(--gray-300);
             border-radius: 8px;
             padding: 15px;
         }
-        
+
         .platform-card h3 {
             color: var(--primary);
             margin-top: 0;
@@ -256,14 +257,14 @@
             padding-bottom: 10px;
             border-bottom: 1px solid var(--gray-200);
         }
-        
+
         .transition-arrow {
             text-align: center;
             font-size: 24px;
             color: var(--primary);
             margin: 20px 0;
         }
-        
+
         .payment-milestone {
             background-color: var(--accent);
             color: var(--white);
@@ -273,7 +274,7 @@
             font-weight: bold;
             text-align: center;
         }
-        
+
         .actions {
             margin-top: 40px;
             display: flex;
@@ -281,7 +282,7 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        
+
         button {
             background-color: var(--primary);
             color: white;
@@ -292,34 +293,34 @@
             font-weight: bold;
             transition: background-color 0.3s;
         }
-        
+
         button:hover {
             background-color: var(--primary-dark);
         }
-        
+
         button.secondary {
             background-color: var(--gray-300);
             color: var(--gray-700);
         }
-        
+
         button.secondary:hover {
             background-color: var(--gray-400);
         }
-        
+
         button.success {
             background-color: var(--success);
         }
-        
+
         button.warning {
             background-color: var(--warning);
         }
-        
+
         .timeline {
             position: relative;
             margin: 40px 0;
             padding-left: 50px;
         }
-        
+
         .timeline::before {
             content: '';
             position: absolute;
@@ -329,7 +330,7 @@
             width: 4px;
             background-color: var(--primary);
         }
-        
+
         .timeline-item {
             position: relative;
             margin-bottom: 30px;
@@ -338,7 +339,7 @@
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        
+
         .timeline-item::before {
             content: '';
             position: absolute;
@@ -350,7 +351,7 @@
             background-color: var(--white);
             border: 4px solid var(--primary);
         }
-        
+
         .timeline-date {
             display: inline-block;
             padding: 5px 10px;
@@ -359,7 +360,7 @@
             font-size: 14px;
             margin-bottom: 10px;
         }
-        
+
         .progress-container {
             width: 100%;
             height: 10px;
@@ -368,24 +369,24 @@
             overflow: hidden;
             margin-top: 5px;
         }
-        
+
         .progress-bar {
             height: 100%;
             background-color: var(--accent);
             transition: width 0.3s ease;
         }
-        
+
         .import-export-section {
             margin-top: 40px;
             padding: 20px;
             background-color: var(--light);
             border-radius: 8px;
         }
-        
+
         .file-input {
             display: none;
         }
-        
+
         .file-label {
             display: inline-block;
             background-color: var(--primary);
@@ -396,13 +397,13 @@
             font-weight: bold;
             margin-right: 10px;
         }
-        
+
         .file-name {
             display: inline-block;
             margin-left: 10px;
             font-style: italic;
         }
-        
+
         /* Project selector */
         .project-selector {
             margin-bottom: 30px;
@@ -413,19 +414,19 @@
             padding: 15px;
             border-radius: 8px;
         }
-        
+
         .project-selector select {
             padding: 8px;
             border: 1px solid var(--gray-300);
             border-radius: 4px;
             flex-grow: 1;
         }
-        
+
         .project-management-btns {
             display: flex;
             gap: 10px;
         }
-        
+
         /* Client overview table */
         .client-overview {
             margin-top: 20px;
@@ -435,7 +436,7 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
-        
+
         .client-overview-header {
             display: flex;
             justify-content: space-between;
@@ -444,29 +445,29 @@
             color: white;
             padding: 15px 20px;
         }
-        
+
         .client-overview-header h2 {
             margin: 0;
             border: none;
             color: white;
         }
-        
+
         .client-overview-controls {
             display: flex;
             gap: 10px;
         }
-        
+
         .client-overview-controls input {
             padding: 5px 10px;
             border: none;
             border-radius: 4px;
         }
-        
+
         .client-table {
             width: 100%;
             border-collapse: collapse;
         }
-        
+
         .client-table th {
             background-color: var(--gray-100);
             padding: 10px;
@@ -474,70 +475,85 @@
             border-bottom: 2px solid var(--gray-300);
             cursor: pointer;
         }
-        
+        /* Add sort indicators */
+        .client-table th.sort-asc::after {
+            content: ' ▲';
+            font-size: 0.8em;
+        }
+        .client-table th.sort-desc::after {
+            content: ' ▼';
+            font-size: 0.8em;
+        }
+
+
         .client-table th:hover {
             background-color: var(--gray-200);
         }
-        
+
         .client-table td {
             padding: 10px;
             border-bottom: 1px solid var(--gray-200);
         }
-        
+
         .client-table tr:hover {
             background-color: var(--gray-100);
         }
-        
+
         .client-table .progress-container {
             width: 100%;
             max-width: 150px;
         }
-        
+
         .client-table .action-column {
             text-align: right;
             white-space: nowrap;
         }
-        
+
         .client-table .action-column button {
             padding: 5px 10px;
             font-size: 12px;
+            margin-left: 5px; /* Add space between buttons */
         }
-        
+
         .status-pill {
             display: inline-block;
             padding: 4px 10px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: bold;
+            /* Align text and icon vertically */
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
-        
+
         .status-pill.not-started {
             background-color: var(--gray-200);
             color: var(--gray-700);
         }
-        
+
         .status-pill.in-progress {
             background-color: var(--accent);
             color: white;
         }
-        
+
         .status-pill.completed {
             background-color: var(--success);
             color: white;
         }
-        
+
         .status-pill.at-risk {
             background-color: var(--warning);
             color: white;
         }
-        
+
         .batch-controls {
             margin-top: 20px;
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
         }
-        
+
         footer {
             margin-top: 40px;
             text-align: center;
@@ -546,7 +562,7 @@
             border-top: 1px solid var(--gray-300);
             padding-top: 20px;
         }
-        
+
         /* Process Timeline Visualization */
         .process-timeline {
             margin: 30px auto;
@@ -555,18 +571,18 @@
             border-radius: 8px;
             border: 1px solid var(--gray-300);
         }
-        
+
         .process-timeline h2 {
             text-align: center;
             margin-bottom: 30px;
         }
-        
+
         .timeline-row {
             display: flex;
             position: relative;
             margin-bottom: 40px;
         }
-        
+
         .timeline-row::after {
             content: '';
             position: absolute;
@@ -577,14 +593,14 @@
             background-color: var(--gray-300);
             z-index: 1;
         }
-        
+
         .timeline-step {
             flex: 1;
             text-align: center;
             position: relative;
             z-index: 2;
         }
-        
+
         .timeline-step-circle {
             width: 60px;
             height: 60px;
@@ -598,18 +614,18 @@
             font-weight: bold;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        
+
         .timeline-step-title {
             font-weight: bold;
             margin-bottom: 5px;
         }
-        
+
         .timeline-step-duration {
             color: var(--gray-600);
             font-size: 14px;
             font-style: italic;
         }
-        
+
         /* Account Setup Instructions */
         .setup-instructions {
             background-color: var(--light);
@@ -617,14 +633,14 @@
             padding: 20px;
             margin: 20px 0;
         }
-        
+
         .setup-instructions h3 {
             color: var(--primary);
             border-bottom: 1px solid var(--gray-300);
             padding-bottom: 10px;
             margin-bottom: 15px;
         }
-        
+
         .setup-url-box {
             background-color: var(--white);
             border: 1px solid var(--gray-300);
@@ -636,7 +652,7 @@
             align-items: center;
             justify-content: space-between;
         }
-        
+
         .url-button {
             background-color: var(--gray-200);
             border: none;
@@ -646,17 +662,17 @@
             font-size: 12px;
             cursor: pointer;
         }
-        
+
         .url-button:hover {
             background-color: var(--gray-300);
         }
-        
+
         .instruction-step {
             margin-bottom: 15px;
             padding-left: 24px;
             position: relative;
         }
-        
+
         .instruction-step-number {
             position: absolute;
             left: 0;
@@ -672,7 +688,7 @@
             font-size: 11px;
             font-weight: bold;
         }
-        
+
         .instruction-note {
             margin-top: 15px;
             padding: 10px;
@@ -680,7 +696,7 @@
             border-left: 4px solid #ffc107;
             font-style: italic;
         }
-        
+
         /* Google Drive Integration Info */
         .drive-integration {
             background-color: rgba(66, 133, 244, 0.1);
@@ -689,11 +705,11 @@
             margin: 20px 0;
             border-radius: 0 4px 4px 0;
         }
-        
+
         .drive-integration h3 {
             color: #4285f4;
         }
-        
+
         /* Gmail Integration Info */
         .gmail-integration {
             background-color: rgba(219, 68, 55, 0.1);
@@ -702,11 +718,158 @@
             margin: 20px 0;
             border-radius: 0 4px 4px 0;
         }
-        
+
         .gmail-integration h3 {
             color: #db4437;
         }
-        
+
+        /* --- START: Added Google Drive Integration Styles --- */
+        #google-auth-modal {
+          display: none; /* Initially hidden */
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0,0,0,0.5);
+          z-index: 1000;
+          /* Use Flexbox to center */
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .google-auth-container {
+          background: var(--white);
+          width: 90%;
+          max-width: 400px;
+          padding: 25px;
+          border-radius: 8px;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+          /* Added text align */
+          text-align: center;
+        }
+        .google-auth-container h2 {
+           border: none; /* Remove underline from modal h2 */
+           color: var(--gray-800);
+           margin-bottom: 15px;
+        }
+         .google-auth-container p {
+           color: var(--gray-600);
+           margin-bottom: 20px;
+         }
+
+
+        .drive-settings {
+          margin-top: 30px;
+          padding: 20px;
+          background: var(--light);
+          border-radius: 8px;
+          border-left: 4px solid var(--accent); /* Using accent for consistency */
+        }
+         /* Style h3 inside drive-settings */
+         .drive-settings h3 {
+            color: var(--primary); /* Match other h3 */
+            margin-top: 0; /* Remove top margin */
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray-300); /* Add a subtle separator */
+             display: flex; /* Align icon and text */
+             align-items: center;
+        }
+
+
+        #drive-status {
+          margin: 15px 0;
+          padding: 10px; /* Re-apply padding if needed */
+          /* font-weight: bold; - Handled by pill */
+          /* border-radius: 4px; - Handled by pill */
+          /* Use status-pill class for styling */
+        }
+
+        .backup-options {
+          margin-top: 20px;
+          padding-top: 15px;
+          border-top: 1px solid var(--gray-200);
+        }
+
+        .backup-options label {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 15px;
+          cursor: pointer;
+        }
+        /* Style checkbox */
+         .backup-options input[type="checkbox"] {
+             width: 18px;
+             height: 18px;
+         }
+
+        #backup-history {
+          /* max-height: 200px; - Keep if desired */
+          overflow-y: auto;
+          margin-top: 25px; /* More spacing */
+          border: 1px solid var(--gray-200);
+          border-radius: 4px;
+          padding: 15px; /* More padding */
+          background-color: var(--white); /* White background */
+        }
+         #backup-history h4 {
+             margin: 0 0 10px 0; /* Adjust heading margin */
+             color: var(--secondary);
+             font-size: 16px;
+             border-bottom: 1px solid var(--gray-200);
+             padding-bottom: 8px;
+         }
+
+
+        .backup-item {
+          padding: 8px 0; /* Adjust padding */
+          border-bottom: 1px solid var(--gray-200);
+          display: flex;
+          justify-content: space-between;
+           font-size: 14px; /* Slightly smaller text */
+           color: var(--gray-700);
+           cursor: pointer; /* Add pointer cursor */
+           transition: background-color 0.2s; /* Smooth hover */
+        }
+         .backup-item:hover {
+             background-color: var(--gray-100); /* Hover effect */
+         }
+
+
+        .backup-item:last-child {
+          border-bottom: none;
+        }
+
+         /* Alert styles */
+         .alert-success { background-color: var(--success); }
+         .alert-warning { background-color: var(--warning); }
+         .alert-danger { background-color: var(--danger); }
+         .alert-info { background-color: var(--accent); }
+
+        /* This media query specifically targets the .google-auth-container */
+        @media (max-width: 768px) {
+          .google-auth-container {
+            width: 95%;
+            padding: 20px; /* Adjust padding */
+          }
+          .drive-settings {
+              padding: 15px;
+          }
+           /* Target the div containing the buttons */
+           #backup-options > div:nth-of-type(1) {
+              flex-direction: column;
+              gap: 10px; /* Keep gap */
+           }
+            #backup-options > div:nth-of-type(1) button {
+               width: 100%; /* Make buttons full width */
+            }
+        }
+        /* --- END: Added Google Drive Integration Styles --- */
+
+
         /* Responsive */
         @media (max-width: 768px) {
             .project-info-grid,
@@ -714,88 +877,89 @@
             .platform-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .container {
                 padding: 20px;
             }
-            
+
             .platform-grid {
                 gap: 15px;
             }
-            
+
             .actions {
                 flex-direction: column;
             }
-            
+
             .actions button {
                 width: 100%;
             }
-            
+
             .project-selector {
                 flex-direction: column;
                 align-items: stretch;
             }
-            
+
             .client-overview-header {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            
+
             .client-overview-controls {
                 margin-top: 10px;
                 width: 100%;
             }
-            
+
             .client-table .action-column {
                 display: flex;
                 flex-direction: column;
                 gap: 5px;
             }
-            
+
             .timeline-row {
                 flex-direction: column;
             }
-            
+
             .timeline-row::after {
                 display: none;
             }
-            
+
             .timeline-step {
                 margin-bottom: 30px;
                 padding-left: 70px;
                 text-align: left;
             }
-            
+
             .timeline-step-circle {
                 position: absolute;
                 left: 0;
                 margin: 0;
             }
         }
-
         @media print {
             body {
                 background-color: var(--white);
                 padding: 0;
             }
-            
+
             .container {
                 box-shadow: none;
                 max-width: 100%;
             }
-            
+
             .actions,
             .project-selector,
             .import-export-section,
             .client-overview,
-            .batch-controls {
-                display: none;
+            .batch-controls,
+            .drive-settings, /* Hide drive settings */
+            #google-auth-modal /* Hide modal */ {
+                display: none !important; /* Important to override other display rules */
             }
-            
+
             .phase-container.collapsed .phase-content {
                 display: block;
             }
-            
+
             @page {
                 size: letter;
                 margin: 0.5in;
@@ -810,8 +974,8 @@
             <h1>Book Publishing Workflow Tracker</h1>
             <p>Comprehensive management system for book publication projects</p>
         </header>
-        
-        <!-- Process Timeline Visualization -->
+
+
         <div class="process-timeline">
             <h2>Publishing Process Timeline</h2>
             <div class="timeline-row">
@@ -859,15 +1023,13 @@
                 </div>
             </div>
         </div>
-
-        <!-- Client Overview Section -->
         <div class="client-overview">
             <div class="client-overview-header">
                 <h2>Client Projects Overview</h2>
                 <div class="client-overview-controls">
                     <input type="text" id="clientSearch" placeholder="Search clients...">
                     <select id="statusFilter">
-                        <option value="all">All Statuses</option>
+                         <option value="all">All Statuses</option>
                         <option value="not-started">Not Started</option>
                         <option value="in-progress">In Progress</option>
                         <option value="completed">Completed</option>
@@ -890,13 +1052,11 @@
                         </tr>
                     </thead>
                     <tbody id="clientTableBody">
-                        <!-- Client rows will be dynamically generated here -->
-                    </tbody>
-                </table>
+                        </tbody>
+                 </table>
             </div>
         </div>
-        
-        <!-- Project Selector -->
+
         <div class="project-selector">
             <select id="projectSelect">
                 <option value="">-- Select a saved project --</option>
@@ -907,37 +1067,37 @@
                 <button type="button" id="deleteProjectBtn" class="warning">Delete</button>
             </div>
         </div>
-        
-        <!-- Batch Control Buttons -->
+
+
         <div class="batch-controls">
             <button type="button" id="exportAllBtn" class="success">Export All Projects</button>
             <button type="button" id="importBatchBtn">Import Batch</button>
             <input type="file" id="batchImportFile" class="file-input" accept=".json">
             <label for="batchImportFile" class="file-label">Select Batch File</label>
             <span id="batchFileName" class="file-name"></span>
-        </div>
-        
+         </div>
+
         <div class="project-info">
             <h2>Book Project Information</h2>
             <div class="project-info-grid">
                 <div class="info-item">
                     <label for="bookTitle">Book Title:</label>
-                    <input type="text" id="bookTitle" name="bookTitle" required>
+                     <input type="text" id="bookTitle" name="bookTitle" required>
                 </div>
                 <div class="info-item">
                     <label for="authorName">Author Name:</label>
                     <input type="text" id="authorName" name="authorName" required>
-                </div>
+                 </div>
                 <div class="info-item">
                     <label for="startDate">Project Start Date:</label>
                     <input type="date" id="startDate" name="startDate" required>
                 </div>
-                <div class="info-item">
+                 <div class="info-item">
                     <label for="pubDate">Target Publication Date:</label>
                     <input type="date" id="pubDate" name="pubDate" required>
                 </div>
                 <div class="info-item">
-                    <label for="projectManager">Project Manager:</label>
+                     <label for="projectManager">Project Manager:</label>
                     <input type="text" id="projectManager" name="projectManager" required>
                 </div>
                 <div class="info-item">
@@ -947,54 +1107,49 @@
                         <div class="progress-bar" id="overallProgress" style="width: 0%"></div>
                     </div>
                 </div>
-            </div>
+             </div>
         </div>
-        
-        <!-- Pre-Manuscript Phase -->
+
         <div class="phase-container" id="phase1Container">
             <div class="phase-header" onclick="togglePhase('phase1Container')">
                 <h2>Pre-Manuscript Phase</h2>
                 <span class="status status-not-started" id="phase1Status">Not Started</span>
-            </div>
+             </div>
             <div class="phase-content">
-                <!-- Google Drive Integration Info -->
                 <div class="drive-integration">
                     <h3>Google Drive Integration</h3>
-                    <p>Create a structured folder system for the author in Google Drive to store all project files.</p>
+                     <p>Create a structured folder system for the author in Google Drive to store all project files.</p>
                     <p>Recommended folder structure:</p>
                     <ul>
                         <li><strong>[Author Name] - [Book Title]</strong> (main folder)
-                            <ul>
+                             <ul>
                                 <li>01 - Agreements</li>
                                 <li>02 - Manuscript</li>
                                 <li>03 - Cover Designs</li>
                                 <li>04 - Production Files</li>
                                 <li>05 - Marketing</li>
-                                <li>06 - Proof Reviews</li>
+                                 <li>06 - Proof Reviews</li>
                             </ul>
                         </li>
                     </ul>
-                    <p>Make sure to give the author View access to their folder.</p>
+                     <p>Make sure to give the author View access to their folder.</p>
                 </div>
-
-                <!-- Gmail Integration Info -->
                 <div class="gmail-integration">
-                    <h3>Gmail Account Setup</h3>
+                     <h3>Gmail Account Setup</h3>
                     <p>Authors have their own email accounts, but we should have access information for administration purposes.</p>
                     <p>We will use the author's Gmail account for:</p>
                     <ul>
-                        <li>Platform registrations (BookVault, IngramSpark, KDP)</li>
+                         <li>Platform registrations (BookVault, IngramSpark, KDP)</li>
                         <li>Automated notifications from platforms</li>
                         <li>Sales reports and royalty payments</li>
                     </ul>
-                </div>
-
+                 </div>
                 <div class="info-item">
                     <label for="authorGmail">Author Gmail:</label>
                     <input type="text" id="authorGmail" name="authorGmail">
                 </div>
                 <div class="info-item">
-                    <label for="authorGmailPass">Gmail Password (stored securely):</label>
+                     <label for="authorGmailPass">Gmail Password (stored securely):</label>
                     <input type="password" id="authorGmailPass" name="authorGmailPass">
                 </div>
                 <div class="info-item">
@@ -1003,78 +1158,78 @@
                 </div>
                 <div class="info-item">
                     <label for="stripePass">Stripe Password (stored securely):</label>
-                    <input type="password" id="stripePass" name="stripePass">
+                     <input type="password" id="stripePass" name="stripePass">
                 </div>
-                
+
                 <div class="isbn-section">
                     <h3>ISBN Assignment</h3>
                     <div class="isbn-grid">
-                        <div class="info-item">
+                         <div class="info-item">
                             <label for="isbnEbook">eBook ISBN:</label>
                             <input type="text" id="isbnEbook" name="isbnEbook">
-                        </div>
+                         </div>
                         <div class="info-item">
                             <label for="isbnPaperback">Paperback ISBN:</label>
                             <input type="text" id="isbnPaperback" name="isbnPaperback">
-                        </div>
+                         </div>
                         <div class="info-item">
                             <label for="isbnCaseLaminate">Case Laminate ISBN:</label>
                             <input type="text" id="isbnCaseLaminate" name="isbnCaseLaminate">
                         </div>
                         <div class="info-item">
                             <label for="isbnDustJacket">Dust Jacket ISBN:</label>
-                            <input type="text" id="isbnDustJacket" name="isbnDustJacket">
+                             <input type="text" id="isbnDustJacket" name="isbnDustJacket">
                         </div>
                     </div>
                 </div>
-                
-                <h3>Tasks</h3>
+
+
+                 <h3>Tasks</h3>
                 <ul class="task-list">
                     <li class="task-item">
                         <input type="checkbox" id="task1" name="task1">
                         <label for="task1">Schedule discovery/lead follow-up call</label>
-                    </li>
+                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task2" name="task2">
                         <label for="task2">Send welcome package with publishing agreement</label>
-                    </li>
+                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task3" name="task3">
                         <label for="task3">Receive signed agreement</label>
-                    </li>
+                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task4" name="task4">
                         <label for="task4">Receive FIRST PAYMENT (50%)</label>
-                    </li>
+                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task5" name="task5">
                         <label for="task5">Create author folder in Google Drive</label>
-                    </li>
+                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task6" name="task6">
                         <label for="task6">Create entry in Employee Task Tracker</label>
-                    </li>
+                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task7" name="task7">
                         <label for="task7">Set up author Gmail account</label>
                     </li>
-                    <li class="task-item">
+                     <li class="task-item">
                         <input type="checkbox" id="task8" name="task8">
                         <label for="task8">Set up author Stripe account</label>
                     </li>
-                    <li class="task-item">
+                     <li class="task-item">
                         <input type="checkbox" id="task9" name="task9">
                         <label for="task9">Assign ISBNs to project</label>
                     </li>
-                </ul>
+                 </ul>
             </div>
         </div>
-        
+
         <div class="payment-milestone">
             FIRST PAYMENT (50%) - Due upon signing publishing agreement
         </div>
-        
-        <!-- Manuscript Development Phase -->
+
         <div class="phase-container" id="phase2Container">
             <div class="phase-header" onclick="togglePhase('phase2Container')">
                 <h2>Manuscript Development Phase (3 Months)</h2>
@@ -1082,51 +1237,51 @@
             </div>
             <div class="phase-content">
                 <h3>Tasks</h3>
-                <ul class="task-list">
+                 <ul class="task-list">
                     <li class="task-item">
                         <input type="checkbox" id="task10" name="task10">
                         <label for="task10">Receive draft manuscript or author notes</label>
-                    </li>
+                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task11" name="task11">
                         <label for="task11">Complete developmental editing (~6 weeks)</label>
-                    </li>
+                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task12" name="task12">
                         <label for="task12">Author implements developmental editing feedback</label>
-                    </li>
+                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task13" name="task13">
                         <label for="task13">Complete line/copy editing (~6 weeks)</label>
-                    </li>
+                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task14" name="task14">
                         <label for="task14">Author reviews and approves edits</label>
-                    </li>
+                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task15" name="task15">
                         <label for="task15"><strong>MILESTONE: Approve Final Draft Copy of Manuscript</strong></label>
-                    </li>
+                     </li>
                 </ul>
             </div>
         </div>
-        
+
         <div class="transition-arrow">
             <i>↓ TRANSITION: Once final draft is approved, begin Beta Reader phase ↓</i>
         </div>
-        
-        <!-- Beta Reader Review Phase -->
+
+
         <div class="phase-container" id="phase3Container">
             <div class="phase-header" onclick="togglePhase('phase3Container')">
                 <h2>Beta Reader Review Phase (30 Days)</h2>
                 <span class="status status-not-started" id="phase3Status">Not Started</span>
             </div>
             <div class="phase-content">
-                <h3>Tasks</h3>
+                 <h3>Tasks</h3>
                 <ul class="task-list">
                     <li class="task-item">
                         <input type="checkbox" id="task16" name="task16">
-                        <label for="task16">Create preliminary eBook version for beta readers</label>
+                         <label for="task16">Create preliminary eBook version for beta readers</label>
                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task17" name="task17">
@@ -1143,51 +1298,50 @@
                     <li class="task-item">
                         <input type="checkbox" id="task20" name="task20">
                         <label for="task20">Compile all beta reader feedback</label>
-                    </li>
+                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task21" name="task21">
                         <label for="task21">Present organized feedback to author</label>
-                    </li>
+                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task22" name="task22">
                         <label for="task22">Make final manuscript adjustments based on feedback</label>
-                    </li>
+                     </li>
                 </ul>
             </div>
         </div>
-        
+
         <div class="transition-arrow">
             <i>↓ TRANSITION: After final manuscript adjustments, begin Production phase ↓</i>
         </div>
-        
-        <!-- Production Phase -->
+
         <div class="phase-container" id="phase4Container">
             <div class="phase-header" onclick="togglePhase('phase4Container')">
                 <h2>Production Phase (2 Months)</h2>
                 <span class="status status-not-started" id="phase4Status">Not Started</span>
             </div>
-            <div class="phase-content">
+             <div class="phase-content">
                 <h3>Tasks</h3>
                 <ul class="task-list">
                     <li class="task-item">
                         <input type="checkbox" id="task23" name="task23">
-                        <label for="task23">Begin interior formatting based on final manuscript (30 days)</label>
+                         <label for="task23">Begin interior formatting based on final manuscript (30 days)</label>
                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task24" name="task24">
-                        <label for="task24">Submit cover design request</label>
+                         <label for="task24">Submit cover design request</label>
                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task25" name="task25">
-                        <label for="task25">Receive first round of cover designs (2 weeks)</label>
+                         <label for="task25">Receive first round of cover designs (2 weeks)</label>
                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task26" name="task26">
-                        <label for="task26">Collect author feedback on cover designs</label>
+                         <label for="task26">Collect author feedback on cover designs</label>
                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task27" name="task27">
-                        <label for="task27">Complete interior formatting</label>
+                         <label for="task27">Complete interior formatting</label>
                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task28" name="task28">
@@ -1204,38 +1358,36 @@
                     <li class="task-item">
                         <input type="checkbox" id="task31" name="task31">
                         <label for="task31">Receive SECOND PAYMENT (50%)</label>
-                    </li>
+                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task32" name="task32">
                         <label for="task32"><strong>MILESTONE: Author Approval of All Production Files</strong></label>
-                    </li>
+                     </li>
                 </ul>
             </div>
         </div>
-        
+
         <div class="payment-milestone">
             SECOND PAYMENT (50%) - Due upon approval of final production files
-        </div>
-        
+         </div>
+
         <div class="transition-arrow">
             <i>↓ TRANSITION: After all production files are approved, begin Account Setup phase ↓</i>
         </div>
-        
-        <!-- Account Setup Phase -->
+
         <div class="phase-container" id="phase5Container">
             <div class="phase-header" onclick="togglePhase('phase5Container')">
-                <h2>Account Setup Phase (1-2 Weeks)</h2>
+                 <h2>Account Setup Phase (1-2 Weeks)</h2>
                 <span class="status status-not-started" id="phase5Status">Not Started</span>
             </div>
             <div class="phase-content">
-                <!-- BookVault Setup Instructions -->
                 <div class="setup-instructions">
-                    <h3>BookVault Account Setup</h3>
+                     <h3>BookVault Account Setup</h3>
                     <div class="setup-url-box">
                         <span>https://booksvault.com/publishers/signup</span>
                         <button class="url-button">Copy</button>
-                    </div>
-                    
+                     </div>
+
                     <div class="instruction-step">
                         <span class="instruction-step-number">1</span>
                         <p>Create a new publisher account using the author's email</p>
@@ -1247,77 +1399,74 @@
                     <div class="instruction-step">
                         <span class="instruction-step-number">3</span>
                         <p>Set up Stripe Connect for direct payments to author</p>
-                    </div>
+                     </div>
                     <div class="instruction-step">
                         <span class="instruction-step-number">4</span>
                         <p>Invite author as team member with payment access</p>
-                    </div>
-                    
+                     </div>
+
                     <div class="instruction-note">
                         <strong>Note:</strong> Authors need to provide their tax information and banking details for Stripe Connect. Assist them in completing this process before publication.
                     </div>
                 </div>
-                
-                <!-- IngramSpark Setup Instructions -->
+
                 <div class="setup-instructions">
                     <h3>IngramSpark Account Setup</h3>
-                    <div class="setup-url-box">
+                     <div class="setup-url-box">
                         <span>https://myaccount.ingramspark.com/</span>
                         <button class="url-button">Copy</button>
                     </div>
-                    
+
                     <div class="instruction-step">
                         <span class="instruction-step-number">1</span>
                         <p>Create publisher account using the author's Gmail account</p>
-                    </div>
+                     </div>
                     <div class="instruction-step">
                         <span class="instruction-step-number">2</span>
                         <p>During signup, use "Skinny Brown Dog Media" as the publisher name</p>
-                    </div>
+                     </div>
                     <div class="instruction-step">
                         <span class="instruction-step-number">3</span>
                         <p>Complete tax information (W-9 for US authors, W-8BEN for international)</p>
-                    </div>
+                     </div>
                     <div class="instruction-step">
                         <span class="instruction-step-number">4</span>
                         <p>Set up payment method for setup fees</p>
-                    </div>
-                    
+                     </div>
+
                     <div class="instruction-note">
                         <strong>Note:</strong> IngramSpark charges setup fees for each format. Ask about current promotions or promo codes to waive these fees when possible.
-                    </div>
+                     </div>
                 </div>
-                
-                <!-- KDP Setup Instructions -->
+
                 <div class="setup-instructions">
                     <h3>Kindle Direct Publishing (KDP) Account Setup</h3>
-                    <div class="setup-url-box">
+                     <div class="setup-url-box">
                         <span>https://kdp.amazon.com/en_US/</span>
                         <button class="url-button">Copy</button>
                     </div>
-                    
+
                     <div class="instruction-step">
                         <span class="instruction-step-number">1</span>
                         <p>Create account using author's Gmail (or link to existing Amazon account)</p>
-                    </div>
+                     </div>
                     <div class="instruction-step">
                         <span class="instruction-step-number">2</span>
                         <p>Complete tax interview (W-9/W-8BEN)</p>
                     </div>
-                    <div class="instruction-step">
+                     <div class="instruction-step">
                         <span class="instruction-step-number">3</span>
                         <p>Set up direct deposit payment method</p>
                     </div>
-                    <div class="instruction-step">
+                     <div class="instruction-step">
                         <span class="instruction-step-number">4</span>
                         <p>Use "Skinny Brown Dog Media" as the publisher name in book details</p>
                     </div>
-                    
+
                     <div class="instruction-note">
                         <strong>Critical:</strong> Do NOT use Amazon's free ISBN option. Always use the Skinny Brown Dog Media assigned ISBNs from the ISBN Assignment section.
-                    </div>
+                     </div>
                 </div>
-
                 <div class="platform-section">
                     <h3>Platform Accounts</h3>
                     <div class="platform-grid">
@@ -1325,38 +1474,39 @@
                             <h3>BookVault</h3>
                             <div class="info-item">
                                 <label for="bookVaultLogin">Login:</label>
-                                <input type="text" id="bookVaultLogin" name="bookVaultLogin">
+                                 <input type="text" id="bookVaultLogin" name="bookVaultLogin">
                             </div>
                             <div class="info-item">
-                                <label for="bookVaultPass">Password:</label>
+                                 <label for="bookVaultPass">Password:</label>
                                 <input type="password" id="bookVaultPass" name="bookVaultPass">
                             </div>
-                        </div>
+                         </div>
                         <div class="platform-card">
                             <h3>IngramSpark</h3>
                             <div class="info-item">
-                                <label for="ingramLogin">Login:</label>
+                                 <label for="ingramLogin">Login:</label>
                                 <input type="text" id="ingramLogin" name="ingramLogin">
                             </div>
-                            <div class="info-item">
+                             <div class="info-item">
                                 <label for="ingramPass">Password:</label>
                                 <input type="password" id="ingramPass" name="ingramPass">
-                            </div>
+                             </div>
                         </div>
                         <div class="platform-card">
                             <h3>KDP</h3>
-                            <div class="info-item">
+                             <div class="info-item">
                                 <label for="kdpLogin">Login:</label>
                                 <input type="text" id="kdpLogin" name="kdpLogin">
-                            </div>
+                             </div>
                             <div class="info-item">
                                 <label for="kdpPass">Password:</label>
-                                <input type="password" id="kdpPass" name="kdpPass">
+                                 <input type="password" id="kdpPass" name="kdpPass">
                             </div>
                         </div>
                     </div>
                 </div>
-                
+
+
                 <div class="isbn-section">
                     <h3>ISBN Platform Usage</h3>
                     <p>Record which ISBN is used on each platform for each format:</p>
@@ -1371,101 +1521,100 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                             <tr>
                                 <td style="padding: 10px; border: 1px solid var(--gray-300);">eBook</td>
                                 <td style="padding: 10px; border: 1px solid var(--gray-300);"><span id="ebookIsbnDisplay"></span></td>
                                 <td style="padding: 10px; border: 1px solid var(--gray-300);">
                                     <input type="checkbox" id="ebookBookVault" name="ebookBookVault" checked disabled>
                                 </td>
-                                <td style="padding: 10px; border: 1px solid var(--gray-300);">
+                                 <td style="padding: 10px; border: 1px solid var(--gray-300);">
                                     <input type="checkbox" id="ebookIngram" name="ebookIngram" disabled>
                                 </td>
-                                <td style="padding: 10px; border: 1px solid var(--gray-300);">
+                                 <td style="padding: 10px; border: 1px solid var(--gray-300);">
                                     <input type="checkbox" id="ebookKDP" name="ebookKDP" checked disabled>
                                 </td>
-                            </tr>
+                             </tr>
                             <tr>
                                 <td style="padding: 10px; border: 1px solid var(--gray-300);">Paperback</td>
                                 <td style="padding: 10px; border: 1px solid var(--gray-300);"><span id="paperbackIsbnDisplay"></span></td>
                                 <td style="padding: 10px; border: 1px solid var(--gray-300);">
                                     <input type="checkbox" id="paperbackBookVault" name="paperbackBookVault" checked disabled>
                                 </td>
-                                <td style="padding: 10px; border: 1px solid var(--gray-300);">
+                                 <td style="padding: 10px; border: 1px solid var(--gray-300);">
                                     <input type="checkbox" id="paperbackIngram" name="paperbackIngram" checked disabled>
                                 </td>
-                                <td style="padding: 10px; border: 1px solid var(--gray-300);">
+                                 <td style="padding: 10px; border: 1px solid var(--gray-300);">
                                     <input type="checkbox" id="paperbackKDP" name="paperbackKDP" checked disabled>
                                 </td>
-                            </tr>
+                             </tr>
                             <tr>
                                 <td style="padding: 10px; border: 1px solid var(--gray-300);">Case Laminate</td>
                                 <td style="padding: 10px; border: 1px solid var(--gray-300);"><span id="laminateIsbnDisplay"></span></td>
                                 <td style="padding: 10px; border: 1px solid var(--gray-300);">
                                     <input type="checkbox" id="laminateBookVault" name="laminateBookVault" checked disabled>
                                 </td>
-                                <td style="padding: 10px; border: 1px solid var(--gray-300);">
+                                 <td style="padding: 10px; border: 1px solid var(--gray-300);">
                                     <input type="checkbox" id="laminateIngram" name="laminateIngram" checked disabled>
                                 </td>
-                                <td style="padding: 10px; border: 1px solid var(--gray-300);">
+                                 <td style="padding: 10px; border: 1px solid var(--gray-300);">
                                     <input type="checkbox" id="laminateKDP" name="laminateKDP" disabled>
                                 </td>
-                            </tr>
+                             </tr>
                             <tr>
                                 <td style="padding: 10px; border: 1px solid var(--gray-300);">Dust Jacket</td>
                                 <td style="padding: 10px; border: 1px solid var(--gray-300);"><span id="dustjacketIsbnDisplay"></span></td>
                                 <td style="padding: 10px; border: 1px solid var(--gray-300);">
                                     <input type="checkbox" id="dustjacketBookVault" name="dustjacketBookVault" checked disabled>
                                 </td>
-                                <td style="padding: 10px; border: 1px solid var(--gray-300);">
+                                 <td style="padding: 10px; border: 1px solid var(--gray-300);">
                                     <input type="checkbox" id="dustjacketIngram" name="dustjacketIngram" checked disabled>
                                 </td>
-                                <td style="padding: 10px; border: 1px solid var(--gray-300);">
+                                 <td style="padding: 10px; border: 1px solid var(--gray-300);">
                                     <input type="checkbox" id="dustjacketKDP" name="dustjacketKDP" disabled>
                                 </td>
-                            </tr>
+                             </tr>
                         </tbody>
                     </table>
                 </div>
-                
+
                 <h3>Tasks</h3>
-                <ul class="task-list">
+                 <ul class="task-list">
                     <li class="task-item">
                         <input type="checkbox" id="task33" name="task33">
                         <label for="task33">Create BookVault account</label>
-                    </li>
+                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task34" name="task34">
                         <label for="task34">Create IngramSpark account</label>
-                    </li>
+                     </li>
                     <li class="task-item">
                         <input type="checkbox" id="task35" name="task35">
                         <label for="task35">Create KDP account</label>
                     </li>
-                    <li class="task-item">
+                     <li class="task-item">
                         <input type="checkbox" id="task36" name="task36">
                         <label for="task36">Verify ISBN assignments across all platforms</label>
                     </li>
-                    <li class="task-item">
+                     <li class="task-item">
                         <input type="checkbox" id="task37" name="task37">
                         <label for="task37">Configure correct distribution settings on each platform</label>
                     </li>
-                    <li class="task-item">
+                     <li class="task-item">
                         <input type="checkbox" id="task38" name="task38">
                         <label for="task38">Set up proper metadata and pricing structure</label>
                     </li>
-                    <li class="task-item">
+                     <li class="task-item">
                         <input type="checkbox" id="task39" name="task39">
                         <label for="task39">Verify no conflicts between distribution channels</label>
                     </li>
-                </ul>
+                 </ul>
             </div>
         </div>
-        
-        <!-- File Upload & QA Phase -->
+
         <div class="phase-container" id="phase6Container">
             <div class="phase-header" onclick="togglePhase('phase6Container')">
                 <h2>File Upload & Quality Control (1-2 Weeks)</h2>
-                <span class="status status-not-started" id="phase6Status">Not Started</span>
+                 <span class="status status-not-started" id="phase6Status">Not Started</span>
             </div>
             <div class="phase-content">
                 <h3>File Requirements</h3>
@@ -1474,103 +1623,2033 @@
                         <h4 style="color: #2196f3;">Interior PDF Requirements</h4>
                         <ul>
                             <li>PDF/X-1a:2001 compliant format</li>
-                            <li>All fonts embedded</li>
+                             <li>All fonts embedded</li>
                             <li>Proper margins (min. 0.5" all sides)</li>
                             <li>300 DPI minimum for all images</li>
-                            <li>No crop marks or printer's marks</li>
+                             <li>No crop marks or printer's marks</li>
                             <li>Correct trim size as specified</li>
                         </ul>
                     </div>
-                    <div style="flex: 1; min-width: 300px; background-color: #fdefef; padding: 15px; border-radius: 8px; border-left: 4px solid #f44336;">
+                     <div style="flex: 1; min-width: 300px; background-color: #fdefef; padding: 15px; border-radius: 8px; border-left: 4px solid #f44336;">
                         <h4 style="color: #f44336;">Cover PDF Requirements</h4>
                         <ul>
-                            <li>0.125" bleed on all sides</li>
+                             <li>0.125" bleed on all sides</li>
                             <li>CMYK color mode (not RGB)</li>
                             <li>300 DPI minimum resolution</li>
-                            <li>Correct spine width calculation</li>
+                             <li>Correct spine width calculation</li>
                             <li>ISBN barcode on back cover</li>
                             <li>All text within safe zones</li>
                         </ul>
-                    </div>
+                     </div>
                 </div>
-
                 <h3>Tasks</h3>
                 <ul class="task-list">
                     <li class="task-item">
-                        <input type="checkbox" id="task40" name="task40">
+                         <input type="checkbox" id="task40" name="task40">
                         <label for="task40">Upload interior PDF and cover files to BookVault</label>
                     </li>
                     <li class="task-item">
-                        <input type="checkbox" id="task41" name="task41">
+                         <input type="checkbox" id="task41" name="task41">
                         <label for="task41">Upload interior PDF and cover files to IngramSpark</label>
                     </li>
                     <li class="task-item">
-                        <input type="checkbox" id="task42" name="task42">
+                         <input type="checkbox" id="task42" name="task42">
                         <label for="task42">Upload interior PDF, cover files, and EPUB to KDP</label>
                     </li>
                     <li class="task-item">
-                        <input type="checkbox" id="task43" name="task43">
+                         <input type="checkbox" id="task43" name="task43">
                         <label for="task43">Complete all metadata fields on all platforms</label>
                     </li>
                     <li class="task-item">
-                        <input type="checkbox" id="task44" name="task44">
+                         <input type="checkbox" id="task44" name="task44">
                         <label for="task44">Set up pricing according to agreed strategy</label>
                     </li>
                     <li class="task-item">
-                        <input type="checkbox" id="task45" name="task45">
+                         <input type="checkbox" id="task45" name="task45">
                         <label for="task45">Order proof copies from all platforms</label>
                     </li>
                     <li class="task-item">
-                        <input type="checkbox" id="task46" name="task46">
+                         <input type="checkbox" id="task46" name="task46">
                         <label for="task46">Conduct internal review for quality issues</label>
                     </li>
                     <li class="task-item">
-                        <input type="checkbox" id="task47" name="task47">
+                         <input type="checkbox" id="task47" name="task47">
                         <label for="task47">Send proof copies to author for review</label>
                     </li>
                     <li class="task-item">
-                        <input type="checkbox" id="task48" name="task48">
+                         <input type="checkbox" id="task48" name="task48">
                         <label for="task48">Collect completed Proof Approval Form</label>
                     </li>
                 </ul>
             </div>
         </div>
-        
-        <!-- Publication Phase -->
+
         <div class="phase-container" id="phase7Container">
             <div class="phase-header" onclick="togglePhase('phase7Container')">
                 <h2>Publication Phase - Platform Release Schedule</h2>
                 <span class="status status-not-started" id="phase7Status">Not Started</span>
             </div>
-            <div class="phase-content">
+             <div class="phase-content">
                 <div class="info-item">
                     <label for="launchDate">Official Launch Date:</label>
                     <input type="date" id="launchDate" name="launchDate">
                 </div>
-                
-                <div class="timeline">
+
+
+                 <div class="timeline">
                     <div class="timeline-item">
                         <span class="timeline-date">Day 1</span>
                         <h3>BookVault Release</h3>
-                        <ul class="task-list">
+                         <ul class="task-list">
                             <li class="task-item">
                                 <input type="checkbox" id="task49" name="task49">
-                                <label for="task49">Activate BookVault listing</label>
+                                 <label for="task49">Activate BookVault listing</label>
                             </li>
                             <li class="task-item">
-                                <input type="checkbox" id="task50" name="task50">
+                                 <input type="checkbox" id="task50" name="task50">
                                 <label for="task50">Initialize BookVault marketing tools</label>
                             </li>
                             <li class="task-item">
-                                <input type="checkbox" id="task51" name="task51">
+                                 <input type="checkbox" id="task51" name="task51">
                                 <label for="task51">Verify BookVault payment processing</label>
                             </li>
-                        </ul>
+                         </ul>
                     </div>
-                    
+
                     <div class="timeline-item">
-                        <span class="timeline-date">Day 3-5</span>
+                         <span class="timeline-date">Day 3-5</span>
                         <h3>KDP Release</h3>
                         <ul class="task-list">
                             <li class="task-item">
-                                <input type="checkbox
+                                 <input type="checkbox" id="task52" name="task52">
+                                <label for="task52">Publish KDP listing (eBook and Print)</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="task53" name="task53">
+                                <label for="task53">Verify KDP listing is live on Amazon</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="task54" name="task54">
+                                <label for="task54">Set up KDP advertising campaigns (if applicable)</label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="timeline-item">
+                         <span class="timeline-date">Day 7-14</span>
+                        <h3>IngramSpark Release</h3>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <input type="checkbox" id="task55" name="task55">
+                                <label for="task55">Approve IngramSpark title for distribution</label>
+                            </li>
+                            <li class="task-item">
+                                <input type="checkbox" id="task56" name="task56">
+                                <label for="task56">Verify distribution status in IngramSpark dashboard</label>
+                            </li>
+                        </ul>
+                    </div>
+                 </div>
+            </div>
+        </div>
+
+        <div class="phase-container" id="phase8Container">
+            <div class="phase-header" onclick="togglePhase('phase8Container')">
+                <h2>Post-Publication Phase - Ongoing Support</h2>
+                <span class="status status-not-started" id="phase8Status">Not Started</span>
+            </div>
+            <div class="phase-content">
+                <h3>Tasks</h3>
+                <ul class="task-list">
+                    <li class="task-item">
+                        <input type="checkbox" id="task57" name="task57">
+                        <label for="task57">Monitor sales and royalty reports</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task58" name="task58">
+                        <label for="task58">Provide monthly reporting to author</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task59" name="task59">
+                        <label for="task59">Assist with marketing efforts (if applicable)</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task60" name="task60">
+                        <label for="task60">Handle any platform updates or issues</label>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="task61" name="task61">
+                        <label for="task61">Process any necessary file updates or corrections</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="import-export-section">
+            <h2>Project Data Management</h2>
+            <div>
+                <button type="button" id="exportBtn">Export Project Data (JSON)</button>
+            </div>
+            <div style="margin-top: 15px;">
+                <label for="importFile" class="file-label">Import Project Data (JSON)</label>
+                <input type="file" id="importFile" class="file-input" accept=".json">
+                <span id="fileName" class="file-name"></span>
+                <button type="button" id="importBtn" class="secondary" style="margin-left: 10px;">Import</button>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button type="button" id="saveBtn" class="success">Save Project</button>
+            <button type="button" id="printBtn">Print Summary</button>
+        </div>
+
+        <div id="google-auth-modal" style="display: none;"> <div class="google-auth-container">
+            <h2>Connect Google Drive</h2>
+            <p>This will enable automatic backups of your publishing projects to your Google Drive.</p>
+            <div style="margin: 20px 0; text-align: center;">
+              <button id="google-auth-button" class="success" style="padding: 12px 20px;">
+                <i class="fab fa-google" style="margin-right: 8px;"></i> Authorize with Google
+              </button>
+            </div>
+            <button id="cancel-auth" class="secondary" style="width: 100%; padding: 10px;">
+              Cancel
+            </button>
+          </div>
+        </div>
+
+        <div class="drive-settings">
+          <h3><i class="fab fa-google-drive" style="margin-right: 10px; color: #4285F4;"></i> Google Drive Backup</h3>
+
+          <div id="drive-status" class="status-pill not-started">
+            <i class="fas fa-times-circle" style="margin-right: 5px;"></i> Not connected
+          </div>
+
+          <button id="setup-drive" class="secondary">
+            <i class="fas fa-cog" style="margin-right: 8px;"></i> Configure Google Drive Backup
+          </button>
+
+          <div id="backup-options" class="backup-options" style="display: none;">
+            <label>
+              <input type="checkbox" id="auto-backup"> <span>Automatic daily backup</span>
+            </label>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;"> <button id="manual-backup" class="secondary">
+                <i class="fas fa-cloud-upload-alt" style="margin-right: 8px;"></i> Backup Now
+              </button>
+              <button id="disconnect-drive" class="warning">
+                <i class="fas fa-unlink" style="margin-right: 8px;"></i> Disconnect
+              </button>
+            </div>
+
+            <div id="backup-history" style="display: none;">
+              <h4>Recent Backups</h4>
+              <div id="backup-list"></div>
+            </div>
+          </div>
+        </div>
+        <footer>
+            &copy; <span id="currentYear"></span> Skinny Brown Dog Media. All Rights Reserved.
+        </footer>
+    </div>
+
+    <script src="https://apis.google.com/js/api.js"></script>
+
+    <script>
+        // --- Core Application Logic (Phases, Tasks, Projects, UI Updates) ---
+        let currentProjectId = null; // Track current project ID if needed for restore context
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current year in footer
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+            // Load saved projects into selector
+            loadProjectList();
+
+            // Add event listeners for phase toggling
+            const phaseHeaders = document.querySelectorAll('.phase-header');
+            phaseHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const container = header.closest('.phase-container');
+                    container.classList.toggle('collapsed');
+                });
+            });
+
+            // Add event listeners for task completion and progress updates
+            const checkboxes = document.querySelectorAll('.task-list input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    updateTaskStatus(checkbox);
+                    updatePhaseStatus(checkbox.closest('.phase-container'));
+                    updateOverallProgress();
+                });
+            });
+
+            // Setup initial state (collapse all phases except the first active one)
+            initializePhaseCollapse();
+            updateAllPhaseStatuses();
+            updateOverallProgress();
+
+
+            // Project management button listeners
+            document.getElementById('loadProjectBtn')?.addEventListener('click', loadSelectedProject);
+            document.getElementById('newProjectBtn')?.addEventListener('click', () => clearProjectForm(true)); // Pass true to reset fully
+            document.getElementById('deleteProjectBtn')?.addEventListener('click', deleteSelectedProject);
+
+            // Save button listener
+             document.getElementById('saveBtn')?.addEventListener('click', saveProjectData);
+
+            // Import/Export listeners
+            document.getElementById('exportBtn')?.addEventListener('click', exportProjectData);
+            document.getElementById('importFile')?.addEventListener('change', displayFileName);
+            document.getElementById('importBtn')?.addEventListener('click', importProjectData);
+
+            // Print button listener
+            document.getElementById('printBtn')?.addEventListener('click', () => window.print());
+
+             // Client Overview Listeners
+            document.getElementById('clientSearch')?.addEventListener('input', filterClientTable);
+            document.getElementById('statusFilter')?.addEventListener('change', filterClientTable);
+
+            // Batch controls
+            document.getElementById('exportAllBtn')?.addEventListener('click', exportAllProjects);
+            document.getElementById('batchImportFile')?.addEventListener('change', displayBatchFileName);
+            document.getElementById('importBatchBtn')?.addEventListener('click', () => document.getElementById('batchImportFile')?.click()); // Trigger hidden input
+
+            // Load client overview table
+            loadClientOverview();
+
+             // Update ISBN displays in Phase 5 based on Phase 1 input
+            ['isbnEbook', 'isbnPaperback', 'isbnCaseLaminate', 'isbnDustJacket'].forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.addEventListener('input', updateIsbnDisplays);
+                }
+            });
+            updateIsbnDisplays(); // Initial update on load
+
+             // Copy URL buttons
+            document.querySelectorAll('.url-button').forEach(button => {
+                button.addEventListener('click', copyUrlToClipboard);
+            });
+
+            // Initial UI update for Drive Status (before API loads)
+            updateDriveStatusUIOnly(false); // Assume disconnected initially
+
+        }); // End DOMContentLoaded
+
+        function togglePhase(containerId) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.classList.toggle('collapsed');
+            }
+        }
+
+        function updateTaskStatus(checkbox) {
+            const taskItem = checkbox.closest('.task-item');
+            if(taskItem) {
+                if (checkbox.checked) {
+                    taskItem.classList.add('completed');
+                } else {
+                    taskItem.classList.remove('completed');
+                }
+            }
+        }
+
+        function updatePhaseStatus(phaseContainer) {
+            if (!phaseContainer) return;
+            const phaseId = phaseContainer.id;
+            const statusElement = document.getElementById(phaseId.replace('Container', 'Status'));
+            const tasks = phaseContainer.querySelectorAll('.task-list input[type="checkbox"]');
+            const completedTasks = phaseContainer.querySelectorAll('.task-list input[type="checkbox"]:checked');
+
+            let status = 'Not Started';
+            let statusClass = 'status-not-started';
+
+            if (tasks.length > 0) { // Only calculate if tasks exist
+                if (completedTasks.length === tasks.length) {
+                    status = 'Completed';
+                    statusClass = 'status-completed';
+                } else if (completedTasks.length > 0) {
+                    status = 'In Progress';
+                    statusClass = 'status-in-progress';
+                }
+            } else {
+                status = 'N/A'; // No tasks in this phase
+                statusClass = 'status-not-started'; // Or a different class if needed
+            }
+
+
+            if(statusElement) { // Check if element exists
+                statusElement.textContent = status;
+                statusElement.className = `status ${statusClass}`; // Reset classes and apply new one
+            }
+        }
+
+        function updateAllPhaseStatuses() {
+            const phaseContainers = document.querySelectorAll('.phase-container');
+            phaseContainers.forEach(container => updatePhaseStatus(container));
+        }
+
+        function updateOverallProgress() {
+            const allTasks = document.querySelectorAll('.phase-container .task-list input[type="checkbox"]');
+            const completedTasks = document.querySelectorAll('.phase-container .task-list input[type="checkbox"]:checked');
+            const totalTasks = allTasks.length;
+            const totalCompleted = completedTasks.length;
+
+            const progress = totalTasks > 0 ? (totalCompleted / totalTasks) * 100 : 0;
+            const progressBar = document.getElementById('overallProgress');
+            const statusInput = document.getElementById('currentStatus');
+
+            if(progressBar) progressBar.style.width = `${progress}%`;
+
+            let overallStatus = "Not Started";
+            if (totalTasks === 0) {
+                overallStatus = "N/A"; // No tasks defined yet
+                 if(progressBar) progressBar.style.backgroundColor = "var(--gray-200)";
+            } else if (progress === 100) {
+                overallStatus = "Completed";
+                 if(progressBar) progressBar.style.backgroundColor = "var(--success)";
+            } else if (progress > 0) {
+                overallStatus = "In Progress";
+                if(progressBar) progressBar.style.backgroundColor = "var(--accent)";
+            } else {
+                 if(progressBar) progressBar.style.backgroundColor = "var(--gray-200)"; // Show empty bar
+            }
+            if(statusInput) statusInput.value = overallStatus;
+        }
+
+        function initializePhaseCollapse() {
+            const phaseContainers = document.querySelectorAll('.phase-container');
+            let firstActiveFound = false;
+            phaseContainers.forEach((container, index) => {
+                const statusElement = container.querySelector('.status');
+                let shouldOpen = false;
+
+                if (!firstActiveFound && statusElement) {
+                     if(statusElement.textContent === 'In Progress') {
+                         shouldOpen = true;
+                         firstActiveFound = true;
+                     } else if (statusElement.textContent === 'Not Started') {
+                         // Check if it's the very first phase OR if no phase before it is In Progress/Not Started
+                         let previousPhaseInProgressOrNotStarted = false;
+                         for(let j=0; j<index; j++) {
+                             const prevStatus = phaseContainers[j].querySelector('.status');
+                             if(prevStatus && (prevStatus.textContent === 'In Progress' || prevStatus.textContent === 'Not Started')) {
+                                 previousPhaseInProgressOrNotStarted = true;
+                                 break;
+                             }
+                         }
+                         if(!previousPhaseInProgressOrNotStarted) {
+                              shouldOpen = true;
+                              firstActiveFound = true;
+                         }
+                     }
+                }
+
+
+                if (shouldOpen) {
+                    container.classList.remove('collapsed');
+                } else {
+                    container.classList.add('collapsed');
+                }
+            });
+             // Fallback: If no phases are 'In Progress' or meet the 'Not Started' condition, open the first one.
+             if (!firstActiveFound && phaseContainers.length > 0) {
+                 phaseContainers[0].classList.remove('collapsed');
+             }
+        }
+
+
+        // --- Project Data Management ---
+
+        // Function to get all projects (used by backup) - Adapt as needed
+         function getProjects() {
+             const projects = {};
+             for (let i = 0; i < localStorage.length; i++) {
+                 const key = localStorage.key(i);
+                 if (key && key.startsWith('project_')) { // Added null check for key
+                    try {
+                        const item = localStorage.getItem(key);
+                         if (item) { // Check if item is not null
+                             projects[key] = JSON.parse(item);
+                         } else {
+                              console.warn(`localStorage returned null for key ${key}`);
+                         }
+                    } catch(e) {
+                        console.warn(`Could not parse project ${key} for backup: ${e}`);
+                    }
+                 }
+             }
+             // Filter out null/undefined entries if parsing failed
+             return Object.fromEntries(Object.entries(projects).filter(([_, v]) => v != null));
+         }
+
+         // Function to refresh client overview (used by restore) - Assumes loadClientOverview exists
+         function refreshClientOverview() {
+             if (typeof loadClientOverview === 'function') {
+                loadClientOverview();
+             }
+         }
+
+         // Function to load project list (used by restore) - Assumes loadProjectList exists
+         function loadProjectsList() {
+             if (typeof loadProjectList === 'function') {
+                 loadProjectList();
+             }
+         }
+          // Function to load a specific project (used by restore) - Assumes loadSelectedProject logic exists or adapt
+          function loadProject(projectIdKey) {
+             // This needs to map projectIdKey to the actual loading mechanism
+             // Example: Select in dropdown and trigger load
+             const projectSelect = document.getElementById('projectSelect');
+             if (projectSelect) {
+                 projectSelect.value = projectIdKey;
+                 if (typeof loadSelectedProject === 'function') {
+                     loadSelectedProject();
+                     currentProjectId = projectIdKey; // Update current project tracker
+                 }
+             }
+          }
+
+
+        function getProjectData() {
+            const data = {};
+            const inputs = document.querySelectorAll('.container input[type="text"], .container input[type="date"], .container input[type="password"], .container textarea, .container input[type="checkbox"]');
+
+            inputs.forEach(input => {
+                // Exclude elements within the auth modal or drive settings section from general project data
+                 if (input.closest('#google-auth-modal') || input.closest('.drive-settings')) {
+                    return; // Skip these elements
+                 }
+
+                if (input.type === 'checkbox') {
+                    if(input.id) data[input.id] = input.checked; // Ensure ID exists
+                } else {
+                     // Use name attribute if available and unique, otherwise use id
+                    const key = input.name && document.querySelectorAll(`[name="${input.name}"]`).length === 1 ? input.name : input.id;
+                    if (key) { // Ensure there is a key
+                         data[key] = input.value;
+                    }
+                }
+            });
+            return data;
+        }
+
+         function setProjectData(data) {
+             clearProjectForm(false); // Clear form without reloading list
+             const inputs = document.querySelectorAll('.container input[type="text"], .container input[type="date"], .container input[type="password"], .container textarea, .container input[type="checkbox"]');
+
+             inputs.forEach(input => {
+                 // Exclude elements within the auth modal or drive settings section
+                 if (input.closest('#google-auth-modal') || input.closest('.drive-settings')) {
+                     return; // Skip these elements
+                 }
+
+                 const keyById = input.id;
+                 // Prefer name attribute for lookup if it exists and was likely used for saving
+                  const keyByName = input.name && document.querySelectorAll(`[name="${input.name}"]`).length === 1 ? input.name : null;
+                  let value = undefined;
+
+                 if (keyByName && data.hasOwnProperty(keyByName)) {
+                     value = data[keyByName];
+                 } else if (keyById && data.hasOwnProperty(keyById)) {
+                     value = data[keyById];
+                 }
+
+
+                 if (value !== undefined) {
+                     if (input.type === 'checkbox') {
+                         input.checked = value;
+                         updateTaskStatus(input); // Update visual style for loaded tasks
+                     } else {
+                         input.value = value;
+                     }
+                 }
+             });
+             updateAllPhaseStatuses();
+             updateOverallProgress();
+             initializePhaseCollapse(); // Re-apply collapse state based on loaded data
+             updateIsbnDisplays(); // Update ISBNs in phase 5 table
+         }
+
+
+        function saveProjectData() {
+            const projectData = getProjectData();
+            const bookTitle = projectData.bookTitle || 'Untitled Project'; // Use title or default
+             const authorName = projectData.authorName || 'Unknown Author';
+            const projectName = `${bookTitle} - ${authorName}`; // Unique identifier
+
+
+            if (!bookTitle || !authorName || bookTitle.trim() === '' || authorName.trim() === '') {
+                 showAlert('Please enter both a Book Title and Author Name before saving.', 'warning');
+                 return;
+            }
+
+            try {
+                const projectKey = `project_${projectName}`;
+                localStorage.setItem(projectKey, JSON.stringify(projectData));
+                 currentProjectId = projectKey; // Track the saved project ID
+                showAlert(`Project "${projectName}" saved successfully!`, 'success');
+                loadProjectList(); // Refresh the dropdown
+                 // Ensure the saved project is selected in the dropdown
+                 const projectSelect = document.getElementById('projectSelect');
+                 if(projectSelect) projectSelect.value = projectKey;
+                loadClientOverview(); // Refresh client table
+            } catch (e) {
+                console.error("Error saving project:", e);
+                showAlert("Failed to save project. Local storage might be full or disabled.", 'danger');
+            }
+        }
+
+        function loadProjectList() {
+            const projectSelect = document.getElementById('projectSelect');
+             const currentSelectedValue = projectSelect ? projectSelect.value : null; // Remember current selection
+            if(projectSelect) projectSelect.innerHTML = '<option value="">-- Select a saved project --</option>'; // Clear existing options
+
+            const keys = [];
+             for (let i = 0; i < localStorage.length; i++) {
+                 const key = localStorage.key(i);
+                 if (key && key.startsWith('project_')) { // Added null check
+                     keys.push(key);
+                 }
+             }
+
+             // Sort keys alphabetically by project name (after 'project_')
+             keys.sort((a, b) => a.substring(8).localeCompare(b.substring(8)));
+
+
+             keys.forEach(key => {
+                 const projectName = key.substring(8); // Remove 'project_' prefix
+                 const option = document.createElement('option');
+                 option.value = key; // Store the full key
+                 option.textContent = projectName;
+                 if(projectSelect) projectSelect.appendChild(option);
+             });
+
+              // Restore previous selection if it still exists
+             if (currentSelectedValue && keys.includes(currentSelectedValue)) {
+                 if(projectSelect) projectSelect.value = currentSelectedValue;
+             } else if (keys.length > 0 && currentProjectId && keys.includes(currentProjectId)) {
+                  if(projectSelect) projectSelect.value = currentProjectId; // Select the actively saved project if dropdown was reset
+             } else {
+                  currentProjectId = null; // Reset if current project no longer exists
+             }
+        }
+
+         function loadSelectedProject() {
+             const projectSelect = document.getElementById('projectSelect');
+             if (!projectSelect) return;
+             const selectedKey = projectSelect.value;
+              currentProjectId = selectedKey; // Update tracker
+
+             if (!selectedKey) {
+                 // alert('Please select a project to load.'); // Can be noisy, maybe just clear form?
+                 clearProjectForm(false); // Clear form if "-- Select --" is chosen
+                 return;
+             }
+
+             try {
+                 const projectDataString = localStorage.getItem(selectedKey);
+                 if (projectDataString) {
+                     const projectData = JSON.parse(projectDataString);
+                     setProjectData(projectData);
+                     // showAlert(`Project "${selectedKey.substring(8)}" loaded successfully!`, 'info'); // Less intrusive
+                 } else {
+                     showAlert('Could not find the selected project data.', 'warning');
+                      currentProjectId = null; // Reset tracker if load failed
+                 }
+             } catch (e) {
+                 console.error("Error loading project:", e);
+                 showAlert("Failed to load project data. It might be corrupted.", 'danger');
+                  currentProjectId = null; // Reset tracker if load failed
+             }
+         }
+
+        function deleteSelectedProject() {
+            const projectSelect = document.getElementById('projectSelect');
+             if (!projectSelect) return;
+            const selectedKey = projectSelect.value;
+
+            if (!selectedKey) {
+                showAlert('Please select a project to delete.', 'warning');
+                return;
+            }
+
+            const projectName = selectedKey.substring(8);
+            if (confirm(`Are you sure you want to delete the project "${projectName}"? This cannot be undone.`)) {
+                try {
+                    localStorage.removeItem(selectedKey);
+                     if (currentProjectId === selectedKey) {
+                        currentProjectId = null; // Clear tracker if deleted project was current
+                     }
+                    showAlert(`Project "${projectName}" deleted successfully!`, 'success');
+                    loadProjectList(); // Refresh the dropdown
+                    clearProjectForm(false); // Clear the form after deletion
+                    loadClientOverview(); // Refresh client table
+                } catch (e) {
+                    console.error("Error deleting project:", e);
+                    showAlert("Failed to delete project.", 'danger');
+                }
+            }
+        }
+
+        function clearProjectForm(reloadList = true) {
+             const formElements = document.querySelectorAll('.container input[type="text"], .container input[type="date"], .container input[type="password"], .container textarea');
+             formElements.forEach(el => {
+                 // Exclude elements within the auth modal or drive settings section
+                if (!el.closest('#google-auth-modal') && !el.closest('.drive-settings')) {
+                     el.value = '';
+                }
+             });
+
+             const checkboxes = document.querySelectorAll('.container input[type="checkbox"]');
+             checkboxes.forEach(cb => {
+                  // Exclude elements within the auth modal or drive settings section
+                if (!cb.closest('#google-auth-modal') && !cb.closest('.drive-settings')) {
+                     cb.checked = false;
+                     updateTaskStatus(cb); // Also reset visual state
+                 }
+             });
+
+             // Reset specific fields to defaults
+            const statusInput = document.getElementById('currentStatus');
+             const progressBar = document.getElementById('overallProgress');
+            if(statusInput) statusInput.value = 'Not Started';
+            if(progressBar) {
+                 progressBar.style.width = '0%';
+                 progressBar.style.backgroundColor = "var(--gray-200)";
+            }
+
+
+             // Reset phase statuses and collapse states
+             updateAllPhaseStatuses();
+             initializePhaseCollapse(); // Make sure the first phase is open
+
+             // Clear file input display names
+            const fileNameDisplay = document.getElementById('fileName');
+             const fileInput = document.getElementById('importFile');
+             const batchFileNameDisplay = document.getElementById('batchFileName');
+             const batchFileInput = document.getElementById('batchImportFile');
+
+            if(fileNameDisplay) fileNameDisplay.textContent = '';
+            if(fileInput) fileInput.value = ''; // Clear file selection
+            if(batchFileNameDisplay) batchFileNameDisplay.textContent = '';
+            if(batchFileInput) batchFileInput.value = ''; // Clear file selection
+
+             // Optionally reload project list and reset selection
+             if (reloadList) {
+                 currentProjectId = null; // Reset tracker on explicit New Project / Delete
+                loadProjectList();
+                 const projectSelect = document.getElementById('projectSelect');
+                 if (projectSelect) projectSelect.value = ""; // Reset dropdown selection
+             }
+             updateIsbnDisplays(); // Clear ISBNs in phase 5 table
+             // Don't show alert on programmatic clear
+         }
+
+
+        function exportProjectData() {
+            const projectData = getProjectData();
+             const bookTitle = projectData.bookTitle || 'Untitled Project';
+            const authorName = projectData.authorName || 'Unknown Author';
+            const filename = `SBDM_Project_${bookTitle.replace(/[^a-z0-9]/gi, '_')}_${authorName.replace(/[^a-z0-9]/gi, '_')}.json`; // Sanitize filename
+
+             if (!projectData.bookTitle || !projectData.authorName || projectData.bookTitle.trim() === '' || projectData.authorName.trim() === '') {
+                 if (!confirm('Project title or author name is missing. Export anyway with a default name?')) {
+                     return;
+                 }
+             }
+
+
+            const dataStr = JSON.stringify(projectData, null, 2); // Pretty print JSON
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+
+            const exportFileDefaultName = filename;
+
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+             linkElement.remove(); // Clean up the link element
+        }
+
+        function displayFileName() {
+            const fileInput = document.getElementById('importFile');
+            const fileNameDisplay = document.getElementById('fileName');
+            if (fileInput && fileNameDisplay) {
+                if (fileInput.files.length > 0) {
+                    fileNameDisplay.textContent = fileInput.files[0].name;
+                } else {
+                    fileNameDisplay.textContent = '';
+                }
+            }
+        }
+
+        function importProjectData() {
+            const fileInput = document.getElementById('importFile');
+             if (!fileInput || fileInput.files.length === 0) {
+                showAlert('Please select a JSON file to import.', 'warning');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                try {
+                    const importedData = JSON.parse(event.target.result);
+                    setProjectData(importedData);
+                    showAlert(`Project data from "${file.name}" loaded successfully! Remember to save it if you want to keep it.`, 'success');
+                    // Clear file input after successful import
+                    const fileNameDisplay = document.getElementById('fileName');
+                    if(fileNameDisplay) fileNameDisplay.textContent = '';
+                    fileInput.value = '';
+                     // Optionally, try to select the loaded project if it exists by name
+                     const bookTitle = importedData.bookTitle || '';
+                     const authorName = importedData.authorName || '';
+                     const projectName = `${bookTitle} - ${authorName}`;
+                    const projectKey = `project_${projectName}`;
+                     currentProjectId = projectKey; // Track potentially unsaved loaded project
+                    if (localStorage.getItem(projectKey)) {
+                         const projectSelect = document.getElementById('projectSelect');
+                        if(projectSelect) projectSelect.value = projectKey;
+                    } else {
+                         const projectSelect = document.getElementById('projectSelect');
+                         if(projectSelect) projectSelect.value = ""; // Deselect if not saved yet
+                    }
+
+                } catch (e) {
+                    console.error("Error parsing JSON file:", e);
+                    showAlert('Failed to parse the selected file. Please ensure it is a valid JSON project file exported from this tool.', 'danger');
+                }
+            };
+
+            reader.onerror = function() {
+                showAlert(`Error reading file: ${reader.error}`, 'danger');
+            };
+
+            reader.readAsText(file);
+        }
+
+
+        // --- Client Overview Table ---
+
+        function loadClientOverview() {
+            const tableBody = document.getElementById('clientTableBody');
+             if(!tableBody) return; // Exit if table doesn't exist
+            tableBody.innerHTML = ''; // Clear existing rows
+            const projects = [];
+
+            // Iterate through localStorage to find project data
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('project_')) { // Added null check
+                    try {
+                        const dataString = localStorage.getItem(key);
+                        if (dataString) {
+                            const data = JSON.parse(dataString);
+                            // Basic check if it looks like project data
+                            if (data.bookTitle && data.authorName) {
+                                projects.push({ key: key, data: data });
+                            }
+                        }
+                    } catch (e) {
+                        console.error(`Failed to parse project data for key ${key}:`, e);
+                        // Optionally skip this item or add a row indicating an error
+                    }
+                }
+            }
+
+             // Sort projects, e.g., by author name then title
+            projects.sort((a, b) => {
+                 const authorA = a.data.authorName || '';
+                 const authorB = b.data.authorName || '';
+                 const titleA = a.data.bookTitle || '';
+                 const titleB = b.data.bookTitle || '';
+                if (authorA.toLowerCase() < authorB.toLowerCase()) return -1;
+                if (authorA.toLowerCase() > authorB.toLowerCase()) return 1;
+                 // If authors are the same, sort by title
+                 if (titleA.toLowerCase() < titleB.toLowerCase()) return -1;
+                 if (titleA.toLowerCase() > titleB.toLowerCase()) return 1;
+                 return 0;
+             });
+
+
+            // Populate the table
+             projects.forEach(project => {
+                 const row = tableBody.insertRow();
+                 row.dataset.key = project.key; // Store key for easy access
+
+                 const bookTitle = project.data.bookTitle || 'N/A';
+                 const authorName = project.data.authorName || 'N/A';
+                 const startDate = project.data.startDate || 'N/A';
+                 const pubDate = project.data.pubDate || 'N/A';
+
+                // Calculate current phase and status dynamically from loaded data
+                 const { currentPhaseName, overallStatus, progress } = calculateProjectStatus(project.data);
+
+                 // Cell 1: Book Title
+                 row.insertCell().textContent = bookTitle;
+                 // Cell 2: Author
+                 row.insertCell().textContent = authorName;
+                 // Cell 3: Start Date
+                 row.insertCell().textContent = startDate;
+                 // Cell 4: Target Pub Date
+                 row.insertCell().textContent = pubDate;
+                 // Cell 5: Current Phase
+                 row.insertCell().textContent = currentPhaseName;
+                 // Cell 6: Status (Pill)
+                const statusCell = row.insertCell();
+                 const statusPill = document.createElement('span');
+                 statusPill.classList.add('status-pill');
+                 statusPill.textContent = overallStatus.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()); // Format text
+                 // Add status class (e.g., 'not-started', 'in-progress', 'completed', 'at-risk')
+                 let statusClass = overallStatus.toLowerCase().replace(' ', '-');
+                  // Check for at-risk (Example: if past pub date and not completed)
+                 if (pubDate && new Date(pubDate) < new Date() && statusClass !== 'completed') {
+                     statusClass = 'at-risk';
+                     statusPill.textContent = 'At Risk'; // Override text
+                 }
+                 statusPill.classList.add(statusClass);
+                 statusCell.appendChild(statusPill);
+
+                 // Cell 7: Progress Bar
+                 const progressCell = row.insertCell();
+                 const progressContainer = document.createElement('div');
+                 progressContainer.className = 'progress-container';
+                 const progressBar = document.createElement('div');
+                 progressBar.className = 'progress-bar';
+                 progressBar.style.width = `${progress}%`;
+                  if (statusClass === 'completed') progressBar.style.backgroundColor = "var(--success)";
+                  else if (statusClass === 'at-risk') progressBar.style.backgroundColor = "var(--warning)";
+                 else if (statusClass === 'in-progress') progressBar.style.backgroundColor = "var(--accent)";
+                 else progressBar.style.backgroundColor = "var(--gray-200)";
+
+                 progressContainer.appendChild(progressBar);
+                 progressCell.appendChild(progressContainer);
+
+                 // Cell 8: Actions
+                 const actionCell = row.insertCell();
+                 actionCell.className = 'action-column';
+                 const loadButton = document.createElement('button');
+                 loadButton.textContent = 'Load';
+                 loadButton.classList.add('secondary');
+                 loadButton.onclick = () => {
+                      const projectSelect = document.getElementById('projectSelect');
+                     if(projectSelect) projectSelect.value = project.key; // Select in dropdown
+                     loadSelectedProject(); // Load the project data into the main form
+                     window.scrollTo({ top: document.getElementById('projectSelect').offsetTop - 20, behavior: 'smooth' }); // Scroll to selector
+                 };
+                 actionCell.appendChild(loadButton);
+
+                 const deleteButton = document.createElement('button');
+                 deleteButton.textContent = 'Delete';
+                 deleteButton.classList.add('warning');
+                 deleteButton.onclick = () => {
+                     const projectSelect = document.getElementById('projectSelect');
+                     if(projectSelect) projectSelect.value = project.key; // Ensure correct project is selected for deletion prompt
+                    deleteSelectedProject(); // Use existing delete function
+                 };
+                 actionCell.appendChild(deleteButton);
+             });
+
+             // Apply current filter/search
+             filterClientTable();
+         }
+
+         function calculateProjectStatus(projectData) {
+             const phaseContainersConfig = [
+                 { id: 'phase1Container', name: 'Pre-Manuscript' },
+                 { id: 'phase2Container', name: 'Manuscript Dev' },
+                 { id: 'phase3Container', name: 'Beta Reader Review' },
+                 { id: 'phase4Container', name: 'Production' },
+                 { id: 'phase5Container', name: 'Account Setup' },
+                 { id: 'phase6Container', name: 'File Upload & QA' },
+                 { id: 'phase7Container', name: 'Publication' },
+                 { id: 'phase8Container', name: 'Post-Publication' }
+             ];
+
+             let totalTasks = 0;
+             let completedTasks = 0;
+             let currentPhaseIndex = -1;
+             let currentPhaseName = 'Not Started';
+             let overallStatus = 'Not Started'; // Default overall status
+
+             for (let i = 0; i < phaseContainersConfig.length; i++) {
+                 const phaseConfig = phaseContainersConfig[i];
+                 let phaseTotalTasks = 0;
+                 let phaseCompletedTasks = 0;
+                 let phaseInProgress = false;
+
+                 // Simulate finding tasks for this phase in the projectData
+                 const phaseTaskRanges = [
+                    { phase: 1, start: 1, end: 9 }, { phase: 2, start: 10, end: 15 },
+                    { phase: 3, start: 16, end: 22 }, { phase: 4, start: 23, end: 32 },
+                    { phase: 5, start: 33, end: 39 }, { phase: 6, start: 40, end: 48 },
+                    { phase: 7, start: 49, end: 56 }, { phase: 8, start: 57, end: 61 }
+                 ];
+
+                 const range = phaseTaskRanges.find(r => r.phase === i + 1);
+                 if(range) {
+                    for(let taskId = range.start; taskId <= range.end; taskId++) {
+                        const taskKey = `task${taskId}`;
+                        if(projectData.hasOwnProperty(taskKey)) {
+                            // phaseHasTasks = true; // Don't count just existing, only if value is boolean
+                            if(typeof projectData[taskKey] === 'boolean') {
+                                phaseTotalTasks++;
+                                totalTasks++;
+                                if(projectData[taskKey] === true) {
+                                    phaseCompletedTasks++;
+                                    completedTasks++;
+                                }
+                            }
+                        }
+                    }
+                 }
+
+
+                  if (phaseTotalTasks > 0) { // Only consider phases with actual tasks defined
+                    if (phaseCompletedTasks > 0 && phaseCompletedTasks < phaseTotalTasks) {
+                        phaseInProgress = true;
+                         if (currentPhaseIndex === -1) { // This is the first phase in progress
+                            currentPhaseIndex = i;
+                             currentPhaseName = phaseConfig.name;
+                             overallStatus = 'In Progress';
+                         }
+                    } else if (phaseCompletedTasks === phaseTotalTasks) {
+                        // Phase completed
+                    } else { // phaseCompletedTasks === 0
+                         // Phase Not Started (has tasks but none complete)
+                         if (currentPhaseIndex === -1 && overallStatus === 'Not Started') {
+                             currentPhaseIndex = i; // This is the first phase with tasks
+                              currentPhaseName = phaseConfig.name;
+                         }
+                    }
+                 }
+             }
+
+             // Refine overall status
+             if (totalTasks === 0) { // If no tasks are defined at all
+                  overallStatus = 'Not Started';
+                  currentPhaseName = 'N/A';
+             } else if (completedTasks === totalTasks) {
+                 overallStatus = 'Completed';
+                 // Find last phase that actually had tasks
+                  for (let i = phaseContainersConfig.length - 1; i >= 0; i--) {
+                     const range = phaseTaskRanges.find(r => r.phase === i + 1);
+                      let phaseHadTasks = false;
+                       if(range) {
+                           for(let taskId = range.start; taskId <= range.end; taskId++) {
+                               if(projectData.hasOwnProperty(`task${taskId}`) && typeof projectData[`task${taskId}`] === 'boolean') {
+                                   phaseHadTasks = true;
+                                   break;
+                               }
+                           }
+                       }
+                      if (phaseHadTasks) {
+                          currentPhaseName = phaseContainersConfig[i].name;
+                          break;
+                      }
+                  }
+                  if (currentPhaseName === 'Not Started') currentPhaseName = 'Completed'; // Fallback if no tasks found
+             } else if (completedTasks > 0) {
+                 overallStatus = 'In Progress';
+                  // If we didn't find an in-progress phase but tasks are done, find first uncompleted phase with tasks
+                  if (currentPhaseIndex === -1) {
+                      for(let i = 0; i < phaseContainersConfig.length; i++) {
+                          const range = phaseTaskRanges.find(r => r.phase === i + 1);
+                          let phaseDone = true;
+                           let phaseHasTasks = false;
+                           if(range) {
+                               for(let taskId = range.start; taskId <= range.end; taskId++) {
+                                   const taskKey = `task${taskId}`;
+                                   if(projectData.hasOwnProperty(taskKey) && typeof projectData[taskKey] === 'boolean') {
+                                       phaseHasTasks = true;
+                                       if(projectData[taskKey] !== true) {
+                                           phaseDone = false;
+                                           break;
+                                       }
+                                   }
+                               }
+                               if (phaseHasTasks && !phaseDone) {
+                                   currentPhaseIndex = i;
+                                   currentPhaseName = phaseContainersConfig[i].name;
+                                   break; // Found the first active phase
+                               }
+                           }
+                      }
+                  }
+                  // If still no current phase name, default to In Progress
+                  if(currentPhaseName === 'Not Started') currentPhaseName = 'In Progress';
+
+             }
+             // If overallStatus is still 'Not Started' and currentPhaseName wasn't set, it means the first phase with tasks is the current one.
+              else if (overallStatus === 'Not Started' && currentPhaseName === 'Not Started') {
+                  for (let i = 0; i < phaseContainersConfig.length; i++) {
+                       const range = phaseTaskRanges.find(r => r.phase === i + 1);
+                        if(range) {
+                            for(let taskId = range.start; taskId <= range.end; taskId++) {
+                                if(projectData.hasOwnProperty(`task${taskId}`) && typeof projectData[`task${taskId}`] === 'boolean') {
+                                     currentPhaseName = phaseContainersConfig[i].name;
+                                     i = phaseContainersConfig.length; // Break outer loop
+                                     break; // Break inner loop
+                                 }
+                            }
+                        }
+                  }
+                   if (currentPhaseName === 'Not Started') currentPhaseName = 'N/A'; // No tasks at all
+              }
+
+
+              const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+             return { currentPhaseName, overallStatus, progress };
+         }
+
+
+        function filterClientTable() {
+            const searchInput = document.getElementById('clientSearch')?.value.toLowerCase() || '';
+            const statusFilter = document.getElementById('statusFilter')?.value || 'all';
+            const tableBody = document.getElementById('clientTableBody');
+            if(!tableBody) return;
+            const rows = tableBody.getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const titleCell = row.cells[0];
+                const authorCell = row.cells[1];
+                const statusPill = row.cells[5]?.querySelector('.status-pill');
+                let statusClass = '';
+                 if(statusPill) {
+                    // Extract status from class list, handling potential multiple classes
+                     statusPill.classList.forEach(cls => {
+                         if (cls !== 'status-pill') {
+                             statusClass = cls; // Assumes the status class is the second one
+                         }
+                     });
+                 }
+
+
+                const titleText = titleCell ? titleCell.textContent.toLowerCase() : '';
+                const authorText = authorCell ? authorCell.textContent.toLowerCase() : '';
+
+                // Check search term
+                const matchesSearch = titleText.includes(searchInput) || authorText.includes(searchInput);
+
+                // Check status filter
+                const matchesStatus = (statusFilter === 'all') || (statusClass === statusFilter);
+
+
+                // Show or hide row
+                if (matchesSearch && matchesStatus) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        }
+
+         // Debounce function to limit sorting frequency if needed
+        function debounce(func, wait) {
+             let timeout;
+             return function executedFunction(...args) {
+                 const later = () => {
+                     clearTimeout(timeout);
+                     func(...args);
+                 };
+                 clearTimeout(timeout);
+                 timeout = setTimeout(later, wait);
+             };
+         }
+
+
+        let sortDirections = {}; // Store sort direction for each column index
+
+        function sortTable(columnIndex) {
+            const table = document.getElementById('clientTable');
+             if (!table || !table.tHead || !table.tBodies[0]) return; // Exit if table elements don't exist
+            const tbody = table.tBodies[0];
+            const rows = Array.from(tbody.rows);
+            const headerCell = table.tHead.rows[0]?.cells[columnIndex];
+             if (!headerCell) return; // Exit if header cell doesn't exist
+
+            // Determine sort direction
+            const currentDirection = sortDirections[columnIndex] || 'asc'; // Default to ascending
+            const direction = currentDirection === 'asc' ? 'desc' : 'asc';
+            sortDirections[columnIndex] = direction;
+
+            // Remove sort indicators from other headers
+            table.tHead.querySelectorAll('th').forEach((th, index) => {
+                 // Remove existing arrows before potentially adding a new one
+                 th.innerHTML = th.innerHTML.replace(/ [▲▼]$/, '');
+                th.classList.remove('sort-asc', 'sort-desc');
+                 if (index !== columnIndex) {
+                     delete sortDirections[index]; // Reset direction for other columns
+                 }
+            });
+
+            // Add indicator to current header
+             headerCell.classList.add(direction === 'asc' ? 'sort-asc' : 'sort-desc');
+             // headerCell.innerHTML += direction === 'asc' ? ' ▲' : ' ▼'; // Add arrow - Handled by CSS now
+
+
+            rows.sort((rowA, rowB) => {
+                 const cellAContent = rowA.cells[columnIndex]?.textContent.trim() || '';
+                 const cellBContent = rowB.cells[columnIndex]?.textContent.trim() || '';
+
+                 // Handle specific column types for proper sorting
+                if (columnIndex === 2 || columnIndex === 3) { // Date columns
+                    const dateA = new Date(cellAContent);
+                    const dateB = new Date(cellBContent);
+                    // Sort invalid dates to the end/beginning consistently
+                    if (isNaN(dateA) && isNaN(dateB)) return 0;
+                    if (isNaN(dateA)) return direction === 'asc' ? 1 : -1; // Invalid dates last when ascending
+                    if (isNaN(dateB)) return direction === 'asc' ? -1 : 1; // Invalid dates first when descending
+                    return direction === 'asc' ? dateA - dateB : dateB - dateA;
+                 } else if (columnIndex === 6) { // Progress column
+                     const progressA = parseFloat(rowA.cells[columnIndex]?.querySelector('.progress-bar')?.style.width || '0');
+                     const progressB = parseFloat(rowB.cells[columnIndex]?.querySelector('.progress-bar')?.style.width || '0');
+                     return direction === 'asc' ? progressA - progressB : progressB - progressA;
+                 } else if (columnIndex === 5) { // Status column
+                    // Define an order for statuses
+                     const statusOrder = { 'at-risk': 0, 'in-progress': 1, 'not-started': 2, 'completed': 3, 'n/a': 4 };
+                     const statusPillA = rowA.cells[columnIndex]?.querySelector('.status-pill');
+                     const statusPillB = rowB.cells[columnIndex]?.querySelector('.status-pill');
+                     let statusClassA = 'n/a';
+                     let statusClassB = 'n/a';
+                      if (statusPillA) statusPillA.classList.forEach(cls => { if (cls !== 'status-pill') statusClassA = cls; });
+                      if (statusPillB) statusPillB.classList.forEach(cls => { if (cls !== 'status-pill') statusClassB = cls; });
+
+                     const orderA = statusOrder[statusClassA] ?? 99;
+                     const orderB = statusOrder[statusClassB] ?? 99;
+
+                     return direction === 'asc' ? orderA - orderB : orderB - orderA;
+                 }
+
+
+                // Default: Locale-aware string comparison
+                 return direction === 'asc'
+                     ? cellAContent.localeCompare(cellBContent, undefined, { numeric: true, sensitivity: 'base' })
+                     : cellBContent.localeCompare(cellAContent, undefined, { numeric: true, sensitivity: 'base' });
+             });
+
+
+            // Re-append rows in sorted order
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        // --- Batch Import/Export ---
+
+        function exportAllProjects() {
+            const allProjects = getProjects(); // Use helper function
+            const projectCount = Object.keys(allProjects).length;
+
+
+             if (projectCount === 0) {
+                 showAlert('No projects found to export.', 'info');
+                 return;
+             }
+
+             const dataStr = JSON.stringify(allProjects, null, 2); // Store as object {key: data}
+             const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+             const exportFileDefaultName = `SBDM_AllProjects_Backup_${new Date().toISOString().split('T')[0]}.json`;
+
+             const linkElement = document.createElement('a');
+             linkElement.setAttribute('href', dataUri);
+             linkElement.setAttribute('download', exportFileDefaultName);
+             linkElement.click();
+             linkElement.remove();
+             showAlert(`Exported ${projectCount} projects.`, 'success');
+         }
+
+         function displayBatchFileName() {
+             const fileInput = document.getElementById('batchImportFile');
+             const fileNameDisplay = document.getElementById('batchFileName');
+             if (fileInput && fileNameDisplay) {
+                 if (fileInput.files.length > 0) {
+                    fileNameDisplay.textContent = fileInput.files[0].name;
+                    // Immediately attempt import after selection
+                    importBatchData();
+                 } else {
+                    fileNameDisplay.textContent = '';
+                 }
+             }
+         }
+
+        function importBatchData() {
+            const fileInput = document.getElementById('batchImportFile');
+             if (!fileInput || fileInput.files.length === 0) {
+                 showAlert("Please select a batch file first using the 'Select Batch File' button.", 'warning');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                try {
+                    const importedObject = JSON.parse(event.target.result);
+                    // Expecting an object like {"project_Name1": {...}, "project_Name2": {...}}
+                     if (typeof importedObject !== 'object' || importedObject === null || Array.isArray(importedObject)) {
+                         throw new Error('Batch file does not contain a valid JSON object of projects.');
+                     }
+
+
+                    let importedCount = 0;
+                    let errorCount = 0;
+
+                    // Clear existing projects before import? Or merge/overwrite? Let's overwrite.
+                    // Optional: Clear existing first
+                    // let keysToRemove = [];
+                    // for (let i = localStorage.length - 1; i >= 0; i--) {
+                    //     const key = localStorage.key(i);
+                    //     if (key && key.startsWith('project_')) { // Added null check
+                    //         keysToRemove.push(key);
+                    //     }
+                    // }
+                    // keysToRemove.forEach(key => localStorage.removeItem(key));
+                    // console.log(`Removed ${keysToRemove.length} existing projects before batch import.`);
+
+
+                     for (const projectKey in importedObject) {
+                         if (projectKey.startsWith('project_') && typeof importedObject[projectKey] === 'object' && importedObject[projectKey] !== null) {
+                             const projectData = importedObject[projectKey];
+                             // Basic validation
+                             if (projectData.bookTitle && projectData.authorName) {
+                                 try {
+                                     localStorage.setItem(projectKey, JSON.stringify(projectData));
+                                     importedCount++;
+                                 } catch (saveError) {
+                                     console.error(`Error saving imported project "${projectKey.substring(8)}":`, saveError);
+                                     errorCount++;
+                                      // Optional: Stop import on first error?
+                                      // throw new Error(`Save failed for ${projectKey}. Import aborted.`);
+                                 }
+                             } else {
+                                 console.warn(`Skipping invalid project data for key ${projectKey} during batch import.`);
+                                 errorCount++; // Count as error if data is invalid
+                             }
+                         } else {
+                              console.warn(`Skipping invalid key or data type for key ${projectKey} during batch import.`);
+                              errorCount++;
+                         }
+                     }
+
+
+                    showAlert(`Batch Import Complete:\n- Successfully imported/updated: ${importedCount}\n- Errors/Skipped items: ${errorCount}`, importedCount > 0 ? 'success' : 'warning');
+
+                     // Refresh UI
+                    loadProjectList();
+                    loadClientOverview();
+                    clearProjectForm(false); // Clear the form but don't reset dropdown if possible
+
+                    // Clear file input display
+                    const batchFileNameDisplay = document.getElementById('batchFileName');
+                     if(batchFileNameDisplay) batchFileNameDisplay.textContent = '';
+                    fileInput.value = ''; // Clear file selection
+
+
+                } catch (e) {
+                    console.error("Error parsing batch JSON file:", e);
+                    showAlert(`Failed to parse the batch file: ${e.message}`, 'danger');
+                     const batchFileNameDisplay = document.getElementById('batchFileName');
+                     if(batchFileNameDisplay) batchFileNameDisplay.textContent = '';
+                    if(fileInput) fileInput.value = '';
+                }
+            };
+
+             reader.onerror = function() {
+                 showAlert(`Error reading batch file: ${reader.error}`, 'danger');
+                 const batchFileNameDisplay = document.getElementById('batchFileName');
+                 if(batchFileNameDisplay) batchFileNameDisplay.textContent = '';
+                 if(fileInput) fileInput.value = '';
+             };
+
+             reader.readAsText(file);
+         }
+
+        // --- Phase 5 ISBN Display Update ---
+         function updateIsbnDisplays() {
+             const ebookIsbn = document.getElementById('isbnEbook')?.value || 'N/A';
+             const paperbackIsbn = document.getElementById('isbnPaperback')?.value || 'N/A';
+             const laminateIsbn = document.getElementById('isbnCaseLaminate')?.value || 'N/A';
+             const dustjacketIsbn = document.getElementById('isbnDustJacket')?.value || 'N/A';
+
+            const ebookDisplay = document.getElementById('ebookIsbnDisplay');
+            const paperbackDisplay = document.getElementById('paperbackIsbnDisplay');
+            const laminateDisplay = document.getElementById('laminateIsbnDisplay');
+            const dustjacketDisplay = document.getElementById('dustjacketIsbnDisplay');
+
+             if(ebookDisplay) ebookDisplay.textContent = ebookIsbn;
+             if(paperbackDisplay) paperbackDisplay.textContent = paperbackIsbn;
+             if(laminateDisplay) laminateDisplay.textContent = laminateIsbn;
+             if(dustjacketDisplay) dustjacketDisplay.textContent = dustjacketIsbn;
+         }
+
+         // --- Copy URL Helper ---
+         function copyUrlToClipboard(event) {
+            const button = event.target;
+             const urlBox = button.previousElementSibling; // Assumes button is immediately after the span with the URL
+             if (urlBox && urlBox.tagName === 'SPAN') {
+                 const url = urlBox.textContent;
+                 navigator.clipboard.writeText(url).then(() => {
+                     button.textContent = 'Copied!';
+                     setTimeout(() => { button.textContent = 'Copy'; }, 2000); // Reset button text
+                 }).catch(err => {
+                     console.error('Failed to copy URL: ', err);
+                     showAlert('Failed to copy URL.', 'warning');
+                 });
+             }
+         }
+
+          // --- Update Drive Status (UI Only - before API loads) ---
+          function updateDriveStatusUIOnly(isConnected) {
+             const driveStatusDiv = document.getElementById('drive-status');
+             const backupOptionsDiv = document.getElementById('backup-options');
+             const setupDriveButton = document.getElementById('setup-drive');
+             const backupHistory = document.getElementById('backup-history');
+
+
+             if (driveStatusDiv) {
+                driveStatusDiv.classList.remove('not-started', 'completed');
+                 driveStatusDiv.innerHTML = '';
+
+                 const icon = document.createElement('i');
+                 icon.style.marginRight = '5px';
+
+                 if (isConnected) {
+                    driveStatusDiv.classList.add('completed');
+                     icon.className = 'fas fa-check-circle';
+                     driveStatusDiv.appendChild(icon);
+                     driveStatusDiv.appendChild(document.createTextNode(' Checking status...')); // Initial text
+                     if (setupDriveButton) setupDriveButton.style.display = 'none';
+                     if (backupOptionsDiv) backupOptionsDiv.style.display = 'block'; // Show options optimistically
+                     if (backupHistory) backupHistory.style.display = 'block'; // Show history optimistically
+
+                 } else {
+                    driveStatusDiv.classList.add('not-started');
+                     icon.className = 'fas fa-times-circle';
+                     driveStatusDiv.appendChild(icon);
+                     driveStatusDiv.appendChild(document.createTextNode(' Not connected'));
+                      if (setupDriveButton) setupDriveButton.style.display = 'inline-block';
+                      if (backupOptionsDiv) backupOptionsDiv.style.display = 'none';
+                      if (backupHistory) backupHistory.style.display = 'none';
+                 }
+             }
+          }
+
+        // --- Google Drive Integration Code ---
+        /*******************************
+         * GOOGLE DRIVE INTEGRATION    *
+         *******************************/
+        const GOOGLE_CLIENT_ID = 'YOUR_CLIENT_ID.apps.googleusercontent.com'; // <<< REPLACE THIS
+        const GOOGLE_API_KEY = 'YOUR_API_KEY'; // <<< REPLACE THIS
+        const DRIVE_SCOPES = 'https://www.googleapis.com/auth/drive.file';
+        const BACKUP_FOLDER_NAME = 'Publishing Workflow Backups';
+
+        let backupFolderId = null;
+        let gapiInitialized = false; // Track initialization state
+
+        // Initialize Google API Client
+        function initializeGapiClient() {
+            if (!window.gapi || !window.gapi.client) {
+                console.error("gapi.client not loaded yet.");
+                showAlert("Google API client library failed to load.", "danger");
+                updateDriveStatusUIOnly(false); // Ensure UI reflects disconnected state
+                return;
+            }
+            gapi.client.init({
+                apiKey: GOOGLE_API_KEY,
+                clientId: GOOGLE_CLIENT_ID,
+                discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"],
+                scope: DRIVE_SCOPES
+            }).then(() => {
+                console.log('Google API client initialized');
+                gapiInitialized = true;
+
+                // Listen for auth changes using gapi.auth2
+                if (gapi.auth2) {
+                    const authInstance = gapi.auth2.getAuthInstance();
+                    if (authInstance) {
+                        authInstance.isSignedIn.listen(updateAuthStatus);
+                        // Handle initial status
+                        updateAuthStatus(authInstance.isSignedIn.get());
+                    } else {
+                         console.error("gapi.auth2.getAuthInstance() failed.");
+                         updateDriveStatusUIOnly(false); // Fallback UI update
+                         showAlert("Could not get Google Authentication instance.", "danger");
+                    }
+                } else {
+                     console.error("gapi.auth2 not loaded.");
+                     updateDriveStatusUIOnly(false); // Fallback UI update
+                     showAlert("Google Authentication library failed to load.", "danger");
+                }
+
+            }).catch(err => {
+                console.error('Error initializing Google API client:', err);
+                let errorMsg = "Error initializing Google API.";
+                if (err.details) {
+                    errorMsg += ` Details: ${err.details}`;
+                }
+                 showAlert(errorMsg, 'danger');
+                updateDriveStatusUIOnly(false); // Ensure UI shows disconnected on error
+            });
+        }
+
+        // Load the GAPI client and auth2 libraries
+        function handleClientLoad() {
+            if (window.gapi) {
+                gapi.load('client:auth2', initializeGapiClient);
+            } else {
+                 console.error("Google API script (api.js) failed to load.");
+                 showAlert("Failed to load Google API script. Drive features unavailable.", "danger");
+                 updateDriveStatusUIOnly(false);
+            }
+        }
+
+
+        // Update UI based on auth status
+        function updateAuthStatus(isSignedIn) {
+          const driveStatus = document.getElementById('drive-status');
+          const backupOptions = document.getElementById('backup-options');
+          const setupButton = document.getElementById('setup-drive');
+           const backupHistoryDiv = document.getElementById('backup-history');
+
+
+           if (!driveStatus || !backupOptions || !setupButton || !backupHistoryDiv) {
+               console.error("Drive UI elements not found for status update.");
+               return;
+           }
+
+          if (isSignedIn) {
+             if (!gapi.auth2 || !gapi.auth2.getAuthInstance()) {
+                 console.error("Auth instance not ready in updateAuthStatus");
+                 return; // Avoid errors if called before instance is ready
+             }
+            const user = gapi.auth2.getAuthInstance().currentUser.get();
+             const profile = user.getBasicProfile();
+             let email = 'Unknown User';
+             if (profile) {
+                email = profile.getEmail();
+             } else {
+                console.warn("Could not get user profile.");
+             }
+
+
+            driveStatus.innerHTML = `<i class="fas fa-check-circle" style="margin-right:5px;"></i> Connected as: ${email}`;
+            driveStatus.className = 'status-pill completed';
+            backupOptions.style.display = 'block';
+            setupButton.style.display = 'none';
+
+            // Check/create backup folder
+            ensureBackupFolder().then(() => {
+              // Load backup history
+              loadBackupHistory(); // This will show/hide the history div
+
+              // Setup auto-backup if enabled
+               const autoBackupCheckbox = document.getElementById('auto-backup');
+              if (autoBackupCheckbox && autoBackupCheckbox.checked) { // Check current state
+                setupAutoBackup();
+              }
+            }).catch(err => {
+                 showAlert("Could not verify or create backup folder in Google Drive.", "warning");
+                 // Still show connected, but maybe disable backup buttons?
+            });
+          } else {
+            driveStatus.innerHTML = '<i class="fas fa-times-circle" style="margin-right:5px;"></i> Not connected';
+            driveStatus.className = 'status-pill not-started';
+            backupOptions.style.display = 'none';
+            setupButton.style.display = 'inline-block';
+             backupHistoryDiv.style.display = 'none'; // Hide history when not connected
+              // Clear backup interval if user signs out
+              if (window.backupInterval) {
+                  clearInterval(window.backupInterval);
+                  window.backupInterval = null;
+                  console.log("Auto-backup interval cleared due to sign out.");
+              }
+          }
+        }
+
+        // Ensure backup folder exists
+        async function ensureBackupFolder() {
+          if (backupFolderId) return; // Already found or created
+
+           if (!gapiInitialized || !gapi.client || !gapi.client.drive) {
+                showAlert("Google Drive API client not ready.", "warning");
+               throw new Error("Google Drive API client not ready.");
+            }
+
+          try {
+            console.log("Checking for backup folder:", BACKUP_FOLDER_NAME);
+            // Check if folder already exists
+            const response = await gapi.client.drive.files.list({
+              q: `name='${BACKUP_FOLDER_NAME}' and mimeType='application/vnd.google-apps.folder' and trashed=false`,
+              fields: 'files(id)',
+               spaces: 'drive' // Important: Search only in Drive
+            });
+
+            if (response.result.files && response.result.files.length > 0) {
+              backupFolderId = response.result.files[0].id;
+              console.log("Backup folder found with ID:", backupFolderId);
+              return;
+            }
+
+            console.log("Backup folder not found, creating...");
+            // Create folder if it doesn't exist
+            const folderMetadata = {
+              name: BACKUP_FOLDER_NAME,
+              mimeType: 'application/vnd.google-apps.folder'
+            };
+
+            const createResponse = await gapi.client.drive.files.create({
+              resource: folderMetadata,
+              fields: 'id'
+            });
+
+            backupFolderId = createResponse.result.id;
+             console.log("Backup folder created with ID:", backupFolderId);
+          } catch (error) {
+            console.error('Error ensuring backup folder:', error);
+             // Provide more specific feedback if possible
+             let errorMsg = "Error accessing/creating backup folder.";
+            if (error.result && error.result.error) {
+                 errorMsg += ` Details: ${error.result.error.message}`;
+             } else if (error.message) {
+                 errorMsg += ` Details: ${error.message}`;
+             }
+             showAlert(errorMsg, 'danger');
+            throw error; // Re-throw to prevent proceeding without a folder ID
+          }
+        }
+
+        // Create a backup
+        async function createBackup() {
+           if (!gapiInitialized || !gapi.auth2 || !gapi.auth2.getAuthInstance() || !gapi.auth2.getAuthInstance().isSignedIn.get()) {
+            showAlert('Please connect to Google Drive first.', 'warning');
+            return null;
+          }
+
+           if (!backupFolderId) {
+              showAlert('Backup folder not found or created. Cannot backup.', 'warning');
+              // Attempt to ensure folder exists again
+               try {
+                  await ensureBackupFolder();
+                  if (!backupFolderId) return null; // Still no folder, exit
+               } catch (e) {
+                  return null; // Error ensuring folder, exit
+               }
+           }
+
+          try {
+            showAlert('Creating backup...', 'info');
+
+            const projects = getProjects(); // Your existing function to get all project data
+             if (Object.keys(projects).length === 0) {
+                 showAlert('No projects found to back up.', 'info');
+                 return null; // Don't create an empty backup
+             }
+
+             const timestamp = new Date().toISOString();
+             // Use Date components for a cleaner filename
+            const now = new Date();
+            const dateString = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+            const timeString = `${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+            const backupName = `SBDM_Backup_${dateString}_${timeString}.json`; // Changed extension
+
+
+            const backupData = {
+              timestamp,
+              projects,
+              systemVersion: '1.0' // Example versioning
+            };
+
+            const file = new Blob([JSON.stringify(backupData, null, 2)], {type: 'application/json'});
+            const metadata = {
+              name: backupName,
+              mimeType: 'application/json',
+              parents: [backupFolderId]
+            };
+
+            const response = await gapi.client.drive.files.create({
+              resource: metadata,
+              media: {
+                mimeType: 'application/json',
+                body: file
+              },
+              fields: 'id,name,webViewLink,createdTime'
+            });
+
+            showAlert(`Backup created: ${response.result.name}`, 'success');
+            loadBackupHistory(); // Refresh the history list
+            return response.result;
+          } catch (error) {
+            console.error('Backup failed:', error);
+             let errorMsg = "Backup failed.";
+            if (error.result && error.result.error) {
+                 errorMsg += ` Details: ${error.result.error.message}`;
+             } else if (error.message) {
+                 errorMsg += ` Details: ${error.message}`;
+             }
+             showAlert(errorMsg, 'danger');
+            return null;
+          }
+        }
+
+        // Load backup history
+        async function loadBackupHistory() {
+          const backupList = document.getElementById('backup-list');
+           const backupHistoryDiv = document.getElementById('backup-history');
+           if (!backupList || !backupHistoryDiv) return; // Exit if elements don't exist
+
+            backupList.innerHTML = '<span>Loading history...</span>'; // Indicate loading
+            backupHistoryDiv.style.display = 'block'; // Show history section while loading
+
+
+           if (!gapiInitialized || !gapi.auth2 || !gapi.auth2.getAuthInstance().isSignedIn.get() || !backupFolderId) {
+               backupList.innerHTML = '<span style="font-style: italic; color: var(--gray-500);">Connect to Google Drive to see history.</span>';
+               backupHistoryDiv.style.display = 'block'; // Keep visible to show message
+               return;
+           }
+
+
+          try {
+              console.log("Loading backup history from folder:", backupFolderId);
+            const response = await gapi.client.drive.files.list({
+              q: `'${backupFolderId}' in parents and name contains 'SBDM_Backup_' and mimeType='application/json' and trashed=false`, // Updated query
+              fields: 'files(id,name,createdTime,webViewLink)', // webViewLink might require different scope/permission
+              orderBy: 'createdTime desc',
+              pageSize: 5, // Load only the last 5 backups
+               spaces: 'drive'
+            });
+
+            backupList.innerHTML = ''; // Clear loading message
+
+            if (response.result.files && response.result.files.length > 0) {
+              response.result.files.forEach(file => {
+                const backupItem = document.createElement('div');
+                backupItem.className = 'backup-item';
+                backupItem.title = `Click to restore this backup\nFile ID: ${file.id}`; // Tooltip
+
+                const date = new Date(file.createdTime).toLocaleString();
+                backupItem.innerHTML = `
+                  <span style="flex-grow: 1; margin-right: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${file.name}</span>
+                  <span style="color: var(--gray-600); font-size: 0.9em; white-space: nowrap;">${date}</span>
+                `;
+
+                backupItem.addEventListener('click', () => {
+                    // Double check confirmation message
+                  if (confirm(`Restore backup "${file.name}" from ${date}?\n\nWARNING: This will overwrite all current project data in the browser.`)) {
+                    restoreBackup(file.id);
+                  }
+                });
+
+                backupList.appendChild(backupItem);
+              });
+            } else {
+                backupList.innerHTML = '<span style="font-style: italic; color: var(--gray-500);">No backups found in the folder.</span>';
+            }
+             backupHistoryDiv.style.display = 'block'; // Ensure visible after loading
+
+          } catch (error) {
+            console.error('Error loading backup history:', error);
+            backupList.innerHTML = '<span style="color: var(--danger);">Error loading history.</span>';
+             backupHistoryDiv.style.display = 'block'; // Ensure visible to show error
+          }
+        }
+
+        // Restore from backup
+        async function restoreBackup(fileId) {
+           if (!gapiInitialized || !gapi.auth2 || !gapi.auth2.getAuthInstance().isSignedIn.get()) {
+               showAlert('Not connected to Google Drive.', 'warning');
+               return;
+           }
+
+
+          try {
+            showAlert('Restoring backup...', 'info');
+
+            const response = await gapi.client.drive.files.get({
+              fileId: fileId,
+              alt: 'media'
+            });
+
+            // GAPI client might parse JSON automatically if mimeType was correct during upload
+             // If response.body is a string, parse it. If it's already an object, use it.
+            let backupData;
+            if (typeof response.body === 'string') {
+                backupData = JSON.parse(response.body);
+            } else if (typeof response.result === 'object' && response.result !== null) {
+                 // Sometimes the data might be in response.result if not using alt: 'media' correctly or if response changed
+                 backupData = response.result;
+            }
+             else {
+                 backupData = response.body; // Assume it's an object
+            }
+
+
+            if (!backupData || typeof backupData !== 'object' || !backupData.projects || typeof backupData.projects !== 'object') {
+              throw new Error('Invalid or empty backup file format');
+            }
+
+            // Clear existing projects
+            let keysToRemove = [];
+             for (let i = 0; i < localStorage.length; i++) {
+                 const key = localStorage.key(i);
+                 if (key && key.startsWith('project_')) { // Added null check
+                     keysToRemove.push(key);
+                 }
+             }
+             keysToRemove.forEach(key => localStorage.removeItem(key));
+            console.log(`Removed ${keysToRemove.length} existing projects.`);
+
+            // Restore projects from the backup object { "project_Name1": {...}, ... }
+            let restoredCount = 0;
+            for (const projectKey in backupData.projects) {
+                 if (projectKey.startsWith('project_') && typeof backupData.projects[projectKey] === 'object') {
+                     try {
+                        localStorage.setItem(projectKey, JSON.stringify(backupData.projects[projectKey]));
+                        restoredCount++;
+                     } catch (e) {
+                         console.error(`Error restoring project ${projectKey}:`, e);
+                         // Optionally alert user about partial restore failure
+                     }
+                 }
+            }
+
+
+             if (restoredCount === 0 && Object.keys(backupData.projects).length > 0) {
+                 throw new Error("Backup contained project data, but failed to restore any items.");
+             } else if (restoredCount === 0) {
+                 showAlert("Backup restored, but contained no project data.", "info");
+             } else {
+                 showAlert(`Backup restored successfully! (${restoredCount} projects loaded)`, 'success');
+             }
+
+
+            // Refresh UI
+            loadClientOverview(); // Use correct function name
+            loadProjectList();    // Use correct function name
+
+            // Attempt to load the first restored project into the form, or clear it
+            const firstProjectKey = Object.keys(backupData.projects).find(k => k.startsWith('project_'));
+            if (firstProjectKey) {
+                 loadProject(firstProjectKey); // Load the first project found in the backup
+            } else {
+                clearProjectForm(false); // Clear form if backup was empty
+            }
+
+
+          } catch (error) {
+            console.error('Restore failed:', error);
+            let errorMsg = "Restore failed.";
+             if (error.result && error.result.error) {
+                 errorMsg += ` Details: ${error.result.error.message}`;
+             } else if (error.message) {
+                 errorMsg += ` Details: ${error.message}`;
+             }
+             showAlert(errorMsg, 'danger');
+          }
+        }
+
+        // Setup auto-backup
+        function setupAutoBackup() {
+            if (!gapiInitialized || !gapi.auth2 || !gapi.auth2.getAuthInstance().isSignedIn.get()) {
+                console.log("Cannot setup auto-backup: User not signed in.");
+                // Ensure checkbox is unticked if called erroneously
+                 const autoBackupCheckbox = document.getElementById('auto-backup');
+                 if (autoBackupCheckbox) autoBackupCheckbox.checked = false;
+                 localStorage.setItem('autoBackup', 'false');
+                return;
+            }
+
+            // Clear existing interval to prevent duplicates
+            if (window.backupInterval) {
+                clearInterval(window.backupInterval);
+                console.log("Cleared existing auto-backup interval.");
+            }
+
+            console.log("Setting up auto-backup interval (24 hours)...");
+             // Set new interval (every 24 hours)
+             const twentyFourHours = 24 * 60 * 60 * 1000;
+             // const twentyFourHours = 30 * 1000; // Short interval for testing
+
+            window.backupInterval = setInterval(() => {
+                console.log("Auto-backup interval triggered.");
+                if (gapi.auth2.getAuthInstance().isSignedIn.get()) {
+                    console.log("User is signed in, attempting auto-backup.");
+                    createBackup().then(result => {
+                         if (result) {
+                             console.log("Auto-backup successful:", result.name);
+                         } else {
+                             console.warn("Auto-backup function returned null or failed.");
+                         }
+                     }).catch(err => {
+                         console.error("Error during scheduled auto-backup:", err);
+                     });
+                } else {
+                    console.log("User not signed in, skipping auto-backup.");
+                     // Optional: Clear interval if user signs out? Handled by updateAuthStatus.
+                }
+            }, twentyFourHours);
+
+            // Optionally, do an initial backup immediately after enabling
+             // Consider user experience - maybe don't backup immediately unless manually triggered?
+            // createBackup();
+             // console.log("Initial auto-backup triggered.");
+        }
+
+        // Helper function to show alerts
+        function showAlert(message, type) { // Type: 'success', 'warning', 'danger', 'info'
+          const alertContainer = document.body; // Or a dedicated container div
+           const alert = document.createElement('div');
+           alert.className = `alert-${type}`; // Use class for styling
+           alert.style.position = 'fixed';
+           alert.style.bottom = '20px';
+           alert.style.right = '20px';
+           alert.style.padding = '15px';
+           alert.style.borderRadius = '4px';
+           // alert.style.backgroundColor is now handled by CSS classes like .alert-success etc.
+           alert.style.color = 'white';
+           alert.style.zIndex = '2000'; // Ensure it's above other elements like modals
+           alert.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+           alert.style.opacity = '1';
+           alert.style.transition = 'opacity 0.5s ease-out';
+           alert.textContent = message;
+
+           alertContainer.appendChild(alert);
+
+           // Auto-dismiss
+           setTimeout(() => {
+             alert.style.opacity = '0';
+             setTimeout(() => {
+                 if (alert.parentNode) { // Check if it hasn't been removed already
+                     alert.parentNode.removeChild(alert);
+                 }
+             }, 500); // Remove after fade out
+           }, 5000); // Alert visible for 5 seconds
+        }
+
+
+        // --- Event Listeners (Specific to Google Drive UI) ---
+        // Ensure elements exist before adding listeners
+        const setupDriveButton = document.getElementById('setup-drive');
+        const cancelAuthButton = document.getElementById('cancel-auth');
+        const googleAuthButton = document.getElementById('google-auth-button');
+        const disconnectButton = document.getElementById('disconnect-drive');
+        const manualBackupButton = document.getElementById('manual-backup');
+        const autoBackupCheckbox = document.getElementById('auto-backup');
+        const authModal = document.getElementById('google-auth-modal');
+
+
+        if(setupDriveButton) {
+            setupDriveButton.addEventListener('click', () => {
+                 if (authModal) authModal.style.display = 'flex'; // Always show modal on click
+             });
+        }
+
+        if(cancelAuthButton) {
+            cancelAuthButton.addEventListener('click', () => {
+                 if (authModal) authModal.style.display = 'none';
+             });
+        }
+
+        if(googleAuthButton) {
+            googleAuthButton.addEventListener('click', () => {
+                 if (!gapiInitialized || !gapi.auth2 || !gapi.auth2.getAuthInstance()) {
+                     showAlert("Google Auth library not ready. Please wait or reload.", "warning");
+                     return;
+                 }
+                gapi.auth2.getAuthInstance().signIn().then(() => {
+                    if (authModal) authModal.style.display = 'none';
+                     // Status update is handled by the listener attached in initializeGapiClient
+                }).catch(err => {
+                    console.error('Sign in failed:', err);
+                     let errorMsg = 'Google sign-in failed.';
+                     if (err.error === 'popup_closed_by_user') {
+                         errorMsg = 'Sign-in cancelled.';
+                     } else if (err.error) {
+                         errorMsg += ` Error: ${err.error}`;
+                     }
+                    showAlert(errorMsg, 'warning');
+                });
+            });
+        }
+
+        if(disconnectButton) {
+            disconnectButton.addEventListener('click', () => {
+                 if (!gapiInitialized || !gapi.auth2 || !gapi.auth2.getAuthInstance()) {
+                     showAlert("Google Auth library not ready.", "warning");
+                     return;
+                 }
+                 // Optional confirmation - consider if needed
+                 if (confirm("Are you sure you want to disconnect from Google Drive? Auto-backup will stop.")) {
+                    gapi.auth2.getAuthInstance().signOut();
+                     // Update happens via listener, but can force UI update too
+                      updateAuthStatus(false);
+                     // Clear auto-backup preference on disconnect
+                     localStorage.setItem('autoBackup', 'false');
+                      if (autoBackupCheckbox) autoBackupCheckbox.checked = false;
+                     showAlert('Disconnected from Google Drive.', 'info');
+                 }
+            });
+        }
+
+        if(manualBackupButton) {
+            manualBackupButton.addEventListener('click', createBackup);
+        }
+
+        if(autoBackupCheckbox) {
+             // Load initial state from localStorage
+             autoBackupCheckbox.checked = localStorage.getItem('autoBackup') === 'true';
+
+            autoBackupCheckbox.addEventListener('change', (e) => {
+              const isChecked = e.target.checked;
+              localStorage.setItem('autoBackup', isChecked);
+              if (isChecked) {
+                if (gapiInitialized && gapi.auth2 && gapi.auth2.getAuthInstance().isSignedIn.get()) {
+                    setupAutoBackup();
+                    showAlert('Auto-backup enabled. First backup will run on schedule.', 'success');
+                     // Optionally trigger immediate backup:
+                     // createBackup().then(()=>showAlert('Initial auto-backup created.', 'info'));
+                } else {
+                    showAlert('Connect to Google Drive to enable auto-backup.', 'warning');
+                     e.target.checked = false; // Uncheck if not connected
+                     localStorage.setItem('autoBackup', 'false');
+                }
+              } else {
+                if (window.backupInterval) {
+                  clearInterval(window.backupInterval);
+                  window.backupInterval = null;
+                  console.log("Auto-backup interval cleared by user.");
+                }
+                showAlert('Auto-backup disabled.', 'warning');
+              }
+            });
+        }
+
+        // --- END Google Drive Integration Code ---
+
+        // --- Initialize Google API ---
+        // The Google API script is loaded via the <script> tag in the HTML.
+        // Assign the callback function to be executed once the script is loaded.
+        // Note: The 'onload' attribute is often used directly in the script tag,
+        // but programmatically assigning it here works too.
+        // Ensure this runs after the DOM is ready or the script tag exists.
+        const googleApiScriptTag = document.querySelector('script[src="https://apis.google.com/js/api.js"]');
+        if (googleApiScriptTag) {
+            googleApiScriptTag.onload = handleClientLoad;
+             googleApiScriptTag.onerror = () => { // Add error handling for script load failure
+                 console.error("Google API script (api.js) failed to load.");
+                 showAlert("Failed to load Google API script. Drive features unavailable.", "danger");
+                 updateDriveStatusUIOnly(false);
+             };
+        } else {
+            console.error("Google API script tag not found in HTML.");
+             showAlert("Google API script tag missing. Drive features unavailable.", "danger");
+             updateDriveStatusUIOnly(false);
+        }
+
+    </script>
+
+</body>
+</html>
