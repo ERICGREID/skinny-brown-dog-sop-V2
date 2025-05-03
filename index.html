@@ -475,16 +475,6 @@
             border-bottom: 2px solid var(--gray-300);
             cursor: pointer;
         }
-        /* Add sort indicators */
-        .client-table th.sort-asc::after {
-            content: ' ▲';
-            font-size: 0.8em;
-        }
-        .client-table th.sort-desc::after {
-            content: ' ▼';
-            font-size: 0.8em;
-        }
-
 
         .client-table th:hover {
             background-color: var(--gray-200);
@@ -512,7 +502,6 @@
         .client-table .action-column button {
             padding: 5px 10px;
             font-size: 12px;
-            margin-left: 5px; /* Add space between buttons */
         }
 
         .status-pill {
@@ -725,7 +714,7 @@
 
         /* --- START: Added Google Drive Integration Styles --- */
         #google-auth-modal {
-          display: none; /* Initially hidden */
+          display: none;
           position: fixed;
           top: 0;
           left: 0;
@@ -831,23 +820,11 @@
           justify-content: space-between;
            font-size: 14px; /* Slightly smaller text */
            color: var(--gray-700);
-           cursor: pointer; /* Add pointer cursor */
-           transition: background-color 0.2s; /* Smooth hover */
         }
-         .backup-item:hover {
-             background-color: var(--gray-100); /* Hover effect */
-         }
-
 
         .backup-item:last-child {
           border-bottom: none;
         }
-
-         /* Alert styles */
-         .alert-success { background-color: var(--success); }
-         .alert-warning { background-color: var(--warning); }
-         .alert-danger { background-color: var(--danger); }
-         .alert-info { background-color: var(--accent); }
 
         /* This media query specifically targets the .google-auth-container */
         @media (max-width: 768px) {
@@ -858,12 +835,11 @@
           .drive-settings {
               padding: 15px;
           }
-           /* Target the div containing the buttons */
-           #backup-options > div:nth-of-type(1) {
+           .backup-options div { /* Stack buttons on small screens */
               flex-direction: column;
               gap: 10px; /* Keep gap */
            }
-            #backup-options > div:nth-of-type(1) button {
+            .backup-options div button {
                width: 100%; /* Make buttons full width */
             }
         }
@@ -1803,7 +1779,8 @@
             <button type="button" id="printBtn">Print Summary</button>
         </div>
 
-        <div id="google-auth-modal" style="display: none;"> <div class="google-auth-container">
+        <div id="google-auth-modal">
+          <div class="google-auth-container">
             <h2>Connect Google Drive</h2>
             <p>This will enable automatic backups of your publishing projects to your Google Drive.</p>
             <div style="margin: 20px 0; text-align: center;">
@@ -1830,10 +1807,12 @@
 
           <div id="backup-options" class="backup-options" style="display: none;">
             <label>
-              <input type="checkbox" id="auto-backup"> <span>Automatic daily backup</span>
+              <input type="checkbox" id="auto-backup" checked>
+              <span>Automatic daily backup</span>
             </label>
 
-            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;"> <button id="manual-backup" class="secondary">
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+              <button id="manual-backup" class="secondary">
                 <i class="fas fa-cloud-upload-alt" style="margin-right: 8px;"></i> Backup Now
               </button>
               <button id="disconnect-drive" class="warning">
@@ -1852,12 +1831,7 @@
         </footer>
     </div>
 
-    <script src="https://apis.google.com/js/api.js"></script>
-
     <script>
-        // --- Core Application Logic (Phases, Tasks, Projects, UI Updates) ---
-        let currentProjectId = null; // Track current project ID if needed for restore context
-
         document.addEventListener('DOMContentLoaded', function() {
             // Set current year in footer
             document.getElementById('currentYear').textContent = new Date().getFullYear();
@@ -1891,29 +1865,29 @@
 
 
             // Project management button listeners
-            document.getElementById('loadProjectBtn')?.addEventListener('click', loadSelectedProject);
-            document.getElementById('newProjectBtn')?.addEventListener('click', () => clearProjectForm(true)); // Pass true to reset fully
-            document.getElementById('deleteProjectBtn')?.addEventListener('click', deleteSelectedProject);
+            document.getElementById('loadProjectBtn').addEventListener('click', loadSelectedProject);
+            document.getElementById('newProjectBtn').addEventListener('click', clearProjectForm);
+            document.getElementById('deleteProjectBtn').addEventListener('click', deleteSelectedProject);
 
             // Save button listener
-             document.getElementById('saveBtn')?.addEventListener('click', saveProjectData);
+             document.getElementById('saveBtn').addEventListener('click', saveProjectData);
 
             // Import/Export listeners
-            document.getElementById('exportBtn')?.addEventListener('click', exportProjectData);
-            document.getElementById('importFile')?.addEventListener('change', displayFileName);
-            document.getElementById('importBtn')?.addEventListener('click', importProjectData);
+            document.getElementById('exportBtn').addEventListener('click', exportProjectData);
+            document.getElementById('importFile').addEventListener('change', displayFileName);
+            document.getElementById('importBtn').addEventListener('click', importProjectData);
 
             // Print button listener
-            document.getElementById('printBtn')?.addEventListener('click', () => window.print());
+            document.getElementById('printBtn').addEventListener('click', () => window.print());
 
              // Client Overview Listeners
-            document.getElementById('clientSearch')?.addEventListener('input', filterClientTable);
-            document.getElementById('statusFilter')?.addEventListener('change', filterClientTable);
+            document.getElementById('clientSearch').addEventListener('input', filterClientTable);
+            document.getElementById('statusFilter').addEventListener('change', filterClientTable);
 
             // Batch controls
-            document.getElementById('exportAllBtn')?.addEventListener('click', exportAllProjects);
-            document.getElementById('batchImportFile')?.addEventListener('change', displayBatchFileName);
-            document.getElementById('importBatchBtn')?.addEventListener('click', () => document.getElementById('batchImportFile')?.click()); // Trigger hidden input
+            document.getElementById('exportAllBtn').addEventListener('click', exportAllProjects);
+            document.getElementById('batchImportFile').addEventListener('change', displayBatchFileName);
+            document.getElementById('importBatchBtn').addEventListener('click', () => document.getElementById('batchImportFile').click()); // Trigger hidden input
 
             // Load client overview table
             loadClientOverview();
@@ -1932,8 +1906,88 @@
                 button.addEventListener('click', copyUrlToClipboard);
             });
 
-            // Initial UI update for Drive Status (before API loads)
-            updateDriveStatusUIOnly(false); // Assume disconnected initially
+            // --- START: Google Drive Integration Listeners ---
+            const setupDriveButton = document.getElementById('setup-drive');
+            const authModal = document.getElementById('google-auth-modal');
+            const cancelAuthButton = document.getElementById('cancel-auth');
+            const googleAuthButton = document.getElementById('google-auth-button');
+            const disconnectButton = document.getElementById('disconnect-drive');
+            const backupOptionsDiv = document.getElementById('backup-options');
+             const driveStatusDiv = document.getElementById('drive-status');
+
+
+             if (setupDriveButton) {
+                setupDriveButton.addEventListener('click', () => {
+                    // Check current status. If not connected, show modal. If connected, show options.
+                     if (driveStatusDiv.classList.contains('not-started')) {
+                         if (authModal) authModal.style.display = 'flex'; // Show modal using flex
+                     } else {
+                         if (backupOptionsDiv) backupOptionsDiv.style.display = 'block'; // Show options directly
+                     }
+                });
+            }
+
+             if (cancelAuthButton) {
+                cancelAuthButton.addEventListener('click', () => {
+                    if (authModal) authModal.style.display = 'none'; // Hide modal
+                });
+            }
+
+             if (googleAuthButton) {
+                 googleAuthButton.addEventListener('click', () => {
+                     // Placeholder for actual Google Auth flow initiation
+                     console.log('Initiate Google Authentication...');
+                     // On successful auth (simulated):
+                     alert('Google Drive connected successfully! (Simulated)');
+                     updateDriveStatus(true); // Update UI to connected state
+                     if (authModal) authModal.style.display = 'none'; // Hide modal
+                     if (backupOptionsDiv) backupOptionsDiv.style.display = 'block'; // Show backup options
+                      if (setupDriveButton) setupDriveButton.style.display = 'none'; // Hide setup button
+                 });
+             }
+
+             if (disconnectButton) {
+                disconnectButton.addEventListener('click', () => {
+                    if (confirm('Are you sure you want to disconnect Google Drive? Automatic backups will stop.')) {
+                        // Placeholder for actual disconnection logic
+                        console.log('Disconnecting Google Drive...');
+                         alert('Google Drive disconnected. (Simulated)');
+                        updateDriveStatus(false); // Update UI to disconnected state
+                         if (backupOptionsDiv) backupOptionsDiv.style.display = 'none'; // Hide options
+                         if (setupDriveButton) setupDriveButton.style.display = 'inline-block'; // Show setup button again
+                    }
+                });
+            }
+
+             // Add listener for manual backup button (placeholder action)
+             const manualBackupButton = document.getElementById('manual-backup');
+             if (manualBackupButton) {
+                 manualBackupButton.addEventListener('click', () => {
+                     console.log('Manual backup triggered...');
+                     alert('Manual backup started... (Simulated)');
+                     // Simulate adding to history
+                     addBackupHistoryItem(new Date());
+                     const historyDiv = document.getElementById('backup-history');
+                     if (historyDiv) historyDiv.style.display = 'block';
+                 });
+             }
+
+
+             // Initial check of simulated drive status (e.g., from localStorage)
+             const isDriveConnected = localStorage.getItem('driveConnected') === 'true'; // Example storage check
+             updateDriveStatus(isDriveConnected);
+             if (isDriveConnected) {
+                 if (setupDriveButton) setupDriveButton.style.display = 'none';
+                 if (backupOptionsDiv) backupOptionsDiv.style.display = 'block';
+                 // Optionally load backup history here
+             } else {
+                  if (setupDriveButton) setupDriveButton.style.display = 'inline-block'; // Ensure it's block or inline-block as needed
+                 if (backupOptionsDiv) backupOptionsDiv.style.display = 'none';
+             }
+
+
+            // --- END: Google Drive Integration Listeners ---
+
 
         }); // End DOMContentLoaded
 
@@ -1946,12 +2000,10 @@
 
         function updateTaskStatus(checkbox) {
             const taskItem = checkbox.closest('.task-item');
-            if(taskItem) {
-                if (checkbox.checked) {
-                    taskItem.classList.add('completed');
-                } else {
-                    taskItem.classList.remove('completed');
-                }
+            if (checkbox.checked) {
+                taskItem.classList.add('completed');
+            } else {
+                taskItem.classList.remove('completed');
             }
         }
 
@@ -1965,24 +2017,16 @@
             let status = 'Not Started';
             let statusClass = 'status-not-started';
 
-            if (tasks.length > 0) { // Only calculate if tasks exist
-                if (completedTasks.length === tasks.length) {
-                    status = 'Completed';
-                    statusClass = 'status-completed';
-                } else if (completedTasks.length > 0) {
-                    status = 'In Progress';
-                    statusClass = 'status-in-progress';
-                }
-            } else {
-                status = 'N/A'; // No tasks in this phase
-                statusClass = 'status-not-started'; // Or a different class if needed
+            if (completedTasks.length === tasks.length && tasks.length > 0) {
+                status = 'Completed';
+                statusClass = 'status-completed';
+            } else if (completedTasks.length > 0) {
+                status = 'In Progress';
+                statusClass = 'status-in-progress';
             }
 
-
-            if(statusElement) { // Check if element exists
-                statusElement.textContent = status;
-                statusElement.className = `status ${statusClass}`; // Reset classes and apply new one
-            }
+            statusElement.textContent = status;
+            statusElement.className = `status ${statusClass}`; // Reset classes and apply new one
         }
 
         function updateAllPhaseStatuses() {
@@ -2000,60 +2044,43 @@
             const progressBar = document.getElementById('overallProgress');
             const statusInput = document.getElementById('currentStatus');
 
-            if(progressBar) progressBar.style.width = `${progress}%`;
+            progressBar.style.width = `${progress}%`;
 
             let overallStatus = "Not Started";
-            if (totalTasks === 0) {
-                overallStatus = "N/A"; // No tasks defined yet
-                 if(progressBar) progressBar.style.backgroundColor = "var(--gray-200)";
-            } else if (progress === 100) {
+            if (progress === 100) {
                 overallStatus = "Completed";
-                 if(progressBar) progressBar.style.backgroundColor = "var(--success)";
+                 progressBar.style.backgroundColor = "var(--success)";
             } else if (progress > 0) {
                 overallStatus = "In Progress";
-                if(progressBar) progressBar.style.backgroundColor = "var(--accent)";
+                progressBar.style.backgroundColor = "var(--accent)";
             } else {
-                 if(progressBar) progressBar.style.backgroundColor = "var(--gray-200)"; // Show empty bar
+                 progressBar.style.backgroundColor = "var(--gray-200)"; // Show empty bar
             }
-            if(statusInput) statusInput.value = overallStatus;
+            statusInput.value = overallStatus;
         }
 
         function initializePhaseCollapse() {
             const phaseContainers = document.querySelectorAll('.phase-container');
             let firstActiveFound = false;
-            phaseContainers.forEach((container, index) => {
+            phaseContainers.forEach(container => {
                 const statusElement = container.querySelector('.status');
-                let shouldOpen = false;
-
-                if (!firstActiveFound && statusElement) {
-                     if(statusElement.textContent === 'In Progress') {
-                         shouldOpen = true;
-                         firstActiveFound = true;
-                     } else if (statusElement.textContent === 'Not Started') {
-                         // Check if it's the very first phase OR if no phase before it is In Progress/Not Started
-                         let previousPhaseInProgressOrNotStarted = false;
-                         for(let j=0; j<index; j++) {
-                             const prevStatus = phaseContainers[j].querySelector('.status');
-                             if(prevStatus && (prevStatus.textContent === 'In Progress' || prevStatus.textContent === 'Not Started')) {
-                                 previousPhaseInProgressOrNotStarted = true;
-                                 break;
-                             }
-                         }
-                         if(!previousPhaseInProgressOrNotStarted) {
-                              shouldOpen = true;
-                              firstActiveFound = true;
-                         }
-                     }
-                }
-
-
-                if (shouldOpen) {
+                if (!firstActiveFound && statusElement && statusElement.textContent === 'In Progress') {
                     container.classList.remove('collapsed');
-                } else {
+                    firstActiveFound = true;
+                } else if (!firstActiveFound && statusElement && statusElement.textContent === 'Not Started' && !phaseContainers[0].querySelector('.status.status-in-progress')) {
+                     // If no phase is in progress, open the first 'Not Started' phase
+                    if(container === phaseContainers[0]) {
+                        container.classList.remove('collapsed');
+                        firstActiveFound = true; // Prevent others from opening
+                    } else {
+                         container.classList.add('collapsed');
+                    }
+                }
+                else {
                     container.classList.add('collapsed');
                 }
             });
-             // Fallback: If no phases are 'In Progress' or meet the 'Not Started' condition, open the first one.
+             // If no phases are 'In Progress' or 'Not Started' (e.g., all completed or empty project), open the first one
              if (!firstActiveFound && phaseContainers.length > 0) {
                  phaseContainers[0].classList.remove('collapsed');
              }
@@ -2061,56 +2088,6 @@
 
 
         // --- Project Data Management ---
-
-        // Function to get all projects (used by backup) - Adapt as needed
-         function getProjects() {
-             const projects = {};
-             for (let i = 0; i < localStorage.length; i++) {
-                 const key = localStorage.key(i);
-                 if (key && key.startsWith('project_')) { // Added null check for key
-                    try {
-                        const item = localStorage.getItem(key);
-                         if (item) { // Check if item is not null
-                             projects[key] = JSON.parse(item);
-                         } else {
-                              console.warn(`localStorage returned null for key ${key}`);
-                         }
-                    } catch(e) {
-                        console.warn(`Could not parse project ${key} for backup: ${e}`);
-                    }
-                 }
-             }
-             // Filter out null/undefined entries if parsing failed
-             return Object.fromEntries(Object.entries(projects).filter(([_, v]) => v != null));
-         }
-
-         // Function to refresh client overview (used by restore) - Assumes loadClientOverview exists
-         function refreshClientOverview() {
-             if (typeof loadClientOverview === 'function') {
-                loadClientOverview();
-             }
-         }
-
-         // Function to load project list (used by restore) - Assumes loadProjectList exists
-         function loadProjectsList() {
-             if (typeof loadProjectList === 'function') {
-                 loadProjectList();
-             }
-         }
-          // Function to load a specific project (used by restore) - Assumes loadSelectedProject logic exists or adapt
-          function loadProject(projectIdKey) {
-             // This needs to map projectIdKey to the actual loading mechanism
-             // Example: Select in dropdown and trigger load
-             const projectSelect = document.getElementById('projectSelect');
-             if (projectSelect) {
-                 projectSelect.value = projectIdKey;
-                 if (typeof loadSelectedProject === 'function') {
-                     loadSelectedProject();
-                     currentProjectId = projectIdKey; // Update current project tracker
-                 }
-             }
-          }
-
 
         function getProjectData() {
             const data = {};
@@ -2123,7 +2100,7 @@
                  }
 
                 if (input.type === 'checkbox') {
-                    if(input.id) data[input.id] = input.checked; // Ensure ID exists
+                    data[input.id] = input.checked;
                 } else {
                      // Use name attribute if available and unique, otherwise use id
                     const key = input.name && document.querySelectorAll(`[name="${input.name}"]`).length === 1 ? input.name : input.id;
@@ -2181,70 +2158,43 @@
 
 
             if (!bookTitle || !authorName || bookTitle.trim() === '' || authorName.trim() === '') {
-                 showAlert('Please enter both a Book Title and Author Name before saving.', 'warning');
+                 alert('Please enter both a Book Title and Author Name before saving.');
                  return;
             }
 
             try {
-                const projectKey = `project_${projectName}`;
-                localStorage.setItem(projectKey, JSON.stringify(projectData));
-                 currentProjectId = projectKey; // Track the saved project ID
-                showAlert(`Project "${projectName}" saved successfully!`, 'success');
+                localStorage.setItem(`project_${projectName}`, JSON.stringify(projectData));
+                alert(`Project "${projectName}" saved successfully!`);
                 loadProjectList(); // Refresh the dropdown
-                 // Ensure the saved project is selected in the dropdown
-                 const projectSelect = document.getElementById('projectSelect');
-                 if(projectSelect) projectSelect.value = projectKey;
                 loadClientOverview(); // Refresh client table
             } catch (e) {
                 console.error("Error saving project:", e);
-                showAlert("Failed to save project. Local storage might be full or disabled.", 'danger');
+                alert("Failed to save project. Local storage might be full or disabled.");
             }
         }
 
         function loadProjectList() {
             const projectSelect = document.getElementById('projectSelect');
-             const currentSelectedValue = projectSelect ? projectSelect.value : null; // Remember current selection
-            if(projectSelect) projectSelect.innerHTML = '<option value="">-- Select a saved project --</option>'; // Clear existing options
+            projectSelect.innerHTML = '<option value="">-- Select a saved project --</option>'; // Clear existing options
 
-            const keys = [];
-             for (let i = 0; i < localStorage.length; i++) {
-                 const key = localStorage.key(i);
-                 if (key && key.startsWith('project_')) { // Added null check
-                     keys.push(key);
-                 }
-             }
-
-             // Sort keys alphabetically by project name (after 'project_')
-             keys.sort((a, b) => a.substring(8).localeCompare(b.substring(8)));
-
-
-             keys.forEach(key => {
-                 const projectName = key.substring(8); // Remove 'project_' prefix
-                 const option = document.createElement('option');
-                 option.value = key; // Store the full key
-                 option.textContent = projectName;
-                 if(projectSelect) projectSelect.appendChild(option);
-             });
-
-              // Restore previous selection if it still exists
-             if (currentSelectedValue && keys.includes(currentSelectedValue)) {
-                 if(projectSelect) projectSelect.value = currentSelectedValue;
-             } else if (keys.length > 0 && currentProjectId && keys.includes(currentProjectId)) {
-                  if(projectSelect) projectSelect.value = currentProjectId; // Select the actively saved project if dropdown was reset
-             } else {
-                  currentProjectId = null; // Reset if current project no longer exists
-             }
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('project_')) {
+                    const projectName = key.substring(8); // Remove 'project_' prefix
+                    const option = document.createElement('option');
+                    option.value = key; // Store the full key
+                    option.textContent = projectName;
+                    projectSelect.appendChild(option);
+                }
+            }
         }
 
          function loadSelectedProject() {
              const projectSelect = document.getElementById('projectSelect');
-             if (!projectSelect) return;
              const selectedKey = projectSelect.value;
-              currentProjectId = selectedKey; // Update tracker
 
              if (!selectedKey) {
-                 // alert('Please select a project to load.'); // Can be noisy, maybe just clear form?
-                 clearProjectForm(false); // Clear form if "-- Select --" is chosen
+                 alert('Please select a project to load.');
                  return;
              }
 
@@ -2253,25 +2203,22 @@
                  if (projectDataString) {
                      const projectData = JSON.parse(projectDataString);
                      setProjectData(projectData);
-                     // showAlert(`Project "${selectedKey.substring(8)}" loaded successfully!`, 'info'); // Less intrusive
+                     alert(`Project "${selectedKey.substring(8)}" loaded successfully!`);
                  } else {
-                     showAlert('Could not find the selected project data.', 'warning');
-                      currentProjectId = null; // Reset tracker if load failed
+                     alert('Could not find the selected project data.');
                  }
              } catch (e) {
                  console.error("Error loading project:", e);
-                 showAlert("Failed to load project data. It might be corrupted.", 'danger');
-                  currentProjectId = null; // Reset tracker if load failed
+                 alert("Failed to load project data. It might be corrupted.");
              }
          }
 
         function deleteSelectedProject() {
             const projectSelect = document.getElementById('projectSelect');
-             if (!projectSelect) return;
             const selectedKey = projectSelect.value;
 
             if (!selectedKey) {
-                showAlert('Please select a project to delete.', 'warning');
+                alert('Please select a project to delete.');
                 return;
             }
 
@@ -2279,16 +2226,13 @@
             if (confirm(`Are you sure you want to delete the project "${projectName}"? This cannot be undone.`)) {
                 try {
                     localStorage.removeItem(selectedKey);
-                     if (currentProjectId === selectedKey) {
-                        currentProjectId = null; // Clear tracker if deleted project was current
-                     }
-                    showAlert(`Project "${projectName}" deleted successfully!`, 'success');
+                    alert(`Project "${projectName}" deleted successfully!`);
                     loadProjectList(); // Refresh the dropdown
-                    clearProjectForm(false); // Clear the form after deletion
+                    clearProjectForm(); // Clear the form after deletion
                     loadClientOverview(); // Refresh client table
                 } catch (e) {
                     console.error("Error deleting project:", e);
-                    showAlert("Failed to delete project.", 'danger');
+                    alert("Failed to delete project.");
                 }
             }
         }
@@ -2312,39 +2256,28 @@
              });
 
              // Reset specific fields to defaults
-            const statusInput = document.getElementById('currentStatus');
-             const progressBar = document.getElementById('overallProgress');
-            if(statusInput) statusInput.value = 'Not Started';
-            if(progressBar) {
-                 progressBar.style.width = '0%';
-                 progressBar.style.backgroundColor = "var(--gray-200)";
-            }
-
+            document.getElementById('currentStatus').value = 'Not Started';
+            document.getElementById('overallProgress').style.width = '0%';
+             document.getElementById('overallProgress').style.backgroundColor = "var(--gray-200)";
 
              // Reset phase statuses and collapse states
              updateAllPhaseStatuses();
              initializePhaseCollapse(); // Make sure the first phase is open
 
              // Clear file input display names
-            const fileNameDisplay = document.getElementById('fileName');
-             const fileInput = document.getElementById('importFile');
-             const batchFileNameDisplay = document.getElementById('batchFileName');
-             const batchFileInput = document.getElementById('batchImportFile');
+            document.getElementById('fileName').textContent = '';
+            document.getElementById('importFile').value = ''; // Clear file selection
+            document.getElementById('batchFileName').textContent = '';
+            document.getElementById('batchImportFile').value = ''; // Clear file selection
 
-            if(fileNameDisplay) fileNameDisplay.textContent = '';
-            if(fileInput) fileInput.value = ''; // Clear file selection
-            if(batchFileNameDisplay) batchFileNameDisplay.textContent = '';
-            if(batchFileInput) batchFileInput.value = ''; // Clear file selection
-
-             // Optionally reload project list and reset selection
+             // Optionally reload project list
              if (reloadList) {
-                 currentProjectId = null; // Reset tracker on explicit New Project / Delete
                 loadProjectList();
-                 const projectSelect = document.getElementById('projectSelect');
-                 if (projectSelect) projectSelect.value = ""; // Reset dropdown selection
+                document.getElementById('projectSelect').value = ""; // Reset dropdown selection
              }
              updateIsbnDisplays(); // Clear ISBNs in phase 5 table
-             // Don't show alert on programmatic clear
+            // Don't show alert on programmatic clear after deletion/load
+            // alert('Form cleared for a new project.');
          }
 
 
@@ -2376,19 +2309,17 @@
         function displayFileName() {
             const fileInput = document.getElementById('importFile');
             const fileNameDisplay = document.getElementById('fileName');
-            if (fileInput && fileNameDisplay) {
-                if (fileInput.files.length > 0) {
-                    fileNameDisplay.textContent = fileInput.files[0].name;
-                } else {
-                    fileNameDisplay.textContent = '';
-                }
+            if (fileInput.files.length > 0) {
+                fileNameDisplay.textContent = fileInput.files[0].name;
+            } else {
+                fileNameDisplay.textContent = '';
             }
         }
 
         function importProjectData() {
             const fileInput = document.getElementById('importFile');
-             if (!fileInput || fileInput.files.length === 0) {
-                showAlert('Please select a JSON file to import.', 'warning');
+            if (fileInput.files.length === 0) {
+                alert('Please select a JSON file to import.');
                 return;
             }
 
@@ -2399,33 +2330,29 @@
                 try {
                     const importedData = JSON.parse(event.target.result);
                     setProjectData(importedData);
-                    showAlert(`Project data from "${file.name}" loaded successfully! Remember to save it if you want to keep it.`, 'success');
+                    alert(`Project data from "${file.name}" loaded successfully! Remember to save it if you want to keep it.`);
                     // Clear file input after successful import
-                    const fileNameDisplay = document.getElementById('fileName');
-                    if(fileNameDisplay) fileNameDisplay.textContent = '';
+                    document.getElementById('fileName').textContent = '';
                     fileInput.value = '';
                      // Optionally, try to select the loaded project if it exists by name
                      const bookTitle = importedData.bookTitle || '';
                      const authorName = importedData.authorName || '';
                      const projectName = `${bookTitle} - ${authorName}`;
                     const projectKey = `project_${projectName}`;
-                     currentProjectId = projectKey; // Track potentially unsaved loaded project
                     if (localStorage.getItem(projectKey)) {
-                         const projectSelect = document.getElementById('projectSelect');
-                        if(projectSelect) projectSelect.value = projectKey;
+                        document.getElementById('projectSelect').value = projectKey;
                     } else {
-                         const projectSelect = document.getElementById('projectSelect');
-                         if(projectSelect) projectSelect.value = ""; // Deselect if not saved yet
+                         document.getElementById('projectSelect').value = ""; // Deselect if not saved yet
                     }
 
                 } catch (e) {
                     console.error("Error parsing JSON file:", e);
-                    showAlert('Failed to parse the selected file. Please ensure it is a valid JSON project file exported from this tool.', 'danger');
+                    alert('Failed to parse the selected file. Please ensure it is a valid JSON project file exported from this tool.');
                 }
             };
 
             reader.onerror = function() {
-                showAlert(`Error reading file: ${reader.error}`, 'danger');
+                alert(`Error reading file: ${reader.error}`);
             };
 
             reader.readAsText(file);
@@ -2436,14 +2363,13 @@
 
         function loadClientOverview() {
             const tableBody = document.getElementById('clientTableBody');
-             if(!tableBody) return; // Exit if table doesn't exist
             tableBody.innerHTML = ''; // Clear existing rows
             const projects = [];
 
             // Iterate through localStorage to find project data
             for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
-                if (key && key.startsWith('project_')) { // Added null check
+                if (key.startsWith('project_')) {
                     try {
                         const dataString = localStorage.getItem(key);
                         if (dataString) {
@@ -2535,8 +2461,7 @@
                  loadButton.textContent = 'Load';
                  loadButton.classList.add('secondary');
                  loadButton.onclick = () => {
-                      const projectSelect = document.getElementById('projectSelect');
-                     if(projectSelect) projectSelect.value = project.key; // Select in dropdown
+                     document.getElementById('projectSelect').value = project.key; // Select in dropdown
                      loadSelectedProject(); // Load the project data into the main form
                      window.scrollTo({ top: document.getElementById('projectSelect').offsetTop - 20, behavior: 'smooth' }); // Scroll to selector
                  };
@@ -2546,8 +2471,7 @@
                  deleteButton.textContent = 'Delete';
                  deleteButton.classList.add('warning');
                  deleteButton.onclick = () => {
-                     const projectSelect = document.getElementById('projectSelect');
-                     if(projectSelect) projectSelect.value = project.key; // Ensure correct project is selected for deletion prompt
+                    document.getElementById('projectSelect').value = project.key; // Ensure correct project is selected for deletion prompt
                     deleteSelectedProject(); // Use existing delete function
                  };
                  actionCell.appendChild(deleteButton);
@@ -2582,6 +2506,15 @@
                  let phaseInProgress = false;
 
                  // Simulate finding tasks for this phase in the projectData
+                 // This requires knowing the task IDs associated with each phase
+                 // Example: Find all keys matching `taskNN` within a certain range for this phase
+                 // --- Simplified Approach: Check if *any* task exists ---
+                 const taskPattern = /task\d+/; // Regex to find task keys
+                 let phaseHasTasks = false;
+
+                 // We need a way to map tasks to phases robustly. Since the HTML structure
+                 // isn't directly available here, we'll rely on the task IDs in the data.
+                 // Let's assume tasks 1-9 are phase 1, 10-15 phase 2, etc. (This is fragile!)
                  const phaseTaskRanges = [
                     { phase: 1, start: 1, end: 9 }, { phase: 2, start: 10, end: 15 },
                     { phase: 3, start: 16, end: 22 }, { phase: 4, start: 23, end: 32 },
@@ -2594,21 +2527,19 @@
                     for(let taskId = range.start; taskId <= range.end; taskId++) {
                         const taskKey = `task${taskId}`;
                         if(projectData.hasOwnProperty(taskKey)) {
-                            // phaseHasTasks = true; // Don't count just existing, only if value is boolean
-                            if(typeof projectData[taskKey] === 'boolean') {
-                                phaseTotalTasks++;
-                                totalTasks++;
-                                if(projectData[taskKey] === true) {
-                                    phaseCompletedTasks++;
-                                    completedTasks++;
-                                }
+                            phaseHasTasks = true;
+                            phaseTotalTasks++;
+                            totalTasks++;
+                            if(projectData[taskKey] === true) {
+                                phaseCompletedTasks++;
+                                completedTasks++;
                             }
                         }
                     }
                  }
 
 
-                  if (phaseTotalTasks > 0) { // Only consider phases with actual tasks defined
+                 if (phaseHasTasks) {
                     if (phaseCompletedTasks > 0 && phaseCompletedTasks < phaseTotalTasks) {
                         phaseInProgress = true;
                          if (currentPhaseIndex === -1) { // This is the first phase in progress
@@ -2618,7 +2549,7 @@
                          }
                     } else if (phaseCompletedTasks === phaseTotalTasks) {
                         // Phase completed
-                    } else { // phaseCompletedTasks === 0
+                    } else {
                          // Phase Not Started (has tasks but none complete)
                          if (currentPhaseIndex === -1 && overallStatus === 'Not Started') {
                              currentPhaseIndex = i; // This is the first phase with tasks
@@ -2629,77 +2560,37 @@
              }
 
              // Refine overall status
-             if (totalTasks === 0) { // If no tasks are defined at all
-                  overallStatus = 'Not Started';
-                  currentPhaseName = 'N/A';
-             } else if (completedTasks === totalTasks) {
+             if (completedTasks === totalTasks && totalTasks > 0) {
                  overallStatus = 'Completed';
-                 // Find last phase that actually had tasks
-                  for (let i = phaseContainersConfig.length - 1; i >= 0; i--) {
-                     const range = phaseTaskRanges.find(r => r.phase === i + 1);
-                      let phaseHadTasks = false;
-                       if(range) {
-                           for(let taskId = range.start; taskId <= range.end; taskId++) {
-                               if(projectData.hasOwnProperty(`task${taskId}`) && typeof projectData[`task${taskId}`] === 'boolean') {
-                                   phaseHadTasks = true;
-                                   break;
-                               }
-                           }
-                       }
-                      if (phaseHadTasks) {
-                          currentPhaseName = phaseContainersConfig[i].name;
-                          break;
-                      }
-                  }
-                  if (currentPhaseName === 'Not Started') currentPhaseName = 'Completed'; // Fallback if no tasks found
+                 currentPhaseName = phaseContainersConfig[phaseContainersConfig.length - 1].name; // Show last phase if all done
              } else if (completedTasks > 0) {
                  overallStatus = 'In Progress';
-                  // If we didn't find an in-progress phase but tasks are done, find first uncompleted phase with tasks
+                  // If we didn't find an in-progress phase but tasks are done, find first uncompleted phase
                   if (currentPhaseIndex === -1) {
                       for(let i = 0; i < phaseContainersConfig.length; i++) {
                           const range = phaseTaskRanges.find(r => r.phase === i + 1);
                           let phaseDone = true;
-                           let phaseHasTasks = false;
                            if(range) {
                                for(let taskId = range.start; taskId <= range.end; taskId++) {
                                    const taskKey = `task${taskId}`;
-                                   if(projectData.hasOwnProperty(taskKey) && typeof projectData[taskKey] === 'boolean') {
-                                       phaseHasTasks = true;
-                                       if(projectData[taskKey] !== true) {
-                                           phaseDone = false;
-                                           break;
-                                       }
+                                   if(projectData.hasOwnProperty(taskKey) && projectData[taskKey] !== true) {
+                                       phaseDone = false;
+                                       break;
                                    }
                                }
-                               if (phaseHasTasks && !phaseDone) {
+                               if (!phaseDone) {
                                    currentPhaseIndex = i;
                                    currentPhaseName = phaseContainersConfig[i].name;
-                                   break; // Found the first active phase
+                                   break;
                                }
                            }
                       }
                   }
-                  // If still no current phase name, default to In Progress
-                  if(currentPhaseName === 'Not Started') currentPhaseName = 'In Progress';
 
+             } else if (totalTasks === 0) {
+                 currentPhaseName = 'N/A'; // No tasks defined
              }
-             // If overallStatus is still 'Not Started' and currentPhaseName wasn't set, it means the first phase with tasks is the current one.
-              else if (overallStatus === 'Not Started' && currentPhaseName === 'Not Started') {
-                  for (let i = 0; i < phaseContainersConfig.length; i++) {
-                       const range = phaseTaskRanges.find(r => r.phase === i + 1);
-                        if(range) {
-                            for(let taskId = range.start; taskId <= range.end; taskId++) {
-                                if(projectData.hasOwnProperty(`task${taskId}`) && typeof projectData[`task${taskId}`] === 'boolean') {
-                                     currentPhaseName = phaseContainersConfig[i].name;
-                                     i = phaseContainersConfig.length; // Break outer loop
-                                     break; // Break inner loop
-                                 }
-                            }
-                        }
-                  }
-                   if (currentPhaseName === 'Not Started') currentPhaseName = 'N/A'; // No tasks at all
-              }
-
+             // If still not started, currentPhaseName remains the first phase or 'Not Started'
 
               const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
@@ -2708,17 +2599,16 @@
 
 
         function filterClientTable() {
-            const searchInput = document.getElementById('clientSearch')?.value.toLowerCase() || '';
-            const statusFilter = document.getElementById('statusFilter')?.value || 'all';
+            const searchInput = document.getElementById('clientSearch').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
             const tableBody = document.getElementById('clientTableBody');
-            if(!tableBody) return;
             const rows = tableBody.getElementsByTagName('tr');
 
             for (let i = 0; i < rows.length; i++) {
                 const row = rows[i];
                 const titleCell = row.cells[0];
                 const authorCell = row.cells[1];
-                const statusPill = row.cells[5]?.querySelector('.status-pill');
+                const statusPill = row.cells[5].querySelector('.status-pill');
                 let statusClass = '';
                  if(statusPill) {
                     // Extract status from class list, handling potential multiple classes
@@ -2767,11 +2657,9 @@
 
         function sortTable(columnIndex) {
             const table = document.getElementById('clientTable');
-             if (!table || !table.tHead || !table.tBodies[0]) return; // Exit if table elements don't exist
             const tbody = table.tBodies[0];
             const rows = Array.from(tbody.rows);
-            const headerCell = table.tHead.rows[0]?.cells[columnIndex];
-             if (!headerCell) return; // Exit if header cell doesn't exist
+            const headerCell = table.tHead.rows[0].cells[columnIndex];
 
             // Determine sort direction
             const currentDirection = sortDirections[columnIndex] || 'asc'; // Default to ascending
@@ -2780,9 +2668,8 @@
 
             // Remove sort indicators from other headers
             table.tHead.querySelectorAll('th').forEach((th, index) => {
-                 // Remove existing arrows before potentially adding a new one
-                 th.innerHTML = th.innerHTML.replace(/ [▲▼]$/, '');
                 th.classList.remove('sort-asc', 'sort-desc');
+                 th.innerHTML = th.innerHTML.replace(/ [▲▼]$/, ''); // Remove arrow
                  if (index !== columnIndex) {
                      delete sortDirections[index]; // Reset direction for other columns
                  }
@@ -2790,47 +2677,35 @@
 
             // Add indicator to current header
              headerCell.classList.add(direction === 'asc' ? 'sort-asc' : 'sort-desc');
-             // headerCell.innerHTML += direction === 'asc' ? ' ▲' : ' ▼'; // Add arrow - Handled by CSS now
+             headerCell.innerHTML += direction === 'asc' ? ' ▲' : ' ▼'; // Add arrow
 
 
             rows.sort((rowA, rowB) => {
-                 const cellAContent = rowA.cells[columnIndex]?.textContent.trim() || '';
-                 const cellBContent = rowB.cells[columnIndex]?.textContent.trim() || '';
+                let cellA = rowA.cells[columnIndex].textContent.trim();
+                let cellB = rowB.cells[columnIndex].textContent.trim();
 
                  // Handle specific column types for proper sorting
                 if (columnIndex === 2 || columnIndex === 3) { // Date columns
-                    const dateA = new Date(cellAContent);
-                    const dateB = new Date(cellBContent);
-                    // Sort invalid dates to the end/beginning consistently
-                    if (isNaN(dateA) && isNaN(dateB)) return 0;
-                    if (isNaN(dateA)) return direction === 'asc' ? 1 : -1; // Invalid dates last when ascending
-                    if (isNaN(dateB)) return direction === 'asc' ? -1 : 1; // Invalid dates first when descending
-                    return direction === 'asc' ? dateA - dateB : dateB - dateA;
-                 } else if (columnIndex === 6) { // Progress column
-                     const progressA = parseFloat(rowA.cells[columnIndex]?.querySelector('.progress-bar')?.style.width || '0');
-                     const progressB = parseFloat(rowB.cells[columnIndex]?.querySelector('.progress-bar')?.style.width || '0');
+                     // Attempt to parse dates, fallback to string comparison if invalid
+                    const dateA = new Date(cellA);
+                    const dateB = new Date(cellB);
+                     if (!isNaN(dateA) && !isNaN(dateB)) {
+                         return direction === 'asc' ? dateA - dateB : dateB - dateA;
+                     }
+                } else if (columnIndex === 6) { // Progress column
+                     // Extract percentage from progress bar style
+                     const progressA = parseFloat(rowA.cells[columnIndex].querySelector('.progress-bar')?.style.width || '0');
+                     const progressB = parseFloat(rowB.cells[columnIndex].querySelector('.progress-bar')?.style.width || '0');
                      return direction === 'asc' ? progressA - progressB : progressB - progressA;
-                 } else if (columnIndex === 5) { // Status column
-                    // Define an order for statuses
-                     const statusOrder = { 'at-risk': 0, 'in-progress': 1, 'not-started': 2, 'completed': 3, 'n/a': 4 };
-                     const statusPillA = rowA.cells[columnIndex]?.querySelector('.status-pill');
-                     const statusPillB = rowB.cells[columnIndex]?.querySelector('.status-pill');
-                     let statusClassA = 'n/a';
-                     let statusClassB = 'n/a';
-                      if (statusPillA) statusPillA.classList.forEach(cls => { if (cls !== 'status-pill') statusClassA = cls; });
-                      if (statusPillB) statusPillB.classList.forEach(cls => { if (cls !== 'status-pill') statusClassB = cls; });
-
-                     const orderA = statusOrder[statusClassA] ?? 99;
-                     const orderB = statusOrder[statusClassB] ?? 99;
-
-                     return direction === 'asc' ? orderA - orderB : orderB - orderA;
+                 } else if (columnIndex === 5) { // Status column - use text content
+                    // Use text content directly for status sorting
                  }
 
 
                 // Default: Locale-aware string comparison
                  return direction === 'asc'
-                     ? cellAContent.localeCompare(cellBContent, undefined, { numeric: true, sensitivity: 'base' })
-                     : cellBContent.localeCompare(cellAContent, undefined, { numeric: true, sensitivity: 'base' });
+                     ? cellA.localeCompare(cellB, undefined, { numeric: true, sensitivity: 'base' })
+                     : cellB.localeCompare(cellA, undefined, { numeric: true, sensitivity: 'base' });
              });
 
 
@@ -2841,16 +2716,27 @@
         // --- Batch Import/Export ---
 
         function exportAllProjects() {
-            const allProjects = getProjects(); // Use helper function
-            const projectCount = Object.keys(allProjects).length;
+            const allProjects = [];
+             for (let i = 0; i < localStorage.length; i++) {
+                 const key = localStorage.key(i);
+                 if (key.startsWith('project_')) {
+                     try {
+                         const dataString = localStorage.getItem(key);
+                         if (dataString) {
+                             allProjects.push(JSON.parse(dataString));
+                         }
+                     } catch (e) {
+                         console.error(`Skipping invalid project data for key ${key} during batch export:`, e);
+                     }
+                 }
+             }
 
-
-             if (projectCount === 0) {
-                 showAlert('No projects found to export.', 'info');
+             if (allProjects.length === 0) {
+                 alert('No projects found to export.');
                  return;
              }
 
-             const dataStr = JSON.stringify(allProjects, null, 2); // Store as object {key: data}
+             const dataStr = JSON.stringify(allProjects, null, 2);
              const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
              const exportFileDefaultName = `SBDM_AllProjects_Backup_${new Date().toISOString().split('T')[0]}.json`;
 
@@ -2859,27 +2745,29 @@
              linkElement.setAttribute('download', exportFileDefaultName);
              linkElement.click();
              linkElement.remove();
-             showAlert(`Exported ${projectCount} projects.`, 'success');
+             alert(`Exported ${allProjects.length} projects.`);
          }
 
          function displayBatchFileName() {
              const fileInput = document.getElementById('batchImportFile');
              const fileNameDisplay = document.getElementById('batchFileName');
-             if (fileInput && fileNameDisplay) {
-                 if (fileInput.files.length > 0) {
-                    fileNameDisplay.textContent = fileInput.files[0].name;
-                    // Immediately attempt import after selection
-                    importBatchData();
-                 } else {
-                    fileNameDisplay.textContent = '';
-                 }
+             if (fileInput.files.length > 0) {
+                 fileNameDisplay.textContent = fileInput.files[0].name;
+                 // Immediately attempt import after selection
+                 importBatchData();
+             } else {
+                 fileNameDisplay.textContent = '';
              }
          }
 
         function importBatchData() {
             const fileInput = document.getElementById('batchImportFile');
-             if (!fileInput || fileInput.files.length === 0) {
-                 showAlert("Please select a batch file first using the 'Select Batch File' button.", 'warning');
+            if (fileInput.files.length === 0) {
+                // This might happen if called without a file selection trigger
+                 // console.log('No batch file selected.');
+                 // Re-trigger selection if needed or handle appropriately
+                // document.getElementById('batchImportFile').click(); // Might cause loop if called from onchange
+                alert("Please select a batch file first using the 'Select Batch File' button.");
                 return;
             }
 
@@ -2888,81 +2776,60 @@
 
             reader.onload = function(event) {
                 try {
-                    const importedObject = JSON.parse(event.target.result);
-                    // Expecting an object like {"project_Name1": {...}, "project_Name2": {...}}
-                     if (typeof importedObject !== 'object' || importedObject === null || Array.isArray(importedObject)) {
-                         throw new Error('Batch file does not contain a valid JSON object of projects.');
-                     }
-
+                    const importedArray = JSON.parse(event.target.result);
+                    if (!Array.isArray(importedArray)) {
+                        throw new Error('Batch file does not contain a valid JSON array.');
+                    }
 
                     let importedCount = 0;
+                    let skippedCount = 0;
                     let errorCount = 0;
 
-                    // Clear existing projects before import? Or merge/overwrite? Let's overwrite.
-                    // Optional: Clear existing first
-                    // let keysToRemove = [];
-                    // for (let i = localStorage.length - 1; i >= 0; i--) {
-                    //     const key = localStorage.key(i);
-                    //     if (key && key.startsWith('project_')) { // Added null check
-                    //         keysToRemove.push(key);
-                    //     }
-                    // }
-                    // keysToRemove.forEach(key => localStorage.removeItem(key));
-                    // console.log(`Removed ${keysToRemove.length} existing projects before batch import.`);
+                     importedArray.forEach(projectData => {
+                         // Basic validation: check for essential fields
+                         if (projectData && projectData.bookTitle && projectData.authorName) {
+                             const projectName = `${projectData.bookTitle} - ${projectData.authorName}`;
+                             const projectKey = `project_${projectName}`;
 
-
-                     for (const projectKey in importedObject) {
-                         if (projectKey.startsWith('project_') && typeof importedObject[projectKey] === 'object' && importedObject[projectKey] !== null) {
-                             const projectData = importedObject[projectKey];
-                             // Basic validation
-                             if (projectData.bookTitle && projectData.authorName) {
-                                 try {
-                                     localStorage.setItem(projectKey, JSON.stringify(projectData));
-                                     importedCount++;
-                                 } catch (saveError) {
-                                     console.error(`Error saving imported project "${projectKey.substring(8)}":`, saveError);
-                                     errorCount++;
-                                      // Optional: Stop import on first error?
-                                      // throw new Error(`Save failed for ${projectKey}. Import aborted.`);
-                                 }
-                             } else {
-                                 console.warn(`Skipping invalid project data for key ${projectKey} during batch import.`);
-                                 errorCount++; // Count as error if data is invalid
+                             // Optional: Check if project already exists and ask to overwrite, or just skip/overwrite
+                             // For simplicity, let's overwrite
+                             try {
+                                localStorage.setItem(projectKey, JSON.stringify(projectData));
+                                importedCount++;
+                             } catch (saveError) {
+                                 console.error(`Error saving imported project "${projectName}":`, saveError);
+                                 errorCount++;
                              }
                          } else {
-                              console.warn(`Skipping invalid key or data type for key ${projectKey} during batch import.`);
-                              errorCount++;
+                             console.warn('Skipping invalid project data item during batch import:', projectData);
+                             skippedCount++;
                          }
-                     }
+                     });
 
-
-                    showAlert(`Batch Import Complete:\n- Successfully imported/updated: ${importedCount}\n- Errors/Skipped items: ${errorCount}`, importedCount > 0 ? 'success' : 'warning');
+                    alert(`Batch Import Complete:\n- Successfully imported/updated: ${importedCount}\n- Skipped invalid items: ${skippedCount}\n- Errors during save: ${errorCount}`);
 
                      // Refresh UI
                     loadProjectList();
                     loadClientOverview();
-                    clearProjectForm(false); // Clear the form but don't reset dropdown if possible
+                    clearProjectForm(); // Optionally clear the form
 
                     // Clear file input display
-                    const batchFileNameDisplay = document.getElementById('batchFileName');
-                     if(batchFileNameDisplay) batchFileNameDisplay.textContent = '';
+                    document.getElementById('batchFileName').textContent = '';
                     fileInput.value = ''; // Clear file selection
 
 
                 } catch (e) {
                     console.error("Error parsing batch JSON file:", e);
-                    showAlert(`Failed to parse the batch file: ${e.message}`, 'danger');
-                     const batchFileNameDisplay = document.getElementById('batchFileName');
-                     if(batchFileNameDisplay) batchFileNameDisplay.textContent = '';
-                    if(fileInput) fileInput.value = '';
+                    alert('Failed to parse the batch file. Please ensure it is a valid JSON array of project objects.');
+                     document.getElementById('batchFileName').textContent = '';
+                    fileInput.value = '';
                 }
             };
 
              reader.onerror = function() {
-                 showAlert(`Error reading batch file: ${reader.error}`, 'danger');
-                 const batchFileNameDisplay = document.getElementById('batchFileName');
-                 if(batchFileNameDisplay) batchFileNameDisplay.textContent = '';
-                 if(fileInput) fileInput.value = '';
+                 alert(`Error reading batch file: ${reader.error}`);
+                 document.getElementById('batchFileName').textContent = '';
+                fileInput.value = '';
              };
 
              reader.readAsText(file);
@@ -2975,15 +2842,10 @@
              const laminateIsbn = document.getElementById('isbnCaseLaminate')?.value || 'N/A';
              const dustjacketIsbn = document.getElementById('isbnDustJacket')?.value || 'N/A';
 
-            const ebookDisplay = document.getElementById('ebookIsbnDisplay');
-            const paperbackDisplay = document.getElementById('paperbackIsbnDisplay');
-            const laminateDisplay = document.getElementById('laminateIsbnDisplay');
-            const dustjacketDisplay = document.getElementById('dustjacketIsbnDisplay');
-
-             if(ebookDisplay) ebookDisplay.textContent = ebookIsbn;
-             if(paperbackDisplay) paperbackDisplay.textContent = paperbackIsbn;
-             if(laminateDisplay) laminateDisplay.textContent = laminateIsbn;
-             if(dustjacketDisplay) dustjacketDisplay.textContent = dustjacketIsbn;
+             document.getElementById('ebookIsbnDisplay').textContent = ebookIsbn;
+             document.getElementById('paperbackIsbnDisplay').textContent = paperbackIsbn;
+             document.getElementById('laminateIsbnDisplay').textContent = laminateIsbn;
+             document.getElementById('dustjacketIsbnDisplay').textContent = dustjacketIsbn;
          }
 
          // --- Copy URL Helper ---
@@ -2997,13 +2859,13 @@
                      setTimeout(() => { button.textContent = 'Copy'; }, 2000); // Reset button text
                  }).catch(err => {
                      console.error('Failed to copy URL: ', err);
-                     showAlert('Failed to copy URL.', 'warning');
+                     alert('Failed to copy URL.');
                  });
              }
          }
 
-          // --- Update Drive Status (UI Only - before API loads) ---
-          function updateDriveStatusUIOnly(isConnected) {
+         // --- Google Drive Status Update ---
+         function updateDriveStatus(isConnected) {
              const driveStatusDiv = document.getElementById('drive-status');
              const backupOptionsDiv = document.getElementById('backup-options');
              const setupDriveButton = document.getElementById('setup-drive');
@@ -3011,644 +2873,117 @@
 
 
              if (driveStatusDiv) {
-                driveStatusDiv.classList.remove('not-started', 'completed');
-                 driveStatusDiv.innerHTML = '';
+                driveStatusDiv.classList.remove('not-started', 'completed'); // Remove existing status classes
+                 driveStatusDiv.innerHTML = ''; // Clear existing content
 
                  const icon = document.createElement('i');
                  icon.style.marginRight = '5px';
 
                  if (isConnected) {
-                    driveStatusDiv.classList.add('completed');
+                    driveStatusDiv.classList.add('completed'); // Use 'completed' for connected state
                      icon.className = 'fas fa-check-circle';
                      driveStatusDiv.appendChild(icon);
-                     driveStatusDiv.appendChild(document.createTextNode(' Checking status...')); // Initial text
-                     if (setupDriveButton) setupDriveButton.style.display = 'none';
-                     if (backupOptionsDiv) backupOptionsDiv.style.display = 'block'; // Show options optimistically
-                     if (backupHistory) backupHistory.style.display = 'block'; // Show history optimistically
+                     driveStatusDiv.appendChild(document.createTextNode(' Connected'));
+                     localStorage.setItem('driveConnected', 'true'); // Persist state (example)
+                     if (setupDriveButton) setupDriveButton.style.display = 'none'; // Hide setup button
+                     if (backupOptionsDiv) backupOptionsDiv.style.display = 'block'; // Show options
+                     loadBackupHistory(); // Load history when connected
+                     if (backupHistory && backupHistory.querySelector('.backup-item')) { // Check if history has items
+                         backupHistory.style.display = 'block';
+                     }
+
 
                  } else {
                     driveStatusDiv.classList.add('not-started');
                      icon.className = 'fas fa-times-circle';
                      driveStatusDiv.appendChild(icon);
                      driveStatusDiv.appendChild(document.createTextNode(' Not connected'));
-                      if (setupDriveButton) setupDriveButton.style.display = 'inline-block';
-                      if (backupOptionsDiv) backupOptionsDiv.style.display = 'none';
-                      if (backupHistory) backupHistory.style.display = 'none';
+                     localStorage.removeItem('driveConnected'); // Clear persisted state
+                      if (setupDriveButton) setupDriveButton.style.display = 'inline-block'; // Show setup button
+                      if (backupOptionsDiv) backupOptionsDiv.style.display = 'none'; // Hide options
+                      if (backupHistory) backupHistory.style.display = 'none'; // Hide history
                  }
              }
-          }
-
-        // --- Google Drive Integration Code ---
-        /*******************************
-         * GOOGLE DRIVE INTEGRATION    *
-         *******************************/
-        const GOOGLE_CLIENT_ID = '720585651306-eimrp5hqb6srs3r0gbhttqlj59hic2dk.apps.googleusercontent.com'; 
-
-        const GOOGLE_API_KEY = 'AIzaSyBTE9Yarj-5e_3iGkPLqehBnjP8Iolh6hE;
-        const DRIVE_SCOPES = 'https://www.googleapis.com/auth/drive.file';
-        const BACKUP_FOLDER_NAME = 'Publishing Workflow Backups';
-
-        let backupFolderId = null;
-        let gapiInitialized = false; // Track initialization state
-
-        // Initialize Google API Client
-        function initializeGapiClient() {
-            if (!window.gapi || !window.gapi.client) {
-                console.error("gapi.client not loaded yet.");
-                showAlert("Google API client library failed to load.", "danger");
-                updateDriveStatusUIOnly(false); // Ensure UI reflects disconnected state
-                return;
-            }
-            gapi.client.init({
-                apiKey: GOOGLE_API_KEY,
-                clientId: GOOGLE_CLIENT_ID,
-                discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"],
-                scope: DRIVE_SCOPES
-            }).then(() => {
-                console.log('Google API client initialized');
-                gapiInitialized = true;
-
-                // Listen for auth changes using gapi.auth2
-                if (gapi.auth2) {
-                    const authInstance = gapi.auth2.getAuthInstance();
-                    if (authInstance) {
-                        authInstance.isSignedIn.listen(updateAuthStatus);
-                        // Handle initial status
-                        updateAuthStatus(authInstance.isSignedIn.get());
-                    } else {
-                         console.error("gapi.auth2.getAuthInstance() failed.");
-                         updateDriveStatusUIOnly(false); // Fallback UI update
-                         showAlert("Could not get Google Authentication instance.", "danger");
-                    }
-                } else {
-                     console.error("gapi.auth2 not loaded.");
-                     updateDriveStatusUIOnly(false); // Fallback UI update
-                     showAlert("Google Authentication library failed to load.", "danger");
-                }
-
-            }).catch(err => {
-                console.error('Error initializing Google API client:', err);
-                let errorMsg = "Error initializing Google API.";
-                if (err.details) {
-                    errorMsg += ` Details: ${err.details}`;
-                }
-                 showAlert(errorMsg, 'danger');
-                updateDriveStatusUIOnly(false); // Ensure UI shows disconnected on error
-            });
-        }
-
-        // Load the GAPI client and auth2 libraries
-        function handleClientLoad() {
-            if (window.gapi) {
-                gapi.load('client:auth2', initializeGapiClient);
-            } else {
-                 console.error("Google API script (api.js) failed to load.");
-                 showAlert("Failed to load Google API script. Drive features unavailable.", "danger");
-                 updateDriveStatusUIOnly(false);
-            }
-        }
-
-
-        // Update UI based on auth status
-        function updateAuthStatus(isSignedIn) {
-          const driveStatus = document.getElementById('drive-status');
-          const backupOptions = document.getElementById('backup-options');
-          const setupButton = document.getElementById('setup-drive');
-           const backupHistoryDiv = document.getElementById('backup-history');
-
-
-           if (!driveStatus || !backupOptions || !setupButton || !backupHistoryDiv) {
-               console.error("Drive UI elements not found for status update.");
-               return;
-           }
-
-          if (isSignedIn) {
-             if (!gapi.auth2 || !gapi.auth2.getAuthInstance()) {
-                 console.error("Auth instance not ready in updateAuthStatus");
-                 return; // Avoid errors if called before instance is ready
-             }
-            const user = gapi.auth2.getAuthInstance().currentUser.get();
-             const profile = user.getBasicProfile();
-             let email = 'Unknown User';
-             if (profile) {
-                email = profile.getEmail();
-             } else {
-                console.warn("Could not get user profile.");
-             }
-
-
-            driveStatus.innerHTML = `<i class="fas fa-check-circle" style="margin-right:5px;"></i> Connected as: ${email}`;
-            driveStatus.className = 'status-pill completed';
-            backupOptions.style.display = 'block';
-            setupButton.style.display = 'none';
-
-            // Check/create backup folder
-            ensureBackupFolder().then(() => {
-              // Load backup history
-              loadBackupHistory(); // This will show/hide the history div
-
-              // Setup auto-backup if enabled
-               const autoBackupCheckbox = document.getElementById('auto-backup');
-              if (autoBackupCheckbox && autoBackupCheckbox.checked) { // Check current state
-                setupAutoBackup();
-              }
-            }).catch(err => {
-                 showAlert("Could not verify or create backup folder in Google Drive.", "warning");
-                 // Still show connected, but maybe disable backup buttons?
-            });
-          } else {
-            driveStatus.innerHTML = '<i class="fas fa-times-circle" style="margin-right:5px;"></i> Not connected';
-            driveStatus.className = 'status-pill not-started';
-            backupOptions.style.display = 'none';
-            setupButton.style.display = 'inline-block';
-             backupHistoryDiv.style.display = 'none'; // Hide history when not connected
-              // Clear backup interval if user signs out
-              if (window.backupInterval) {
-                  clearInterval(window.backupInterval);
-                  window.backupInterval = null;
-                  console.log("Auto-backup interval cleared due to sign out.");
-              }
-          }
-        }
-
-        // Ensure backup folder exists
-        async function ensureBackupFolder() {
-          if (backupFolderId) return; // Already found or created
-
-           if (!gapiInitialized || !gapi.client || !gapi.client.drive) {
-                showAlert("Google Drive API client not ready.", "warning");
-               throw new Error("Google Drive API client not ready.");
-            }
-
-          try {
-            console.log("Checking for backup folder:", BACKUP_FOLDER_NAME);
-            // Check if folder already exists
-            const response = await gapi.client.drive.files.list({
-              q: `name='${BACKUP_FOLDER_NAME}' and mimeType='application/vnd.google-apps.folder' and trashed=false`,
-              fields: 'files(id)',
-               spaces: 'drive' // Important: Search only in Drive
-            });
-
-            if (response.result.files && response.result.files.length > 0) {
-              backupFolderId = response.result.files[0].id;
-              console.log("Backup folder found with ID:", backupFolderId);
-              return;
-            }
-
-            console.log("Backup folder not found, creating...");
-            // Create folder if it doesn't exist
-            const folderMetadata = {
-              name: BACKUP_FOLDER_NAME,
-              mimeType: 'application/vnd.google-apps.folder'
-            };
-
-            const createResponse = await gapi.client.drive.files.create({
-              resource: folderMetadata,
-              fields: 'id'
-            });
-
-            backupFolderId = createResponse.result.id;
-             console.log("Backup folder created with ID:", backupFolderId);
-          } catch (error) {
-            console.error('Error ensuring backup folder:', error);
-             // Provide more specific feedback if possible
-             let errorMsg = "Error accessing/creating backup folder.";
-            if (error.result && error.result.error) {
-                 errorMsg += ` Details: ${error.result.error.message}`;
-             } else if (error.message) {
-                 errorMsg += ` Details: ${error.message}`;
-             }
-             showAlert(errorMsg, 'danger');
-            throw error; // Re-throw to prevent proceeding without a folder ID
-          }
-        }
-
-        // Create a backup
-        async function createBackup() {
-           if (!gapiInitialized || !gapi.auth2 || !gapi.auth2.getAuthInstance() || !gapi.auth2.getAuthInstance().isSignedIn.get()) {
-            showAlert('Please connect to Google Drive first.', 'warning');
-            return null;
-          }
-
-           if (!backupFolderId) {
-              showAlert('Backup folder not found or created. Cannot backup.', 'warning');
-              // Attempt to ensure folder exists again
-               try {
-                  await ensureBackupFolder();
-                  if (!backupFolderId) return null; // Still no folder, exit
-               } catch (e) {
-                  return null; // Error ensuring folder, exit
-               }
-           }
-
-          try {
-            showAlert('Creating backup...', 'info');
-
-            const projects = getProjects(); // Your existing function to get all project data
-             if (Object.keys(projects).length === 0) {
-                 showAlert('No projects found to back up.', 'info');
-                 return null; // Don't create an empty backup
-             }
-
-             const timestamp = new Date().toISOString();
-             // Use Date components for a cleaner filename
-            const now = new Date();
-            const dateString = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-            const timeString = `${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
-            const backupName = `SBDM_Backup_${dateString}_${timeString}.json`; // Changed extension
-
-
-            const backupData = {
-              timestamp,
-              projects,
-              systemVersion: '1.0' // Example versioning
-            };
-
-            const file = new Blob([JSON.stringify(backupData, null, 2)], {type: 'application/json'});
-            const metadata = {
-              name: backupName,
-              mimeType: 'application/json',
-              parents: [backupFolderId]
-            };
-
-            const response = await gapi.client.drive.files.create({
-              resource: metadata,
-              media: {
-                mimeType: 'application/json',
-                body: file
-              },
-              fields: 'id,name,webViewLink,createdTime'
-            });
-
-            showAlert(`Backup created: ${response.result.name}`, 'success');
-            loadBackupHistory(); // Refresh the history list
-            return response.result;
-          } catch (error) {
-            console.error('Backup failed:', error);
-             let errorMsg = "Backup failed.";
-            if (error.result && error.result.error) {
-                 errorMsg += ` Details: ${error.result.error.message}`;
-             } else if (error.message) {
-                 errorMsg += ` Details: ${error.message}`;
-             }
-             showAlert(errorMsg, 'danger');
-            return null;
-          }
-        }
-
-        // Load backup history
-        async function loadBackupHistory() {
-          const backupList = document.getElementById('backup-list');
-           const backupHistoryDiv = document.getElementById('backup-history');
-           if (!backupList || !backupHistoryDiv) return; // Exit if elements don't exist
-
-            backupList.innerHTML = '<span>Loading history...</span>'; // Indicate loading
-            backupHistoryDiv.style.display = 'block'; // Show history section while loading
-
-
-           if (!gapiInitialized || !gapi.auth2 || !gapi.auth2.getAuthInstance().isSignedIn.get() || !backupFolderId) {
-               backupList.innerHTML = '<span style="font-style: italic; color: var(--gray-500);">Connect to Google Drive to see history.</span>';
-               backupHistoryDiv.style.display = 'block'; // Keep visible to show message
-               return;
-           }
-
-
-          try {
-              console.log("Loading backup history from folder:", backupFolderId);
-            const response = await gapi.client.drive.files.list({
-              q: `'${backupFolderId}' in parents and name contains 'SBDM_Backup_' and mimeType='application/json' and trashed=false`, // Updated query
-              fields: 'files(id,name,createdTime,webViewLink)', // webViewLink might require different scope/permission
-              orderBy: 'createdTime desc',
-              pageSize: 5, // Load only the last 5 backups
-               spaces: 'drive'
-            });
-
-            backupList.innerHTML = ''; // Clear loading message
-
-            if (response.result.files && response.result.files.length > 0) {
-              response.result.files.forEach(file => {
-                const backupItem = document.createElement('div');
-                backupItem.className = 'backup-item';
-                backupItem.title = `Click to restore this backup\nFile ID: ${file.id}`; // Tooltip
-
-                const date = new Date(file.createdTime).toLocaleString();
-                backupItem.innerHTML = `
-                  <span style="flex-grow: 1; margin-right: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${file.name}</span>
-                  <span style="color: var(--gray-600); font-size: 0.9em; white-space: nowrap;">${date}</span>
-                `;
-
-                backupItem.addEventListener('click', () => {
-                    // Double check confirmation message
-                  if (confirm(`Restore backup "${file.name}" from ${date}?\n\nWARNING: This will overwrite all current project data in the browser.`)) {
-                    restoreBackup(file.id);
-                  }
-                });
-
-                backupList.appendChild(backupItem);
-              });
-            } else {
-                backupList.innerHTML = '<span style="font-style: italic; color: var(--gray-500);">No backups found in the folder.</span>';
-            }
-             backupHistoryDiv.style.display = 'block'; // Ensure visible after loading
-
-          } catch (error) {
-            console.error('Error loading backup history:', error);
-            backupList.innerHTML = '<span style="color: var(--danger);">Error loading history.</span>';
-             backupHistoryDiv.style.display = 'block'; // Ensure visible to show error
-          }
-        }
-
-        // Restore from backup
-        async function restoreBackup(fileId) {
-           if (!gapiInitialized || !gapi.auth2 || !gapi.auth2.getAuthInstance().isSignedIn.get()) {
-               showAlert('Not connected to Google Drive.', 'warning');
-               return;
-           }
-
-
-          try {
-            showAlert('Restoring backup...', 'info');
-
-            const response = await gapi.client.drive.files.get({
-              fileId: fileId,
-              alt: 'media'
-            });
-
-            // GAPI client might parse JSON automatically if mimeType was correct during upload
-             // If response.body is a string, parse it. If it's already an object, use it.
-            let backupData;
-            if (typeof response.body === 'string') {
-                backupData = JSON.parse(response.body);
-            } else if (typeof response.result === 'object' && response.result !== null) {
-                 // Sometimes the data might be in response.result if not using alt: 'media' correctly or if response changed
-                 backupData = response.result;
-            }
-             else {
-                 backupData = response.body; // Assume it's an object
-            }
-
-
-            if (!backupData || typeof backupData !== 'object' || !backupData.projects || typeof backupData.projects !== 'object') {
-              throw new Error('Invalid or empty backup file format');
-            }
-
-            // Clear existing projects
-            let keysToRemove = [];
-             for (let i = 0; i < localStorage.length; i++) {
-                 const key = localStorage.key(i);
-                 if (key && key.startsWith('project_')) { // Added null check
-                     keysToRemove.push(key);
-                 }
-             }
-             keysToRemove.forEach(key => localStorage.removeItem(key));
-            console.log(`Removed ${keysToRemove.length} existing projects.`);
-
-            // Restore projects from the backup object { "project_Name1": {...}, ... }
-            let restoredCount = 0;
-            for (const projectKey in backupData.projects) {
-                 if (projectKey.startsWith('project_') && typeof backupData.projects[projectKey] === 'object') {
-                     try {
-                        localStorage.setItem(projectKey, JSON.stringify(backupData.projects[projectKey]));
-                        restoredCount++;
-                     } catch (e) {
-                         console.error(`Error restoring project ${projectKey}:`, e);
-                         // Optionally alert user about partial restore failure
-                     }
-                 }
-            }
-
-
-             if (restoredCount === 0 && Object.keys(backupData.projects).length > 0) {
-                 throw new Error("Backup contained project data, but failed to restore any items.");
-             } else if (restoredCount === 0) {
-                 showAlert("Backup restored, but contained no project data.", "info");
-             } else {
-                 showAlert(`Backup restored successfully! (${restoredCount} projects loaded)`, 'success');
-             }
-
-
-            // Refresh UI
-            loadClientOverview(); // Use correct function name
-            loadProjectList();    // Use correct function name
-
-            // Attempt to load the first restored project into the form, or clear it
-            const firstProjectKey = Object.keys(backupData.projects).find(k => k.startsWith('project_'));
-            if (firstProjectKey) {
-                 loadProject(firstProjectKey); // Load the first project found in the backup
-            } else {
-                clearProjectForm(false); // Clear form if backup was empty
-            }
-
-
-          } catch (error) {
-            console.error('Restore failed:', error);
-            let errorMsg = "Restore failed.";
-             if (error.result && error.result.error) {
-                 errorMsg += ` Details: ${error.result.error.message}`;
-             } else if (error.message) {
-                 errorMsg += ` Details: ${error.message}`;
-             }
-             showAlert(errorMsg, 'danger');
-          }
-        }
-
-        // Setup auto-backup
-        function setupAutoBackup() {
-            if (!gapiInitialized || !gapi.auth2 || !gapi.auth2.getAuthInstance().isSignedIn.get()) {
-                console.log("Cannot setup auto-backup: User not signed in.");
-                // Ensure checkbox is unticked if called erroneously
-                 const autoBackupCheckbox = document.getElementById('auto-backup');
-                 if (autoBackupCheckbox) autoBackupCheckbox.checked = false;
-                 localStorage.setItem('autoBackup', 'false');
-                return;
-            }
-
-            // Clear existing interval to prevent duplicates
-            if (window.backupInterval) {
-                clearInterval(window.backupInterval);
-                console.log("Cleared existing auto-backup interval.");
-            }
-
-            console.log("Setting up auto-backup interval (24 hours)...");
-             // Set new interval (every 24 hours)
-             const twentyFourHours = 24 * 60 * 60 * 1000;
-             // const twentyFourHours = 30 * 1000; // Short interval for testing
-
-            window.backupInterval = setInterval(() => {
-                console.log("Auto-backup interval triggered.");
-                if (gapi.auth2.getAuthInstance().isSignedIn.get()) {
-                    console.log("User is signed in, attempting auto-backup.");
-                    createBackup().then(result => {
-                         if (result) {
-                             console.log("Auto-backup successful:", result.name);
-                         } else {
-                             console.warn("Auto-backup function returned null or failed.");
-                         }
-                     }).catch(err => {
-                         console.error("Error during scheduled auto-backup:", err);
-                     });
-                } else {
-                    console.log("User not signed in, skipping auto-backup.");
-                     // Optional: Clear interval if user signs out? Handled by updateAuthStatus.
-                }
-            }, twentyFourHours);
-
-            // Optionally, do an initial backup immediately after enabling
-             // Consider user experience - maybe don't backup immediately unless manually triggered?
-            // createBackup();
-             // console.log("Initial auto-backup triggered.");
-        }
-
-        // Helper function to show alerts
-        function showAlert(message, type) { // Type: 'success', 'warning', 'danger', 'info'
-          const alertContainer = document.body; // Or a dedicated container div
-           const alert = document.createElement('div');
-           alert.className = `alert-${type}`; // Use class for styling
-           alert.style.position = 'fixed';
-           alert.style.bottom = '20px';
-           alert.style.right = '20px';
-           alert.style.padding = '15px';
-           alert.style.borderRadius = '4px';
-           // alert.style.backgroundColor is now handled by CSS classes like .alert-success etc.
-           alert.style.color = 'white';
-           alert.style.zIndex = '2000'; // Ensure it's above other elements like modals
-           alert.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-           alert.style.opacity = '1';
-           alert.style.transition = 'opacity 0.5s ease-out';
-           alert.textContent = message;
-
-           alertContainer.appendChild(alert);
-
-           // Auto-dismiss
-           setTimeout(() => {
-             alert.style.opacity = '0';
-             setTimeout(() => {
-                 if (alert.parentNode) { // Check if it hasn't been removed already
-                     alert.parentNode.removeChild(alert);
-                 }
-             }, 500); // Remove after fade out
-           }, 5000); // Alert visible for 5 seconds
-        }
-
-
-        // --- Event Listeners (Specific to Google Drive UI) ---
-        // Ensure elements exist before adding listeners
-        const setupDriveButton = document.getElementById('setup-drive');
-        const cancelAuthButton = document.getElementById('cancel-auth');
-        const googleAuthButton = document.getElementById('google-auth-button');
-        const disconnectButton = document.getElementById('disconnect-drive');
-        const manualBackupButton = document.getElementById('manual-backup');
-        const autoBackupCheckbox = document.getElementById('auto-backup');
-        const authModal = document.getElementById('google-auth-modal');
-
-
-        if(setupDriveButton) {
-            setupDriveButton.addEventListener('click', () => {
-                 if (authModal) authModal.style.display = 'flex'; // Always show modal on click
-             });
-        }
-
-        if(cancelAuthButton) {
-            cancelAuthButton.addEventListener('click', () => {
-                 if (authModal) authModal.style.display = 'none';
-             });
-        }
-
-        if(googleAuthButton) {
-            googleAuthButton.addEventListener('click', () => {
-                 if (!gapiInitialized || !gapi.auth2 || !gapi.auth2.getAuthInstance()) {
-                     showAlert("Google Auth library not ready. Please wait or reload.", "warning");
-                     return;
-                 }
-                gapi.auth2.getAuthInstance().signIn().then(() => {
-                    if (authModal) authModal.style.display = 'none';
-                     // Status update is handled by the listener attached in initializeGapiClient
-                }).catch(err => {
-                    console.error('Sign in failed:', err);
-                     let errorMsg = 'Google sign-in failed.';
-                     if (err.error === 'popup_closed_by_user') {
-                         errorMsg = 'Sign-in cancelled.';
-                     } else if (err.error) {
-                         errorMsg += ` Error: ${err.error}`;
-                     }
-                    showAlert(errorMsg, 'warning');
-                });
-            });
-        }
-
-        if(disconnectButton) {
-            disconnectButton.addEventListener('click', () => {
-                 if (!gapiInitialized || !gapi.auth2 || !gapi.auth2.getAuthInstance()) {
-                     showAlert("Google Auth library not ready.", "warning");
-                     return;
-                 }
-                 // Optional confirmation - consider if needed
-                 if (confirm("Are you sure you want to disconnect from Google Drive? Auto-backup will stop.")) {
-                    gapi.auth2.getAuthInstance().signOut();
-                     // Update happens via listener, but can force UI update too
-                      updateAuthStatus(false);
-                     // Clear auto-backup preference on disconnect
-                     localStorage.setItem('autoBackup', 'false');
-                      if (autoBackupCheckbox) autoBackupCheckbox.checked = false;
-                     showAlert('Disconnected from Google Drive.', 'info');
-                 }
-            });
-        }
-
-        if(manualBackupButton) {
-            manualBackupButton.addEventListener('click', createBackup);
-        }
-
-        if(autoBackupCheckbox) {
-             // Load initial state from localStorage
-             autoBackupCheckbox.checked = localStorage.getItem('autoBackup') === 'true';
-
-            autoBackupCheckbox.addEventListener('change', (e) => {
-              const isChecked = e.target.checked;
-              localStorage.setItem('autoBackup', isChecked);
-              if (isChecked) {
-                if (gapiInitialized && gapi.auth2 && gapi.auth2.getAuthInstance().isSignedIn.get()) {
-                    setupAutoBackup();
-                    showAlert('Auto-backup enabled. First backup will run on schedule.', 'success');
-                     // Optionally trigger immediate backup:
-                     // createBackup().then(()=>showAlert('Initial auto-backup created.', 'info'));
-                } else {
-                    showAlert('Connect to Google Drive to enable auto-backup.', 'warning');
-                     e.target.checked = false; // Uncheck if not connected
-                     localStorage.setItem('autoBackup', 'false');
-                }
-              } else {
-                if (window.backupInterval) {
-                  clearInterval(window.backupInterval);
-                  window.backupInterval = null;
-                  console.log("Auto-backup interval cleared by user.");
-                }
-                showAlert('Auto-backup disabled.', 'warning');
-              }
-            });
-        }
-
-        // --- END Google Drive Integration Code ---
-
-        // --- Initialize Google API ---
-        // The Google API script is loaded via the <script> tag in the HTML.
-        // Assign the callback function to be executed once the script is loaded.
-        // Note: The 'onload' attribute is often used directly in the script tag,
-        // but programmatically assigning it here works too.
-        // Ensure this runs after the DOM is ready or the script tag exists.
-        const googleApiScriptTag = document.querySelector('script[src="https://apis.google.com/js/api.js"]');
-        if (googleApiScriptTag) {
-            googleApiScriptTag.onload = handleClientLoad;
-             googleApiScriptTag.onerror = () => { // Add error handling for script load failure
-                 console.error("Google API script (api.js) failed to load.");
-                 showAlert("Failed to load Google API script. Drive features unavailable.", "danger");
-                 updateDriveStatusUIOnly(false);
+         }
+
+         // --- Backup History Functions (Example using localStorage) ---
+         function addBackupHistoryItem(timestamp) {
+             const backupListDiv = document.getElementById('backup-list');
+             const history = getBackupHistory();
+
+             const newEntry = {
+                 timestamp: timestamp.toISOString(),
+                 status: 'Completed' // Or could be 'Failed', 'In Progress'
              };
-        } else {
-            console.error("Google API script tag not found in HTML.");
-             showAlert("Google API script tag missing. Drive features unavailable.", "danger");
-             updateDriveStatusUIOnly(false);
-        }
+
+             history.unshift(newEntry); // Add to the beginning
+             // Keep only the last N backups (e.g., 5)
+             const maxHistory = 5;
+             if (history.length > maxHistory) {
+                 history.length = maxHistory;
+             }
+
+             localStorage.setItem('backupHistory', JSON.stringify(history));
+             renderBackupHistory(history, backupListDiv);
+         }
+
+         function getBackupHistory() {
+             const historyString = localStorage.getItem('backupHistory');
+             try {
+                 return historyString ? JSON.parse(historyString) : [];
+             } catch (e) {
+                 console.error("Error parsing backup history:", e);
+                 return []; // Return empty array on error
+             }
+         }
+
+         function renderBackupHistory(history, container) {
+             if (!container) container = document.getElementById('backup-list');
+             if (!container) return;
+
+             container.innerHTML = ''; // Clear previous list
+
+             if (history.length === 0) {
+                 container.innerHTML = '<p style="font-style: italic; color: var(--gray-500);">No recent backups found.</p>';
+                 return;
+             }
+
+             history.forEach(item => {
+                 const div = document.createElement('div');
+                 div.className = 'backup-item';
+
+                 const dateSpan = document.createElement('span');
+                 const date = new Date(item.timestamp);
+                 dateSpan.textContent = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+
+                 const statusSpan = document.createElement('span');
+                 statusSpan.textContent = item.status;
+                 statusSpan.style.fontWeight = 'bold';
+                 if (item.status === 'Completed') {
+                    statusSpan.style.color = 'var(--success)';
+                 } else if (item.status === 'Failed') {
+                     statusSpan.style.color = 'var(--danger)';
+                 }
+
+                 div.appendChild(dateSpan);
+                 div.appendChild(statusSpan);
+                 container.appendChild(div);
+             });
+         }
+
+         function loadBackupHistory() {
+             const history = getBackupHistory();
+             const container = document.getElementById('backup-list');
+             const historyDiv = document.getElementById('backup-history');
+             renderBackupHistory(history, container);
+              // Show history section only if there are items
+              if (history.length > 0 && historyDiv) {
+                  historyDiv.style.display = 'block';
+              } else if (historyDiv) {
+                   historyDiv.style.display = 'none';
+              }
+         }
+
 
     </script>
 
